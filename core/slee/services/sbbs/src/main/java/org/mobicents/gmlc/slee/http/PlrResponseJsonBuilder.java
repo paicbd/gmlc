@@ -65,6 +65,7 @@ import static org.mobicents.gmlc.slee.http.JsonWriter.writeMcc;
 import static org.mobicents.gmlc.slee.http.JsonWriter.writeMmeName;
 import static org.mobicents.gmlc.slee.http.JsonWriter.writeMmeRealm;
 import static org.mobicents.gmlc.slee.http.JsonWriter.writeMnc;
+import static org.mobicents.gmlc.slee.http.JsonWriter.writeMscNumber;
 import static org.mobicents.gmlc.slee.http.JsonWriter.writeMsisdn;
 import static org.mobicents.gmlc.slee.http.JsonWriter.writeNetwork;
 import static org.mobicents.gmlc.slee.http.JsonWriter.writeNumberOfPoints;
@@ -90,6 +91,7 @@ import static org.mobicents.gmlc.slee.http.JsonWriter.writeUtranPositioningData;
 import static org.mobicents.gmlc.slee.http.JsonWriter.writeVelocityType;
 import static org.mobicents.gmlc.slee.http.JsonWriter.writeVerticalSpeed;
 import static org.mobicents.gmlc.slee.utils.ByteUtils.bytesToHex;
+import static org.mobicents.gmlc.slee.utils.TBCDUtil.toTBCDString;
 
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
@@ -114,10 +116,10 @@ public class PlrResponseJsonBuilder {
     public static String buildJsonResponseForPlr(SLhRiaAvpValues ria, SLgPlaAvpValues pla, String plrMsisdn, String plrImsi, Integer clientReferenceNumber,
                                                  Integer lcsReferenceNumber, String diameterResultMessage) {
 
-        String msisdn, imsi, lmsi, mmeName, mmeRealm, sgsnName, sgsnRealm, sgsnNumber, tgppAAAServerName, gmlcAddress, typeOfShape, velocityType,
+        String msisdn, imsi, lmsi, mmeName, mmeRealm, sgsnName, sgsnRealm, sgsnNumber, tgppAAAServerName, mscNumber, gmlcAddress, typeOfShape, velocityType,
             civicAddress, geranPositioningInfo, geranGanssPositioningData, utranPositioningData, utranGanssPositioningData, utranAdditionalPositioningData,
             eUtranPositioningData;
-        msisdn = imsi = lmsi = mmeName = mmeRealm = sgsnName = sgsnRealm = sgsnNumber = tgppAAAServerName = gmlcAddress = typeOfShape = velocityType =
+        msisdn = imsi = lmsi = mmeName = mmeRealm = sgsnName = sgsnRealm = sgsnNumber = tgppAAAServerName = mscNumber = gmlcAddress = typeOfShape = velocityType =
             civicAddress = geranPositioningInfo = geranGanssPositioningData = utranPositioningData = utranGanssPositioningData =
                 utranAdditionalPositioningData = eUtranPositioningData = null;
         Double latitude, longitude, uncertainty, uncertaintySemiMajorAxis, uncertaintySemiMinorAxis, uncertaintyAltitude, uncertaintyInnerRadius,
@@ -190,7 +192,7 @@ public class PlrResponseJsonBuilder {
             }
 
             if (ria.getSgsnNumber() != null) {
-                sgsnNumber = AVPHandler.byte2IsdnAddressString(ria.getSgsnNumber()).getAddress();
+                sgsnNumber = toTBCDString(ria.getSgsnNumber());
                 writeSgsnNumber(sgsnNumber, riaJsonObject);
             }
 
@@ -202,6 +204,11 @@ public class PlrResponseJsonBuilder {
             if (ria.getSgsnRealm() != null) {
                 sgsnRealm = new String(AVPHandler.diameterIdToMapDiameterId(ria.getSgsnRealm()).getData());
                 writeSgsnRealm(sgsnRealm, riaJsonObject);
+            }
+
+            if (ria.getMscNumber() != null) {
+                mscNumber = toTBCDString(ria.getMscNumber());
+                writeMscNumber(mscNumber, riaJsonObject);
             }
 
             if (ria.getTgppAAAServerName() != null) {

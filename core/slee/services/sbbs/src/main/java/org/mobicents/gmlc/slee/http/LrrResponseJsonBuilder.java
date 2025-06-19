@@ -90,6 +90,7 @@ import static org.mobicents.gmlc.slee.http.JsonWriter.writeUtranGanssPositioning
 import static org.mobicents.gmlc.slee.http.JsonWriter.writeUtranPositioningData;
 import static org.mobicents.gmlc.slee.http.JsonWriter.writeVelocityType;
 import static org.mobicents.gmlc.slee.http.JsonWriter.writeVerticalSpeed;
+import static org.mobicents.gmlc.slee.utils.TBCDUtil.toTBCDString;
 
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
@@ -340,11 +341,11 @@ public class LrrResponseJsonBuilder {
                 if (lrr.getServingNodeAvp().getSGSNRealm() != null)
                     sgsnRealm = new String(AVPHandler.diameterIdToMapDiameterId(lrr.getServingNodeAvp().getSGSNRealm()).getData());
                 if (lrr.getServingNodeAvp().getSGSNNumber() != null)
-                    sgsnNumber = new String(AVPHandler.byte2String(lrr.getServingNodeAvp().getSGSNNumber()).getBytes());
+                    sgsnNumber = toTBCDString(lrr.getServingNodeAvp().getSGSNNumber());
                 if (lrr.getServingNodeAvp().get3GPPAAAServerName() != null)
                     tgppAAAServerName = new String(AVPHandler.diameterIdToMapDiameterId(lrr.getServingNodeAvp().get3GPPAAAServerName()).getData());
                 if (lrr.getServingNodeAvp().getMSCNumber() != null)
-                    mscNumber = new String(AVPHandler.byte2String(lrr.getServingNodeAvp().getMSCNumber()).getBytes());
+                    mscNumber = toTBCDString(lrr.getServingNodeAvp().getMSCNumber());
                 if (Long.valueOf(lrr.getServingNodeAvp().getLcsCapabilitiesSets()) != null)
                     lcsCapabilitySets = Long.valueOf(lrr.getServingNodeAvp().getLcsCapabilitiesSets());
                 writeMmeName(mmeName, servingNodeJsonObject);
@@ -513,11 +514,11 @@ public class LrrResponseJsonBuilder {
                     if (lrr.getDeferredMTLRDataAvp().getServingNode().getSGSNRealm() != null)
                         mtlrSgsnRealm = new String(AVPHandler.diameterIdToMapDiameterId(lrr.getDeferredMTLRDataAvp().getServingNode().getSGSNRealm()).getData());
                     if (lrr.getDeferredMTLRDataAvp().getServingNode().getSGSNNumber() != null)
-                        mtlrSgsnNumber = new String(AVPHandler.byte2String(lrr.getDeferredMTLRDataAvp().getServingNode().getSGSNNumber()).getBytes());
+                        mtlrSgsnNumber = toTBCDString(lrr.getDeferredMTLRDataAvp().getServingNode().getSGSNNumber());
                     if (lrr.getDeferredMTLRDataAvp().getServingNode().get3GPPAAAServerName() != null)
                         mtlr3gppAAAServerName = new String(AVPHandler.diameterIdToMapDiameterId(lrr.getDeferredMTLRDataAvp().getServingNode().get3GPPAAAServerName()).getData());
                     if (lrr.getDeferredMTLRDataAvp().getServingNode().getMSCNumber() != null)
-                        mtlrMscNumber = new String(AVPHandler.byte2String(lrr.getDeferredMTLRDataAvp().getServingNode().getMSCNumber()).getBytes());
+                        mtlrMscNumber = toTBCDString(lrr.getDeferredMTLRDataAvp().getServingNode().getMSCNumber());
                     if (Long.valueOf(lrr.getDeferredMTLRDataAvp().getServingNode().getLcsCapabilitiesSets()) != null)
                         mtlrLcsCapabilitySets = Long.valueOf(lrr.getDeferredMTLRDataAvp().getServingNode().getLcsCapabilitiesSets());
                     if (dMtLrterminationCause != null) {
@@ -553,11 +554,11 @@ public class LrrResponseJsonBuilder {
                     if (lrr.getDelayedLocationReportingDataAvp().getServingNode().getSGSNRealm() != null)
                         dlrSgsnRealm = new String(AVPHandler.diameterIdToMapDiameterId(lrr.getDelayedLocationReportingDataAvp().getServingNode().getSGSNRealm()).getData());
                     if (lrr.getDelayedLocationReportingDataAvp().getServingNode().getSGSNNumber() != null)
-                        dlrSgsnNumber = new String(AVPHandler.byte2String(lrr.getDelayedLocationReportingDataAvp().getServingNode().getSGSNNumber()).getBytes());
+                        dlrSgsnNumber = toTBCDString(lrr.getDelayedLocationReportingDataAvp().getServingNode().getSGSNNumber());
                     if (lrr.getDelayedLocationReportingDataAvp().getServingNode().get3GPPAAAServerName() != null)
                         dlr3gppAAAServerName = new String(AVPHandler.diameterIdToMapDiameterId(lrr.getDelayedLocationReportingDataAvp().getServingNode().get3GPPAAAServerName()).getData());
                     if (lrr.getDelayedLocationReportingDataAvp().getServingNode().getMSCNumber() != null)
-                        dlrMscNumber = new String(AVPHandler.byte2String(lrr.getDelayedLocationReportingDataAvp().getServingNode().getMSCNumber()).getBytes());
+                        dlrMscNumber = toTBCDString(lrr.getDelayedLocationReportingDataAvp().getServingNode().getMSCNumber());
                     if (Long.valueOf(lrr.getDelayedLocationReportingDataAvp().getServingNode().getLcsCapabilitiesSets()) != null)
                         dlrLcsCapabilitySets = Long.valueOf(lrr.getDelayedLocationReportingDataAvp().getServingNode().getLcsCapabilitiesSets());
                     if (dlrTerminationCause != null) {

@@ -302,6 +302,7 @@ import org.restcomm.protocols.ss7.map.service.lsm.ResponseTimeImpl;
 import org.restcomm.protocols.ss7.map.service.lsm.SupportedGADShapesImpl;
 import org.restcomm.protocols.ss7.map.service.mobility.subscriberInformation.RequestedInfoImpl;
 import org.restcomm.protocols.ss7.sccp.impl.parameter.ParameterFactoryImpl;
+import org.restcomm.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;
 import org.restcomm.protocols.ss7.sccp.parameter.EncodingScheme;
 import org.restcomm.protocols.ss7.sccp.parameter.GlobalTitle;
 import org.restcomm.protocols.ss7.sccp.parameter.ParameterFactory;
@@ -689,20 +690,20 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             this.setTimer(aci);
 
             // Transaction
-            transaction = mobileCoreNetworkTransactions.Instance().getTransactionId(mapDialogMobility.getLocalDialogId());
+            transaction = mobileCoreNetworkTransactions.getTransactionId(mapDialogMobility.getLocalDialogId());
 
             if (transaction != null) {
-                TimerID atiTimerID = (TimerID) mobileCoreNetworkTransactions.Instance().getValue(transaction, "timerID");
+                TimerID atiTimerID = (TimerID) mobileCoreNetworkTransactions.getValue(transaction, "timerID");
                 if (atiTimerID != null)
                     this.timerFacility.cancelTimer(atiTimerID);
-                msisdnDigitsForAti = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "atiMsisdn");
-                atiHttpRespType = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "atiHttpRespType");
-                curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(transaction, "transactionStart");
+                msisdnDigitsForAti = (String) mobileCoreNetworkTransactions.getValue(transaction, "atiMsisdn");
+                atiHttpRespType = (String) mobileCoreNetworkTransactions.getValue(transaction, "atiHttpRespType");
+                curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(transaction, "transactionStart");
                 gmlcCdrState.setDialogStartTime(dialogStartTime);
                 if (gmlcCdrState.isInitialized()) {
                     gmlcCdrState.setCurlUser(curlUser);
-                    if (dialogStartTime != null && eventTime != null) {
+                    if (dialogStartTime != null) {
                         Long dialogDuration = eventTime.getMillis() - dialogStartTime.getMillis();
                         gmlcCdrState.setDialogDuration(dialogDuration);
                     }
@@ -710,7 +711,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             } else {
                 throw new Exception();
             }
-            mobileCoreNetworkTransactions.Instance().destroy(transaction);
+            mobileCoreNetworkTransactions.destroy(transaction);
 
             if (msisdnDigitsForAti != null) {
                 if (gmlcCdrState.isInitialized()) {
@@ -1409,15 +1410,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             if (sriForSMTransaction == null) {
                 throw new Exception();
             }
-            TimerID sriSmTimerID = (TimerID) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "timerID");
+            TimerID sriSmTimerID = (TimerID) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "timerID");
             if (sriSmTimerID != null)
                 this.timerFacility.cancelTimer(sriSmTimerID);
-            String domainForPsi = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "sriPsiDomain");
-            psiMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "psiMsisdn");
-            eps = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "locationInfoEPS");
-            curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "curlUser");
-            sriSmOnly = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "sriSmOnly");
-            DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "transactionStart");
+            String domainForPsi = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "sriPsiDomain");
+            psiMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "psiMsisdn");
+            eps = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "locationInfoEPS");
+            curlUser = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "curlUser");
+            sriSmOnly = (Boolean) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "sriSmOnly");
+            DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "transactionStart");
             gmlcCdrState.setDialogStartTime(dialogStartTime);
             if (gmlcCdrState.isInitialized()) {
                 gmlcCdrState.setMsisdn(new ISDNAddressStringImpl(AddressNature.international_number, org.restcomm.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, psiMsisdn));
@@ -1427,7 +1428,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     gmlcCdrState.setDialogDuration(dialogDuration);
                 }
             }
-            mobileCoreNetworkTransactions.Instance().destroy(sriForSMTransaction);
+            mobileCoreNetworkTransactions.destroy(sriForSMTransaction);
 
             MessageType tcapMessageType = mapDialogSriForSM.getTCAPMessageType();
             if (tcapMessageType == MessageType.Abort) {
@@ -1524,9 +1525,9 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     handleSriResponseValue(mlpRespResult, null, sriForSmResponseValues, null, "SRISM", psiMsisdn, null, mlpClientErrorMessage);
                     // destroy transactions if exist, detach and return
                     if (transaction != null)
-                        mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                        mobileCoreNetworkTransactions.destroy(transaction);
                     if (sriForSMTransaction != null)
-                        mobileCoreNetworkTransactions.Instance().destroy(sriForSMTransaction);
+                        mobileCoreNetworkTransactions.destroy(sriForSMTransaction);
                     detachFromMAPDialogSms(aci);
                     return;
                 }
@@ -1564,17 +1565,17 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 try {
                     if (this.subscriberInfoEnquiryContext == null) {
                         mapDialogMobility = this.mapProvider.getMAPServiceMobility().createNewDialog(
-                                this.getMAPPsiApplicationContext(), this.getGmlcSccpAddress(), originAddressString,
-                                locationInfoWithLMSI.getGprsNodeIndicator() ?
-                                        getSgsnSccpAddress(locationInfoWithLMSI.getNetworkNodeNumber().getAddress()) :
-                                        getVlrSccpAddress(locationInfoWithLMSI.getNetworkNodeNumber().getAddress()), destinationAddressString);
+                            this.getMAPPsiApplicationContext(), this.getGmlcSccpAddress(), originAddressString,
+                            locationInfoWithLMSI.getGprsNodeIndicator() ?
+                                getSgsnSccpAddress(locationInfoWithLMSI.getNetworkNodeNumber().getAddress()) :
+                                getVlrSccpAddress(locationInfoWithLMSI.getNetworkNodeNumber().getAddress()), destinationAddressString);
                     } else {
                         if (this.subscriberInfoEnquiryContext != null) {
                             mapDialogMobility = this.mapProvider.getMAPServiceMobility().createNewDialog(
-                                    this.subscriberInfoEnquiryContext, this.getGmlcSccpAddress(), originAddressString,
-                                    locationInfoWithLMSI.getGprsNodeIndicator() ?
-                                            getSgsnSccpAddress(locationInfoWithLMSI.getNetworkNodeNumber().getAddress()) :
-                                            getVlrSccpAddress(locationInfoWithLMSI.getNetworkNodeNumber().getAddress()), destinationAddressString);
+                                this.subscriberInfoEnquiryContext, this.getGmlcSccpAddress(), originAddressString,
+                                locationInfoWithLMSI.getGprsNodeIndicator() ?
+                                    getSgsnSccpAddress(locationInfoWithLMSI.getNetworkNodeNumber().getAddress()) :
+                                    getVlrSccpAddress(locationInfoWithLMSI.getNetworkNodeNumber().getAddress()), destinationAddressString);
                         }
                     }
                 } catch (MAPException e) {
@@ -1582,14 +1583,14 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 }
 
                 // Transaction
-                transaction = mobileCoreNetworkTransactions.Instance().create();
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "curlUser", curlUser);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "sriForSMImsi", new String(imsi.getData().getBytes()));
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "psiMsisdn", psiMsisdn);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "psiNNN", nnn);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "sriForSmResponse", sriForSmResponseValues);
-                mobileCoreNetworkTransactions.Instance().setDialog(transaction, mapDialogMobility.getLocalDialogId());
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "transactionStart", dialogStartTime);
+                transaction = mobileCoreNetworkTransactions.create();
+                mobileCoreNetworkTransactions.setValue(transaction, "curlUser", curlUser);
+                mobileCoreNetworkTransactions.setValue(transaction, "sriForSMImsi", new String(imsi.getData().getBytes()));
+                mobileCoreNetworkTransactions.setValue(transaction, "psiMsisdn", psiMsisdn);
+                mobileCoreNetworkTransactions.setValue(transaction, "psiNNN", nnn);
+                mobileCoreNetworkTransactions.setValue(transaction, "sriForSmResponse", sriForSmResponseValues);
+                mobileCoreNetworkTransactions.setDialog(transaction, mapDialogMobility.getLocalDialogId());
+                mobileCoreNetworkTransactions.setValue(transaction, "transactionStart", dialogStartTime);
                 mapDialogMobility.addProvideSubscriberInfoRequest(imsi, lmsi, requestedInfo, mapExtensionContainer, emlppPriority);
 
                 // Keep ACI in across MAP dialog for PSI
@@ -1598,7 +1599,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
 
                 // set new timer for the case PSI does not arrive in time
                 TimerID timerID = timerFacility.setTimer(psiDialogACI, null, System.currentTimeMillis() + MAP_OPERATION_TIMEOUT, defaultTimerOptions);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "timerID", timerID);
+                mobileCoreNetworkTransactions.setValue(transaction, "timerID", timerID);
 
                 // ProvideSubscriberInfoRequest is now composed by values taken from SRISM response
                 // Send PSI
@@ -1612,7 +1613,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                             "SRISM", null, nnn, null, gmlcCdrState, false);
                     }
                     if (transaction != null)
-                        mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                        mobileCoreNetworkTransactions.destroy(transaction);
                 }
             }
         } catch (Exception e) {
@@ -1621,7 +1622,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             this.reportLocationRequestError(MLPResponse.MLPResultType.SYSTEM_FAILURE, "Exception on MAP SRISM response: " + e.getMessage(),
                 "SRISM", psiMsisdn, psiImsi, null, nnn, null, null, null, false);
             if (transaction != null)
-                mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                mobileCoreNetworkTransactions.destroy(transaction);
         } finally {
             detachFromMAPDialogSms(aci);
         }
@@ -1675,15 +1676,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             this.setTimer(aci);
 
             sriTransaction = mobileCoreNetworkTransactions.getTransactionId(mapDialogSri.getLocalDialogId());
-            TimerID sriTimerID = (TimerID) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "timerID");
+            TimerID sriTimerID = (TimerID) mobileCoreNetworkTransactions.getValue(sriTransaction, "timerID");
             if (sriTimerID != null)
                 this.timerFacility.cancelTimer(sriTimerID);
-            String domainForPsi = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "sriPsiDomain");
-            eps = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "locationInfoEPS");
-            psiMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "psiMsisdn");
-            curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "curlUser");
-            DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "transactionStart");
-            sriOnly = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "sriOnly");
+            String domainForPsi = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "sriPsiDomain");
+            eps = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "locationInfoEPS");
+            psiMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "psiMsisdn");
+            curlUser = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "curlUser");
+            DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(sriTransaction, "transactionStart");
+            sriOnly = (Boolean) mobileCoreNetworkTransactions.getValue(sriTransaction, "sriOnly");
             gmlcCdrState.setDialogStartTime(dialogStartTime);
             if (gmlcCdrState.isInitialized()) {
                 gmlcCdrState.setCurlUser(curlUser);
@@ -1694,7 +1695,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 if (psiMsisdn != null)
                     gmlcCdrState.setMsisdn(new ISDNAddressStringImpl(AddressNature.international_number, org.restcomm.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, psiMsisdn));
             }
-            mobileCoreNetworkTransactions.Instance().destroy(sriTransaction);
+            mobileCoreNetworkTransactions.destroy(sriTransaction);
 
             MessageType tcapMessageType = mapDialogSri.getTCAPMessageType();
             if (tcapMessageType == MessageType.Abort) {
@@ -1773,9 +1774,9 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     handleSriResponseValue(mlpRespResult, sriResponseValues, null, null, "SRI", psiMsisdn, null, mlpClientErrorMessage);
                     // destroy transactions if exist, detach and return
                     if (transaction != null)
-                        mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                        mobileCoreNetworkTransactions.destroy(transaction);
                     if (sriTransaction != null)
-                        mobileCoreNetworkTransactions.Instance().destroy(sriTransaction);
+                        mobileCoreNetworkTransactions.destroy(sriTransaction);
                     detachFromMAPDialogCallHandling(aci);
                     return;
                 }
@@ -1826,14 +1827,14 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 }
 
                 // Transaction
-                transaction = mobileCoreNetworkTransactions.Instance().create();
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "curlUser", curlUser);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "sriImsi", new String(imsi.getData().getBytes()));
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "psiMsisdn", psiMsisdn);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "sriResponse", sriResponseValues);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "psiNNN", nnn);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "transactionStart", dialogStartTime);
-                mobileCoreNetworkTransactions.Instance().setDialog(transaction, mapDialogMobility.getLocalDialogId());
+                transaction = mobileCoreNetworkTransactions.create();
+                mobileCoreNetworkTransactions.setValue(transaction, "curlUser", curlUser);
+                mobileCoreNetworkTransactions.setValue(transaction, "sriImsi", new String(imsi.getData().getBytes()));
+                mobileCoreNetworkTransactions.setValue(transaction, "psiMsisdn", psiMsisdn);
+                mobileCoreNetworkTransactions.setValue(transaction, "sriResponse", sriResponseValues);
+                mobileCoreNetworkTransactions.setValue(transaction, "psiNNN", nnn);
+                mobileCoreNetworkTransactions.setValue(transaction, "transactionStart", dialogStartTime);
+                mobileCoreNetworkTransactions.setDialog(transaction, mapDialogMobility.getLocalDialogId());
 
                 mapDialogMobility.addProvideSubscriberInfoRequest(imsi, lmsi, requestedInfo, mapExtensionContainer, emlppPriority);
 
@@ -1843,7 +1844,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
 
                 // set new timer for the PSI request/response cycle
                 TimerID timerID = timerFacility.setTimer(psiDialogACI, null, System.currentTimeMillis() + MAP_OPERATION_TIMEOUT, defaultTimerOptions);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "timerID", timerID);
+                mobileCoreNetworkTransactions.setValue(transaction, "timerID", timerID);
 
                 // ProvideSubscriberInfoRequest is now composed by values taken from SRI response
                 // Send PSI
@@ -1857,7 +1858,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                             "SRI", null, null, nnn, gmlcCdrState, false);
                     }
                     if (transaction != null)
-                        mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                        mobileCoreNetworkTransactions.destroy(transaction);
                 }
             }
         } catch (Exception e) {
@@ -1866,7 +1867,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             this.reportLocationRequestError(MLPResponse.MLPResultType.SYSTEM_FAILURE, "Exception on MAP SRI response: " + e.getMessage(),
                 "SRI", psiMsisdn, psiImsi, null, nnn, null, null, null, false);
             if (transaction != null)
-                mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                mobileCoreNetworkTransactions.destroy(transaction);
         } finally {
             detachFromMAPDialogCallHandling(aci);
         }
@@ -1924,7 +1925,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
         try {
             if (this.subscriberInfoEnquiryContext == null) {
                 mapDialogMobility = this.mapProvider.getMAPServiceMobility().createNewDialog(this.getMAPPsiApplicationContext(),
-                        this.getGmlcSccpAddress(), originAddressString, networkNodeAddress, destinationAddressString);
+                    this.getGmlcSccpAddress(), originAddressString, networkNodeAddress, destinationAddressString);
             } else {
                 mapDialogMobility = this.mapProvider.getMAPServiceMobility().createNewDialog(this.subscriberInfoEnquiryContext,
                     this.getGmlcSccpAddress(), originAddressString, networkNodeAddress, destinationAddressString);
@@ -1946,18 +1947,18 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
         psiDialogACI.attach(this.sbbContext.getSbbLocalObject());
 
         // Transaction
-        transaction = mobileCoreNetworkTransactions.Instance().create();
-        mobileCoreNetworkTransactions.Instance().setValue(transaction, "psiServiceType", "psiFirst");
-        mobileCoreNetworkTransactions.Instance().setValue(transaction, "psiOnlyImsi", imsiStr);
-        mobileCoreNetworkTransactions.Instance().setValue(transaction, "psiOnlyNnn", nnn);
-        mobileCoreNetworkTransactions.Instance().setValue(transaction, "psiMsisdn", psiMsisdn);
-        mobileCoreNetworkTransactions.Instance().setValue(transaction, "curlUser", curlUser);
+        transaction = mobileCoreNetworkTransactions.create();
+        mobileCoreNetworkTransactions.setValue(transaction, "psiServiceType", "psiFirst");
+        mobileCoreNetworkTransactions.setValue(transaction, "psiOnlyImsi", imsiStr);
+        mobileCoreNetworkTransactions.setValue(transaction, "psiOnlyNnn", nnn);
+        mobileCoreNetworkTransactions.setValue(transaction, "psiMsisdn", psiMsisdn);
+        mobileCoreNetworkTransactions.setValue(transaction, "curlUser", curlUser);
         DateTime transactionStart = DateTime.now();
-        mobileCoreNetworkTransactions.Instance().setValue(transaction, "transactionStart", transactionStart);
-        mobileCoreNetworkTransactions.Instance().setDialog(transaction, mapDialogMobility.getLocalDialogId());
+        mobileCoreNetworkTransactions.setValue(transaction, "transactionStart", transactionStart);
+        mobileCoreNetworkTransactions.setDialog(transaction, mapDialogMobility.getLocalDialogId());
         // set new timer for the PSI request/response cycle
         TimerID timerID = timerFacility.setTimer(psiDialogACI, null, System.currentTimeMillis() + MAP_OPERATION_TIMEOUT, defaultTimerOptions);
-        mobileCoreNetworkTransactions.Instance().setValue(transaction, "timerID", timerID);
+        mobileCoreNetworkTransactions.setValue(transaction, "timerID", timerID);
 
         // RequestedInfo for ProvideSubscriberInfoRequest is composed by values taken from HTTP request (IMSI and NNN)
         try {
@@ -1968,7 +1969,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             logger.severe(String.format("MAP Exception while trying to send PSI on provideSubscriberInfoRequestFirst=%s", e.getMessage()));
             e.printStackTrace();
             if (transaction != null)
-                mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                mobileCoreNetworkTransactions.destroy(transaction);
         }
     }
 
@@ -2000,19 +2001,19 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             this.setTimer(aci);
 
             // Transaction
-            transaction = mobileCoreNetworkTransactions.Instance().getTransactionId(mapDialogMobility.getLocalDialogId());
+            transaction = mobileCoreNetworkTransactions.getTransactionId(mapDialogMobility.getLocalDialogId());
 
             if (transaction != null) {
 
-                TimerID psiTimerID = (TimerID) mobileCoreNetworkTransactions.Instance().getValue(transaction, "timerID");
+                TimerID psiTimerID = (TimerID) mobileCoreNetworkTransactions.getValue(transaction, "timerID");
                 if (psiTimerID != null)
                     this.timerFacility.cancelTimer(psiTimerID);
 
                 // PSI only
-                String psiServiceType = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiServiceType");
-                String psiOnlyImsi = psiImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiOnlyImsi");
-                String psiOnlyNnn = nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiOnlyNnn");
-                curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                String psiServiceType = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiServiceType");
+                String psiOnlyImsi = psiImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiOnlyImsi");
+                String psiOnlyNnn = nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiOnlyNnn");
+                curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
 
                 psiResponseValues.setPsiServiceType(psiServiceType);
                 psiResponseValues.setPsiOnlyImsi(psiOnlyImsi);
@@ -2023,13 +2024,13 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 }
 
                 // SRISM/SRI - PSI
-                String sriForSMImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriForSMImsi");
-                String sriImsi = psiImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriImsi");
-                SriForSmResponseValues sriForSmResponse = (SriForSmResponseValues) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriForSmResponse");
-                SriResponseValues sriResponse = (SriResponseValues) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriResponse");
-                psiMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(transaction, "transactionStart");
+                String sriForSMImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriForSMImsi");
+                String sriImsi = psiImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriImsi");
+                SriForSmResponseValues sriForSmResponse = (SriForSmResponseValues) mobileCoreNetworkTransactions.getValue(transaction, "sriForSmResponse");
+                SriResponseValues sriResponse = (SriResponseValues) mobileCoreNetworkTransactions.getValue(transaction, "sriResponse");
+                psiMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(transaction, "transactionStart");
                 gmlcCdrState.setDialogStartTime(dialogStartTime);
                 if (gmlcCdrState.isInitialized()) {
                     gmlcCdrState.setCurlUser(curlUser);
@@ -2038,7 +2039,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         gmlcCdrState.setDialogDuration(dialogDuration);
                     }
                 }
-                mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                mobileCoreNetworkTransactions.destroy(transaction);
 
                 if (sriForSMImsi != null)
                     psiResponseValues.setSriForSMImsi(sriForSMImsi);
@@ -2736,7 +2737,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             this.reportLocationRequestError(MLPResponse.MLPResultType.SYSTEM_FAILURE, "Exception on MAP PSI response: " + e.getMessage(),
                 "PSI", psiMsisdn, psiImsi, null, nnn, null, null, null, false);
             if (transaction != null)
-                mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                mobileCoreNetworkTransactions.destroy(transaction);
         } finally {
             detachFromMAPDialogMobility(aci);
         }
@@ -2803,11 +2804,11 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             }
             pslMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslMsisdn");
             pslImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslImsi");
-            curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-            httpRequestType = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "httpRequestType");
-            sriLcsOnly = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriLcsOnly");
-            DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(transaction, "transactionStart");
-            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(transaction, "mlpTriggeredReportingService");
+            curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+            httpRequestType = (String) mobileCoreNetworkTransactions.getValue(transaction, "httpRequestType");
+            sriLcsOnly = (Boolean) mobileCoreNetworkTransactions.getValue(transaction, "sriLcsOnly");
+            DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(transaction, "transactionStart");
+            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.getValue(transaction, "mlpTriggeredReportingService");
             gmlcCdrState.setDialogStartTime(dialogStartTime);
             if (gmlcCdrState.isInitialized()) {
                 gmlcCdrState.setCurlUser(curlUser);
@@ -2923,15 +2924,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         this.logger.fine("\nonSendRoutingInfoForLCSResponse: received AdditionalNumber");
                     }
                     sriForLcsResponseValues.setAdditionalNumber(lcsLocationInfo.getAdditionalNumber());
-                    /*if (event.getLCSLocationInfo().getGprsNodeIndicator()) {
+                    if (event.getLCSLocationInfo().getGprsNodeIndicator()) {
                         if (lcsLocationInfo.getAdditionalNumber().getSGSNNumber() != null) {
-                            additionalNumberAddress = remotePslAddress = event.getLCSLocationInfo().getAdditionalNumber().getSGSNNumber().getAddress();
+                            additionalNumberAddress = event.getLCSLocationInfo().getAdditionalNumber().getSGSNNumber().getAddress();
                         }
                     } else {
                         if (event.getLCSLocationInfo().getAdditionalNumber().getMSCNumber() != null) {
-                            additionalNumberAddress = remotePslAddress = lcsLocationInfo.getAdditionalNumber().getMSCNumber().getAddress();
+                            additionalNumberAddress = lcsLocationInfo.getAdditionalNumber().getMSCNumber().getAddress();
                         }
-                    }*/
+                    }
                     if (gmlcCdrState.isInitialized()) {
                         gmlcCdrState.setAdditionalNumber(sriForLcsResponseValues.getAdditionalNumber());
                         if (this.logger.isFineEnabled()) {
@@ -3080,7 +3081,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     handleSriResponseValue(mlpRespResult, null, null, sriForLcsResponseValues, "SRILCS", pslMsisdn, pslImsi, mlpClientErrorMessage);
                     // destroy transactions if exist, detach and return
                     if (transaction != null)
-                        mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                        mobileCoreNetworkTransactions.destroy(transaction);
                     detachFromMAPDialogLsm(aci);
                     return;
                 }
@@ -3381,25 +3382,28 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 AddressString originAddressString, destinationAddressString;
                 originAddressString = destinationAddressString = null;
 
-                MAPDialogLsm mapDialogLsmPsl = this.mapProvider.getMAPServiceLsm().createNewDialog(
-                    this.getMAPPslSlrApplicationContext(), this.getGmlcSccpAddress(), originAddressString,
-                    getMscSccpAddress(lcsLocationInfo.getNetworkNodeNumber().getAddress()), destinationAddressString);
+                SccpAddress pslDestinationSccpAddress = new SccpAddressImpl();
 
-                if (lcsLocationInfo.getAdditionalNumber() != null) {
-                        ISDNAddressString additionalNumber = null;
+                // If the Network Node Number and Additional Number are received in the GMLC,
+                // the Network Node Number is used in preference to the Additional Number.
+                if (lcsLocationInfo.getNetworkNodeNumber() != null) {
+                    lcsLocationInfo.getNetworkNodeNumber().getNumberingPlan();
+                    if (lcsLocationInfo.getGprsNodeIndicator())
+                        pslDestinationSccpAddress = getSgsnSccpAddress(lcsLocationInfo.getNetworkNodeNumber().getAddress());
+                    else
+                        pslDestinationSccpAddress = getMscSccpAddress(lcsLocationInfo.getNetworkNodeNumber().getAddress());
+                } else {
+                    if (lcsLocationInfo.getAdditionalNumber() == null) {
                         if (lcsLocationInfo.getAdditionalNumber().getSGSNNumber() != null) {
-                            additionalNumber = lcsLocationInfo.getAdditionalNumber().getSGSNNumber();
-                            mapDialogLsmPsl = this.mapProvider.getMAPServiceLsm().createNewDialog(
-                                this.getMAPPslSlrApplicationContext(), this.getGmlcSccpAddress(), originAddressString,
-                                getSgsnSccpAddress(additionalNumber.getAddress()), destinationAddressString);
+                            pslDestinationSccpAddress = getSgsnSccpAddress(lcsLocationInfo.getAdditionalNumber().getSGSNNumber().getAddress());
                         } else if (lcsLocationInfo.getAdditionalNumber().getMSCNumber() != null) {
-                            additionalNumber = lcsLocationInfo.getAdditionalNumber().getMSCNumber();
-                            mapDialogLsmPsl = this.mapProvider.getMAPServiceLsm().createNewDialog(
-                                this.getMAPPslSlrApplicationContext(), this.getGmlcSccpAddress(), originAddressString,
-                                getMscSccpAddress(additionalNumber.getAddress()), destinationAddressString);
+                            pslDestinationSccpAddress = getMscSccpAddress(lcsLocationInfo.getAdditionalNumber().getSGSNNumber().getAddress());
                         }
-                    remotePslAddress = additionalNumber.getAddress();
+                    }
                 }
+
+                MAPDialogLsm mapDialogLsmPsl = this.mapProvider.getMAPServiceLsm().createNewDialog(this.getMAPPslSlrApplicationContext(),
+                    this.getGmlcSccpAddress(), originAddressString, pslDestinationSccpAddress, destinationAddressString);
 
                 // We are selecting the IMSI over the MSISDN if present for MAP PSL, although as per 3GPP TS 29.002 v15.5.0 both could be included:
                 // The IMSI is provided to identify the target MS. At least one of the IMSI or MSISDN is mandatory.
@@ -3448,7 +3452,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     if (gmlcCdrState.isInitialized()) {
                         if (transaction != null) {
                             referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(transaction, "pslLcsReferenceNumber");
-                            mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                            mobileCoreNetworkTransactions.destroy(transaction);
                         }
                         mlpClientErrorMessage = handleRecordAndLocationReportOnMapError(mapErrorMessage, mlpRespResult, pslMsisdn, pslImsi,
                             "SRILCS", referenceNumber, nnn, additionalNumberAddress, gmlcCdrState, mlpTriggeredReportingService);
@@ -3462,14 +3466,14 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             this.reportLocationRequestError(MLPResponse.MLPResultType.SYSTEM_FAILURE, "Exception on MAP SRILCS response: " + me.getMessage(),
                 "SRILCS", pslMsisdn, pslImsi, referenceNumber, nnn, additionalNumberAddress, null, null, mlpTriggeredReportingService);
             if (transaction != null)
-                mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                mobileCoreNetworkTransactions.destroy(transaction);
         } catch (Exception e) {
             logger.severe(String.format("Error while trying to process SendRoutingInfoForLCSResponse=%s", event), e);
             this.createCDRRecord(RecordStatus.SRILCS_SYSTEM_FAILURE);
             this.reportLocationRequestError(MLPResponse.MLPResultType.SYSTEM_FAILURE, "Exception on MAP SRILCS response: " + e.getMessage(),
                 "SRILCS", pslMsisdn, pslImsi, referenceNumber, nnn, additionalNumberAddress, null, null, mlpTriggeredReportingService);
             if (transaction != null)
-                mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                mobileCoreNetworkTransactions.destroy(transaction);
         } finally {
             detachFromMAPDialogLsm(aci);
         }
@@ -3545,9 +3549,9 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             pslImsi = String.valueOf(mobileCoreNetworkTransactions.getValue(transaction, "pslImsi"));
             pslNnn = String.valueOf(mobileCoreNetworkTransactions.getValue(transaction, "pslNNN"));
             pslRemoteAddress = String.valueOf(mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress"));
-            curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-            DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(transaction, "transactionStart");
-            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(transaction, "mlpTriggeredReportingService");
+            curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+            DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(transaction, "transactionStart");
+            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.getValue(transaction, "mlpTriggeredReportingService");
             gmlcCdrState.setDialogStartTime(dialogStartTime);
             if (gmlcCdrState.isInitialized()) {
                 gmlcCdrState.setCurlUser(curlUser);
@@ -4979,10 +4983,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
         RecordStatus onDialogTimeoutRecordStatus = RecordStatus.MAP_DIALOG_TIMEOUT;
 
         if (event.getMAPDialog() != null) {
-            transaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-            dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(transaction, "transactionStart");
-            TimerID timerID = (TimerID) mobileCoreNetworkTransactions.Instance().getValue(transaction, "timerID");
-            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(transaction, "mlpTriggeredReportingService");
+            transaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+            dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(transaction, "transactionStart");
+            TimerID timerID = (TimerID) mobileCoreNetworkTransactions.getValue(transaction, "timerID");
+            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.getValue(transaction, "mlpTriggeredReportingService");
             if (timerID != null)
                 this.timerFacility.cancelTimer(timerID);
             if (event.getMAPDialog().getApplicationContext() != null) {
@@ -4991,71 +4995,71 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 if (mapApplicationContextName == MAPApplicationContextName.anyTimeEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "ATI";
                     onDialogTimeoutRecordStatus = RecordStatus.ATI_DIALOG_TIMEOUT;
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "atiMsisdn");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "atiMsisdn");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    mobileCoreNetworkTransactions.destroy(transaction);
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationSvcGatewayContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "SRILCS";
                     onDialogTimeoutRecordStatus = RecordStatus.SRILCS_DIALOG_TIMEOUT;
                     referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(transaction, "pslLcsReferenceNumber");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslMsisdn");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                    addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslMsisdn");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                    addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    mobileCoreNetworkTransactions.destroy(transaction);
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationSvcEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "PSL";
                     onDialogTimeoutRecordStatus = RecordStatus.PSL_DIALOG_TIMEOUT;
                     referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(transaction, "pslLcsReferenceNumber");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslMsisdn");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                    addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslMsisdn");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                    addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    mobileCoreNetworkTransactions.destroy(transaction);
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationInfoRetrievalContext &&
                     (mapApplicationContextVersion == MAPApplicationContextVersion.version3 || mapApplicationContextVersion == MAPApplicationContextVersion.version2)) {
                     operation = "SRI";
                     onDialogTimeoutRecordStatus = RecordStatus.SRI_DIALOG_TIMEOUT;
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriImsi");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiNNN");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriImsi");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiNNN");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    mobileCoreNetworkTransactions.destroy(transaction);
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.shortMsgGatewayContext &&
                     (mapApplicationContextVersion == MAPApplicationContextVersion.version3 || mapApplicationContextVersion == MAPApplicationContextVersion.version2)) {
                     operation = "SRISM";
                     onDialogTimeoutRecordStatus = RecordStatus.SRISM_DIALOG_TIMEOUT;
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriForSMImsi");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiNNN");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriForSMImsi");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiNNN");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    mobileCoreNetworkTransactions.destroy(transaction);
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.subscriberInfoEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "PSI";
                     onDialogTimeoutRecordStatus = RecordStatus.PSI_DIALOG_TIMEOUT;
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriForSMImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriForSMImsi");
                     if (targetImsi == null)
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriImsi");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriImsi");
                     if (targetImsi == null)
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiOnlyImsi");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiNNN");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiOnlyImsi");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiNNN");
                     if (nnn == null)
-                        nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiOnlyNnn");
-                    mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                        nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiOnlyNnn");
+                    mobileCoreNetworkTransactions.destroy(transaction);
                 }
             }
         }
         if (transaction != null)
-            mobileCoreNetworkTransactions.Instance().destroy(transaction);
+            mobileCoreNetworkTransactions.destroy(transaction);
         this.reportLocationRequestError(MLPResponse.MLPResultType.TIMEOUT, "MAP Dialog Timeout", operation, targetMsisdn,
             targetImsi, referenceNumber, nnn, addNum, null, null, mlpTriggeredReportingService);
         MAPDialog mapDialog = event.getMAPDialog();
@@ -5108,10 +5112,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             if (event != null) {
                 mapRefuseReason = event.getRefuseReason();
                 if (event.getMAPDialog() != null) {
-                    transaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                    dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(transaction, "transactionStart");
-                    TimerID timerID = (TimerID) mobileCoreNetworkTransactions.Instance().getValue(transaction, "timerID");
-                    mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(transaction, "mlpTriggeredReportingService");
+                    transaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                    dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(transaction, "transactionStart");
+                    TimerID timerID = (TimerID) mobileCoreNetworkTransactions.getValue(transaction, "timerID");
+                    mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.getValue(transaction, "mlpTriggeredReportingService");
                     if (timerID != null)
                         this.timerFacility.cancelTimer(timerID);
                     if (event.getMAPDialog().getApplicationContext() != null)
@@ -5127,55 +5131,55 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 if (mapApplicationContextName == MAPApplicationContextName.anyTimeEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "ATI";
                     onDialogRejectRecordStatus = RecordStatus.ATI_MAP_DIALOG_TIMEOUT;
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "atiMsisdn");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "atiMsisdn");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationSvcGatewayContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "SRILCS";
                     onDialogRejectRecordStatus = RecordStatus.SRILCS_MAP_DIALOG_TIMEOUT;
                     referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(transaction, "pslLcsReferenceNumber");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                    addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                    addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationSvcEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "PSL";
                     onDialogRejectRecordStatus = RecordStatus.PSL_MAP_DIALOG_TIMEOUT;
                     referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(transaction, "pslLcsReferenceNumber");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                    addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                    addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationInfoRetrievalContext &&
                     (mapApplicationContextVersion == MAPApplicationContextVersion.version3 || mapApplicationContextVersion == MAPApplicationContextVersion.version2)) {
                     operation = "SRI";
                     onDialogRejectRecordStatus = RecordStatus.SRI_MAP_DIALOG_TIMEOUT;
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.shortMsgGatewayContext &&
                     (mapApplicationContextVersion == MAPApplicationContextVersion.version3 || mapApplicationContextVersion == MAPApplicationContextVersion.version2)) {
                     operation = "SRISM";
                     onDialogRejectRecordStatus = RecordStatus.SRISM_MAP_DIALOG_TIMEOUT;
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriForSMImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriForSMImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.subscriberInfoEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "PSI";
                     onDialogRejectRecordStatus = RecordStatus.PSI_MAP_DIALOG_TIMEOUT;
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriForSMImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriForSMImsi");
                     if (targetImsi == null)
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriImsi");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriImsi");
                     if (targetImsi == null)
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiOnlyImsi");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiOnlyImsi");
                 }
 
             } else {
@@ -5205,15 +5209,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         onDialogRejectRecordStatus = RecordStatus.SRI_REJECTED_ACN_NOT_SUPPORTED;
                         // Transaction
                         Long sriTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        String domainForPsi = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "sriPsiDomain");
-                        String locationInformationEps = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "locationInfoEPS");
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "psiMsisdn");
-                        String sriAcnVersion = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "sriAcnVersion");
-                        translationType = (Integer) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "tt");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "curlUser");
-                        boolean sriOnly = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "sriOnly");
+                        String domainForPsi = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "sriPsiDomain");
+                        String locationInformationEps = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "locationInfoEPS");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "psiMsisdn");
+                        String sriAcnVersion = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "sriAcnVersion");
+                        translationType = (Integer) mobileCoreNetworkTransactions.getValue(sriTransaction, "tt");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "curlUser");
+                        boolean sriOnly = (Boolean) mobileCoreNetworkTransactions.getValue(sriTransaction, "sriOnly");
                         if (sriTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriTransaction);
 
                         //this.locationInfoRetrievalContext = supportedMAPApplicationContext;
                         if (logger.isWarningEnabled()) {
@@ -5245,15 +5249,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         onDialogRejectRecordStatus = RecordStatus.SRISM_REJECTED_ACN_NOT_SUPPORTED;
                         // Transaction
                         Long sriForSMTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        String domainForPsi = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "sriPsiDomain");
-                        String locationInformationEps = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "locationInfoEPS");
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "psiMsisdn");
-                        String sriAcnVersion = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "sriAcnVersion");
-                        translationType = (Integer) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "tt");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "curlUser");
-                        boolean sriSmOnly = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "sriSmOnly");
+                        String domainForPsi = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "sriPsiDomain");
+                        String locationInformationEps = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "locationInfoEPS");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "psiMsisdn");
+                        String sriAcnVersion = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "sriAcnVersion");
+                        translationType = (Integer) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "tt");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "curlUser");
+                        boolean sriSmOnly = (Boolean) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "sriSmOnly");
                         if (sriForSMTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriForSMTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriForSMTransaction);
 
                         //this.shortMsgGatewayContext = supportedMAPApplicationContext;
                         if (logger.isWarningEnabled()) {
@@ -5283,11 +5287,11 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "ATI";
                         reason = "ATI Application Context Not Supported";
                         onDialogRejectRecordStatus = RecordStatus.ATI_REJECTED_ACN_NOT_SUPPORTED;
-                        Long atiTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(atiTransaction, "atiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(atiTransaction, "curlUser");
+                        Long atiTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(atiTransaction, "atiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(atiTransaction, "curlUser");
                         if (atiTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(atiTransaction);
+                            mobileCoreNetworkTransactions.destroy(atiTransaction);
                     }
                     // PSI ACN check and log if rejected for not being supported by the network
                     if (supportedMAPApplicationContext.getApplicationContextName() == MAPApplicationContextName.subscriberInfoEnquiryContext) {
@@ -5299,11 +5303,11 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "PSI";
                         reason = "PSI Application Context Not Supported";
                         onDialogRejectRecordStatus = RecordStatus.PSI_REJECTED_ACN_NOT_SUPPORTED;
-                        Long psiTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "psiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "curlUser");
+                        Long psiTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "psiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "curlUser");
                         if (psiTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(psiTransaction);
+                            mobileCoreNetworkTransactions.destroy(psiTransaction);
                     }
 
                     // SRILCS ACN check and log if rejected for not being supported by the network
@@ -5316,15 +5320,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "SRILCS";
                         reason = "SRILCS Application Context Not Supported";
                         onDialogRejectRecordStatus = RecordStatus.SRILCS_REJECTED_ACN_NOT_SUPPORTED;
-                        Long sriForLcsTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "pslMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "pslImsi");
+                        Long sriForLcsTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslImsi");
                         referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslLcsReferenceNumber");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "curlUser");
-                        nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                        addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "curlUser");
+                        nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                        addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                         if (sriForLcsTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriForLcsTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriForLcsTransaction);
                     }
 
                     // PSL ACN check and log if rejected for not being supported by the network
@@ -5337,15 +5341,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "PSL";
                         reason = "PSL Application Context Not Supported";
                         onDialogRejectRecordStatus = RecordStatus.PSL_REJECTED_ACN_NOT_SUPPORTED;
-                        Long pslTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "pslMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "pslImsi");
+                        Long pslTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslImsi");
                         referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslLcsReferenceNumber");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "curlUser");
-                        nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                        addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "curlUser");
+                        nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                        addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                         if (pslTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(pslTransaction);
+                            mobileCoreNetworkTransactions.destroy(pslTransaction);
                     }
                 }
 
@@ -5366,10 +5370,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         onDialogRejectRecordStatus = RecordStatus.SRI_REJECTED_INVALID_DESTINATION_REFERENCE;
                         // Transaction
                         Long sriTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "psiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "psiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "curlUser");
                         if (sriTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriTransaction);
                     }
                     // SRISM InvalidDestinationReference
                     if (mapApplicationContextName == MAPApplicationContextName.shortMsgGatewayContext) {
@@ -5381,10 +5385,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         onDialogRejectRecordStatus = RecordStatus.SRISM_REJECTED_INVALID_DESTINATION_REFERENCE;
                         // Transaction
                         Long sriForSMTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "psiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "psiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "curlUser");
                         if (sriForSMTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriForSMTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriForSMTransaction);
                     }
                     // ATI InvalidDestinationReference
                     if (mapApplicationContextName == MAPApplicationContextName.anyTimeEnquiryContext) {
@@ -5395,11 +5399,11 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         reason = "ATI Invalid Destination Reference";
                         onDialogRejectRecordStatus = RecordStatus.ATI_REJECTED_INVALID_DESTINATION_REFERENCE;
                         // Transaction
-                        Long atiTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(atiTransaction, "atiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(atiTransaction, "curlUser");
+                        Long atiTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(atiTransaction, "atiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(atiTransaction, "curlUser");
                         if (atiTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(atiTransaction);
+                            mobileCoreNetworkTransactions.destroy(atiTransaction);
                     }
                     // PSI InvalidDestinationReference
                     if (mapApplicationContextName == MAPApplicationContextName.subscriberInfoEnquiryContext) {
@@ -5409,16 +5413,16 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "PSI";
                         reason = "PSI Invalid Destination Reference";
                         onDialogRejectRecordStatus = RecordStatus.PSI_REJECTED_INVALID_DESTINATION_REFERENCE;
-                        Long psiTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "curlUser");
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "psiMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "sriForSMImsi");
+                        Long psiTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "psiMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "sriForSMImsi");
                         if (targetImsi == null)
-                            targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "sriImsi");
+                            targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "sriImsi");
                         if (targetImsi == null)
-                            targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "psiOnlyImsi");
+                            targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "psiOnlyImsi");
                         if (psiTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(psiTransaction);
+                            mobileCoreNetworkTransactions.destroy(psiTransaction);
                     }
                     // SRILCS InvalidDestinationReference
                     if (mapApplicationContextName == MAPApplicationContextName.locationSvcGatewayContext) {
@@ -5428,15 +5432,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "SRILCS";
                         reason = "SRILCS Invalid Destination Reference";
                         onDialogRejectRecordStatus = RecordStatus.SRILCS_REJECTED_INVALID_DESTINATION_REFERENCE;
-                        Long sriForLcsTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "pslMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "pslImsi");
+                        Long sriForLcsTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslImsi");
                         referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslLcsReferenceNumber");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "curlUser");
-                        nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                        addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "curlUser");
+                        nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                        addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                         if (sriForLcsTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriForLcsTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriForLcsTransaction);
                     }
                     // PSL InvalidDestinationReference
                     if (mapApplicationContextName == MAPApplicationContextName.locationSvcEnquiryContext) {
@@ -5446,15 +5450,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "PSL";
                         reason = "PSL Invalid Destination Reference";
                         onDialogRejectRecordStatus = RecordStatus.PSL_REJECTED_INVALID_DESTINATION_REFERENCE;
-                        Long pslTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "pslMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "pslImsi");
+                        Long pslTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslImsi");
                         referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslLcsReferenceNumber");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "curlUser");
-                        nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                        addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "curlUser");
+                        nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                        addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                         if (pslTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(pslTransaction);
+                            mobileCoreNetworkTransactions.destroy(pslTransaction);
                     }
                 }
 
@@ -5475,10 +5479,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         onDialogRejectRecordStatus = RecordStatus.SRI_REJECTED_INVALID_ORIGINATING_REFERENCE;
                         // Transaction
                         Long sriTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "psiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "psiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "curlUser");
                         if (sriTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriTransaction);
                     }
                     // SRISM InvalidOriginatingReference
                     if (mapApplicationContextName == MAPApplicationContextName.shortMsgGatewayContext) {
@@ -5490,10 +5494,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         onDialogRejectRecordStatus = RecordStatus.SRISM_REJECTED_INVALID_ORIGINATING_REFERENCE;
                         // Transaction
                         Long sriForSMTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "psiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "psiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "curlUser");
                         if (sriForSMTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriForSMTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriForSMTransaction);
                     }
                     // ATI InvalidOriginatingReference
                     if (mapApplicationContextName == MAPApplicationContextName.anyTimeEnquiryContext) {
@@ -5504,11 +5508,11 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         reason = "ATI Invalid Originating Reference";
                         onDialogRejectRecordStatus = RecordStatus.ATI_REJECTED_INVALID_ORIGINATING_REFERENCE;
                         // Transaction
-                        Long atiTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(atiTransaction, "atiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(atiTransaction, "curlUser");
+                        Long atiTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(atiTransaction, "atiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(atiTransaction, "curlUser");
                         if (atiTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(atiTransaction);
+                            mobileCoreNetworkTransactions.destroy(atiTransaction);
                     }
                     // PSI InvalidOriginatingReference
                     if (mapApplicationContextName == MAPApplicationContextName.subscriberInfoEnquiryContext) {
@@ -5518,16 +5522,16 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "PSI";
                         reason = "PSI Invalid Originating Reference";
                         onDialogRejectRecordStatus = RecordStatus.PSI_REJECTED_INVALID_ORIGINATING_REFERENCE;
-                        Long psiTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "curlUser");
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "psiMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "sriForSMImsi");
+                        Long psiTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "psiMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "sriForSMImsi");
                         if (targetImsi == null)
-                            targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "sriImsi");
+                            targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "sriImsi");
                         if (targetImsi == null)
-                            targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "psiOnlyImsi");
+                            targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "psiOnlyImsi");
                         if (psiTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(psiTransaction);
+                            mobileCoreNetworkTransactions.destroy(psiTransaction);
                     }
                     // SRILCS InvalidOriginatingReference
                     if (mapApplicationContextName == MAPApplicationContextName.locationSvcGatewayContext) {
@@ -5537,15 +5541,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "SRILCS";
                         reason = "SRILCS Invalid Originating Reference";
                         onDialogRejectRecordStatus = RecordStatus.SRILCS_REJECTED_INVALID_ORIGINATING_REFERENCE;
-                        Long sriForLcsTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "pslMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "pslImsi");
+                        Long sriForLcsTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslImsi");
                         referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslLcsReferenceNumber");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "curlUser");
-                        nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                        addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "curlUser");
+                        nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                        addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                         if (sriForLcsTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriForLcsTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriForLcsTransaction);
                     }
                     // PSL InvalidOriginatingReference
                     if (mapApplicationContextName == MAPApplicationContextName.locationSvcEnquiryContext) {
@@ -5555,15 +5559,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "PSL";
                         reason = "PSL Invalid Originating Reference";
                         onDialogRejectRecordStatus = RecordStatus.PSL_REJECTED_INVALID_ORIGINATING_REFERENCE;
-                        Long pslTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "pslMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "pslImsi");
+                        Long pslTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslImsi");
                         referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslLcsReferenceNumber");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "curlUser");
-                        nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                        addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "curlUser");
+                        nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                        addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                         if (pslTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(pslTransaction);
+                            mobileCoreNetworkTransactions.destroy(pslTransaction);
                     }
                 }
 
@@ -5584,10 +5588,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         onDialogRejectRecordStatus = RecordStatus.SRI_REJECTED_NO_REASON_GIVEN;
                         // Transaction
                         Long sriTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "psiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "psiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "curlUser");
                         if (sriTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriTransaction);
                     }
                     // SRISM NoReasonGiven
                     if (mapApplicationContextName == MAPApplicationContextName.shortMsgGatewayContext) {
@@ -5599,10 +5603,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         onDialogRejectRecordStatus = RecordStatus.SRISM_REJECTED_NO_REASON_GIVEN;
                         // Transaction
                         Long sriForSMTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "psiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "psiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "curlUser");
                         if (sriForSMTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriForSMTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriForSMTransaction);
                     }
                     // ATI NoReasonGiven
                     if (mapApplicationContextName == MAPApplicationContextName.anyTimeEnquiryContext) {
@@ -5613,11 +5617,11 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         reason = "ATI No Reason Given";
                         onDialogRejectRecordStatus = RecordStatus.ATI_REJECTED_NO_REASON_GIVEN;
                         // Transaction
-                        Long atiTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(atiTransaction, "atiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(atiTransaction, "curlUser");
+                        Long atiTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(atiTransaction, "atiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(atiTransaction, "curlUser");
                         if (atiTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(atiTransaction);
+                            mobileCoreNetworkTransactions.destroy(atiTransaction);
                     }
                     // PSI NoReasonGiven
                     if (mapApplicationContextName == MAPApplicationContextName.subscriberInfoEnquiryContext) {
@@ -5627,16 +5631,16 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "PSI";
                         reason = "PSI No Reason Given";
                         onDialogRejectRecordStatus = RecordStatus.PSI_REJECTED_NO_REASON_GIVEN;
-                        Long psiTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "curlUser");
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "psiMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "sriForSMImsi");
+                        Long psiTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "psiMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "sriForSMImsi");
                         if (targetImsi == null)
-                            targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "sriImsi");
+                            targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "sriImsi");
                         if (targetImsi == null)
-                            targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "psiOnlyImsi");
+                            targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "psiOnlyImsi");
                         if (psiTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(psiTransaction);
+                            mobileCoreNetworkTransactions.destroy(psiTransaction);
                     }
                     // SRILCS NoReasonGiven
                     if (mapApplicationContextName == MAPApplicationContextName.locationSvcGatewayContext) {
@@ -5646,15 +5650,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "SRILCS";
                         reason = "SRILCS No Reason Given";
                         onDialogRejectRecordStatus = RecordStatus.SRILCS_REJECTED_NO_REASON_GIVEN;
-                        Long sriForLcsTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "pslMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "pslImsi");
+                        Long sriForLcsTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslImsi");
                         referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslLcsReferenceNumber");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "curlUser");
-                        nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                        addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "curlUser");
+                        nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                        addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                         if (sriForLcsTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriForLcsTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriForLcsTransaction);
                     }
                     // PSL NoReasonGiven
                     if (mapApplicationContextName == MAPApplicationContextName.locationSvcEnquiryContext) {
@@ -5664,15 +5668,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "PSL";
                         reason = "PSL No Reason Given";
                         onDialogRejectRecordStatus = RecordStatus.PSL_REJECTED_NO_REASON_GIVEN;
-                        Long pslTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "pslMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "pslImsi");
+                        Long pslTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslImsi");
                         referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslLcsReferenceNumber");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "curlUser");
-                        nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                        addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "curlUser");
+                        nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                        addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                         if (pslTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(pslTransaction);
+                            mobileCoreNetworkTransactions.destroy(pslTransaction);
                     }
                 }
 
@@ -5693,9 +5697,9 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         onDialogRejectRecordStatus = RecordStatus.SRI_REJECTED_REMOTE_NODE_NOT_REACHABLE;
                         // Transaction
                         Long sriTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "psiMsisdn");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "psiMsisdn");
                         if (sriTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriTransaction);
                     }
                     // SRISM RemoteNodeNotReachable
                     if (mapApplicationContextName == MAPApplicationContextName.shortMsgGatewayContext) {
@@ -5707,10 +5711,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         onDialogRejectRecordStatus = RecordStatus.SRISM_REJECTED_REMOTE_NODE_NOT_REACHABLE;
                         // Transaction
                         Long sriForSMTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "psiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "psiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "curlUser");
                         if (sriForSMTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriForSMTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriForSMTransaction);
                     }
                     // ATI RemoteNodeNotReachable
                     if (mapApplicationContextName == MAPApplicationContextName.anyTimeEnquiryContext) {
@@ -5721,10 +5725,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         reason = "ATI Remote Node Not Reachable";
                         onDialogRejectRecordStatus = RecordStatus.ATI_REJECTED_REMOTE_NODE_NOT_REACHABLE;
                         // Transaction
-                        Long atiTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(atiTransaction, "atiMsisdn");
+                        Long atiTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(atiTransaction, "atiMsisdn");
                         if (atiTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(atiTransaction);
+                            mobileCoreNetworkTransactions.destroy(atiTransaction);
                     }
                     // PSI RemoteNodeNotReachable
                     if (mapApplicationContextName == MAPApplicationContextName.subscriberInfoEnquiryContext) {
@@ -5734,16 +5738,16 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "PSI";
                         reason = "PSI Remote Node Not Reachable";
                         onDialogRejectRecordStatus = RecordStatus.PSI_REJECTED_REMOTE_NODE_NOT_REACHABLE;
-                        Long psiTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "curlUser");
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "psiMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "sriForSMImsi");
+                        Long psiTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "psiMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "sriForSMImsi");
                         if (targetImsi == null)
-                            targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "sriImsi");
+                            targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "sriImsi");
                         if (targetImsi == null)
-                            targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "psiOnlyImsi");
+                            targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "psiOnlyImsi");
                         if (psiTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(psiTransaction);
+                            mobileCoreNetworkTransactions.destroy(psiTransaction);
                     }
                     // SRILCS RemoteNodeNotReachable
                     if (mapApplicationContextName == MAPApplicationContextName.locationSvcGatewayContext) {
@@ -5753,15 +5757,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "SRILCS";
                         reason = "SRILCS Remote Node Not Reachable";
                         onDialogRejectRecordStatus = RecordStatus.SRILCS_REJECTED_REMOTE_NODE_NOT_REACHABLE;
-                        Long sriForLcsTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "pslMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "pslImsi");
+                        Long sriForLcsTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslImsi");
                         referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslLcsReferenceNumber");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "curlUser");
-                        nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                        addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "curlUser");
+                        nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                        addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                         if (sriForLcsTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriForLcsTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriForLcsTransaction);
                     }
                     // PSL RemoteNodeNotReachable
                     if (mapApplicationContextName == MAPApplicationContextName.locationSvcEnquiryContext) {
@@ -5771,15 +5775,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "PSL";
                         reason = "PSL Remote Node Not Reachable";
                         onDialogRejectRecordStatus = RecordStatus.PSL_REJECTED_REMOTE_NODE_NOT_REACHABLE;
-                        Long pslTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "pslMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "pslImsi");
+                        Long pslTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslImsi");
                         referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslLcsReferenceNumber");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "curlUser");
-                        nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                        addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "curlUser");
+                        nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                        addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                         if (pslTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(pslTransaction);
+                            mobileCoreNetworkTransactions.destroy(pslTransaction);
                     }
                 }
 
@@ -5800,10 +5804,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         onDialogRejectRecordStatus = RecordStatus.SRI_REJECTED_POTENTIAL_VERSION_INCOMPATIBILITY;
                         // Transaction
                         Long sriTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "psiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "psiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "curlUser");
                         if (sriTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriTransaction);
                     }
                     // SRISM PotentialVersionIncompatibility
                     if (mapApplicationContextName == MAPApplicationContextName.shortMsgGatewayContext) {
@@ -5815,10 +5819,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         onDialogRejectRecordStatus = RecordStatus.SRISM_REJECTED_POTENTIAL_VERSION_INCOMPATIBILITY;
                         // Transaction
                         Long sriForSMTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "psiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "psiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "curlUser");
                         if (sriForSMTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriForSMTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriForSMTransaction);
                     }
                     // ATI PotentialVersionIncompatibility
                     if (mapApplicationContextName == MAPApplicationContextName.anyTimeEnquiryContext) {
@@ -5829,11 +5833,11 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         reason = "ATI Potential Version Incompatibility";
                         onDialogRejectRecordStatus = RecordStatus.ATI_REJECTED_POTENTIAL_VERSION_INCOMPATIBILITY;
                         // Transaction
-                        Long atiTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(atiTransaction, "atiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(atiTransaction, "curlUser");
+                        Long atiTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(atiTransaction, "atiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(atiTransaction, "curlUser");
                         if (atiTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(atiTransaction);
+                            mobileCoreNetworkTransactions.destroy(atiTransaction);
                     }
                     // PSI PotentialVersionIncompatibility
                     if (mapApplicationContextName == MAPApplicationContextName.subscriberInfoEnquiryContext) {
@@ -5843,16 +5847,16 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "PSI";
                         reason = "PSI Potential Version Incompatibility";
                         onDialogRejectRecordStatus = RecordStatus.PSI_REJECTED_POTENTIAL_VERSION_INCOMPATIBILITY;
-                        Long psiTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "curlUser");
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "psiMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "sriForSMImsi");
+                        Long psiTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "psiMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "sriForSMImsi");
                         if (targetImsi == null)
-                            targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "sriImsi");
+                            targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "sriImsi");
                         if (targetImsi == null)
-                            targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "psiOnlyImsi");
+                            targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "psiOnlyImsi");
                         if (psiTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(psiTransaction);
+                            mobileCoreNetworkTransactions.destroy(psiTransaction);
                     }
                     // SRILCS PotentialVersionIncompatibility
                     if (mapApplicationContextName == MAPApplicationContextName.locationSvcGatewayContext) {
@@ -5862,15 +5866,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "SRILCS";
                         reason = "SRILCS Potential Version Incompatibility";
                         onDialogRejectRecordStatus = RecordStatus.SRILCS_REJECTED_POTENTIAL_VERSION_INCOMPATIBILITY;
-                        Long sriForLcsTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "pslMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "pslImsi");
+                        Long sriForLcsTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslImsi");
                         referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslLcsReferenceNumber");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "curlUser");
-                        nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                        addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "curlUser");
+                        nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                        addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                         if (sriForLcsTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriForLcsTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriForLcsTransaction);
                     }
                     // PSL PotentialVersionIncompatibility
                     if (mapApplicationContextName == MAPApplicationContextName.locationSvcEnquiryContext) {
@@ -5880,15 +5884,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "PSL";
                         reason = "PSL Potential Version Incompatibility";
                         onDialogRejectRecordStatus = RecordStatus.PSL_REJECTED_POTENTIAL_VERSION_INCOMPATIBILITY;
-                        Long pslTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "pslMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "pslImsi");
+                        Long pslTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslImsi");
                         referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslLcsReferenceNumber");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "curlUser");
-                        nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                        addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "curlUser");
+                        nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                        addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                         if (pslTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(pslTransaction);
+                            mobileCoreNetworkTransactions.destroy(pslTransaction);
                     }
                 }
 
@@ -5909,10 +5913,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         onDialogRejectRecordStatus = RecordStatus.SRI_REJECTED_POTENTIAL_VERSION_INCOMPATIBILITY_TCAP;
                         // Transaction
                         Long sriTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "psiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "psiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriTransaction, "curlUser");
                         if (sriTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriTransaction);
                     }
                     // SRISM PotentialVersionIncompatibilityTcap
                     if (mapApplicationContextName == MAPApplicationContextName.shortMsgGatewayContext) {
@@ -5924,10 +5928,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         onDialogRejectRecordStatus = RecordStatus.SRISM_REJECTED_POTENTIAL_VERSION_INCOMPATIBILITY_TCAP;
                         // Transaction
                         Long sriForSMTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "psiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForSMTransaction, "curlUser");
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "psiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriForSMTransaction, "curlUser");
                         if (sriForSMTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriForSMTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriForSMTransaction);
                     }
                     // ATI PotentialVersionIncompatibilityTcap
                     if (mapApplicationContextName == MAPApplicationContextName.anyTimeEnquiryContext) {
@@ -5938,11 +5942,11 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         reason = "ATI Potential Version Incompatibility TCAP";
                         onDialogRejectRecordStatus = RecordStatus.ATI_REJECTED_POTENTIAL_VERSION_INCOMPATIBILITY_TCAP;
                         // Transaction
-                        Long atiTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(atiTransaction, "atiMsisdn");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(atiTransaction, "curlUser");
+                        Long atiTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(atiTransaction, "atiMsisdn");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(atiTransaction, "curlUser");
                         if (atiTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(atiTransaction);
+                            mobileCoreNetworkTransactions.destroy(atiTransaction);
                     }
                     // PSI PotentialVersionIncompatibilityTcap
                     if (mapApplicationContextName == MAPApplicationContextName.subscriberInfoEnquiryContext) {
@@ -5952,15 +5956,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "PSI";
                         reason = "PSI Potential Version Incompatibility TCAP";
                         onDialogRejectRecordStatus = RecordStatus.PSI_REJECTED_POTENTIAL_VERSION_INCOMPATIBILITY_TCAP;
-                        Long psiTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "psiMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "sriForSMImsi");
+                        Long psiTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "psiMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "sriForSMImsi");
                         if (targetImsi == null)
-                            targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(psiTransaction, "sriImsi");
+                            targetImsi = (String) mobileCoreNetworkTransactions.getValue(psiTransaction, "sriImsi");
                         if (targetImsi == null)
-                            targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiOnlyImsi");
+                            targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiOnlyImsi");
                         if (psiTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(psiTransaction);
+                            mobileCoreNetworkTransactions.destroy(psiTransaction);
                     }
                     // SRILCS PotentialVersionIncompatibilityTcap
                     if (mapApplicationContextName == MAPApplicationContextName.locationSvcGatewayContext) {
@@ -5970,15 +5974,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "SRILCS";
                         reason = "SRILCS Potential Version Incompatibility TCAP";
                         onDialogRejectRecordStatus = RecordStatus.SRILCS_REJECTED_POTENTIAL_VERSION_INCOMPATIBILITY_TCAP;
-                        Long sriForLcsTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "pslMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "pslImsi");
+                        Long sriForLcsTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslImsi");
                         referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "pslLcsReferenceNumber");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(sriForLcsTransaction, "curlUser");
-                        nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                        addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(sriForLcsTransaction, "curlUser");
+                        nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                        addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                         if (sriForLcsTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(sriForLcsTransaction);
+                            mobileCoreNetworkTransactions.destroy(sriForLcsTransaction);
                     }
                     // PSL PotentialVersionIncompatibilityTcap
                     if (mapApplicationContextName == MAPApplicationContextName.locationSvcEnquiryContext) {
@@ -5988,15 +5992,15 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         operation = "PSL";
                         reason = "PSL Potential Version Incompatibility TCAP";
                         onDialogRejectRecordStatus = RecordStatus.PSL_REJECTED_POTENTIAL_VERSION_INCOMPATIBILITY_TCAP;
-                        Long pslTransaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-                        targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "pslMsisdn");
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "pslImsi");
+                        Long pslTransaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+                        targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslMsisdn");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslImsi");
                         referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(pslTransaction, "pslLcsReferenceNumber");
-                        curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(pslTransaction, "curlUser");
-                        nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                        addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                        curlUser = (String) mobileCoreNetworkTransactions.getValue(pslTransaction, "curlUser");
+                        nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                        addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                         if (pslTransaction != null)
-                            mobileCoreNetworkTransactions.Instance().destroy(pslTransaction);
+                            mobileCoreNetworkTransactions.destroy(pslTransaction);
                     }
                 }
 
@@ -6005,13 +6009,13 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
         } catch (Exception e) {
             logger.severe("Exception on onDialogReject(): " + e.getMessage(), e);
             if (transaction != null)
-                mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                mobileCoreNetworkTransactions.destroy(transaction);
             this.reportLocationRequestError(MLPResponse.MLPResultType.SYSTEM_FAILURE, "Exception on MAP Dialog Rejected",
                 operation, targetMsisdn, targetImsi, referenceNumber, nnn, addNum, null, null, mlpTriggeredReportingService);
         }
 
         if (transaction != null)
-            mobileCoreNetworkTransactions.Instance().destroy(transaction);
+            mobileCoreNetworkTransactions.destroy(transaction);
         this.reportLocationRequestError(MLPResponse.MLPResultType.SERVICE_NOT_SUPPORTED, "Dialog Rejected: " + reason,
             operation, targetMsisdn, targetImsi, referenceNumber, nnn, addNum,null, null, mlpTriggeredReportingService);
         MAPDialog mapDialog = event.getMAPDialog();
@@ -6043,10 +6047,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
         RecordStatus onDialogUserAbortRecordStatus = RecordStatus.MAP_USER_DIALOG_ABORT;
 
         if (event.getMAPDialog() != null) {
-            transaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-            dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(transaction, "transactionStart");
-            TimerID timerID = (TimerID) mobileCoreNetworkTransactions.Instance().getValue(transaction, "timerID");
-            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(transaction, "mlpTriggeredReportingService");
+            transaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+            dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(transaction, "transactionStart");
+            TimerID timerID = (TimerID) mobileCoreNetworkTransactions.getValue(transaction, "timerID");
+            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.getValue(transaction, "mlpTriggeredReportingService");
             if (timerID != null)
                 this.timerFacility.cancelTimer(timerID);
             if (event.getMAPDialog().getRemoteAddress() != null)
@@ -6058,60 +6062,60 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 if (mapApplicationContextName == MAPApplicationContextName.anyTimeEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "ATI";
                     onDialogUserAbortRecordStatus = RecordStatus.ATI_DIALOG_U_ABORT;
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "atiMsisdn");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "atiMsisdn");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationSvcGatewayContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "SRILCS";
                     onDialogUserAbortRecordStatus = RecordStatus.SRILCS_DIALOG_U_ABORT;
                     referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(transaction, "pslLcsReferenceNumber");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                    addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                    addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationSvcEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "PSL";
                     onDialogUserAbortRecordStatus = RecordStatus.PSL_DIALOG_U_ABORT;
                     referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(transaction, "pslLcsReferenceNumber");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                    addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                    addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationInfoRetrievalContext &&
                     (mapApplicationContextVersion == MAPApplicationContextVersion.version3 || mapApplicationContextVersion == MAPApplicationContextVersion.version2)) {
                     operation = "SRI";
                     onDialogUserAbortRecordStatus = RecordStatus.SRI_DIALOG_U_ABORT;
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.shortMsgGatewayContext &&
                     (mapApplicationContextVersion == MAPApplicationContextVersion.version3 || mapApplicationContextVersion == MAPApplicationContextVersion.version2)) {
                     operation = "SRISM";
                     onDialogUserAbortRecordStatus = RecordStatus.SRISM_DIALOG_U_ABORT;
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriForSMImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriForSMImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.subscriberInfoEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "PSI";
                     onDialogUserAbortRecordStatus = RecordStatus.PSI_DIALOG_U_ABORT;
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriForSMImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriForSMImsi");
                     if (targetImsi == null)
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriImsi");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriImsi");
                     if (targetImsi == null)
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiOnlyImsi");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiOnlyImsi");
                 }
             }
         }
         if (transaction != null)
-            mobileCoreNetworkTransactions.Instance().destroy(transaction);
+            mobileCoreNetworkTransactions.destroy(transaction);
         this.reportLocationRequestError(MLPResponse.MLPResultType.UNSPECIFIED_ERROR, "Dialog U-ABORT", operation, targetMsisdn,
             targetImsi, referenceNumber, nnn, addNum, null, null, mlpTriggeredReportingService);
         MAPDialog mapDialog = event.getMAPDialog();
@@ -6143,10 +6147,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
         RecordStatus onDialogProviderAbortRecordStatus = RecordStatus.MAP_PROVIDER_DIALOG_ABORT;
 
         if (event.getMAPDialog() != null) {
-            transaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-            dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(transaction, "transactionStart");
-            TimerID timerID = (TimerID) mobileCoreNetworkTransactions.Instance().getValue(transaction, "timerID");
-            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(transaction, "mlpTriggeredReportingService");
+            transaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+            dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(transaction, "transactionStart");
+            TimerID timerID = (TimerID) mobileCoreNetworkTransactions.getValue(transaction, "timerID");
+            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.getValue(transaction, "mlpTriggeredReportingService");
             if (timerID != null)
                 this.timerFacility.cancelTimer(timerID);
             if (event.getMAPDialog().getRemoteAddress() != null)
@@ -6158,60 +6162,60 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 if (mapApplicationContextName == MAPApplicationContextName.anyTimeEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "ATI";
                     onDialogProviderAbortRecordStatus = RecordStatus.ATI_DIALOG_P_ABORT;
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "atiMsisdn");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "atiMsisdn");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationSvcGatewayContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "SRILCS";
                     onDialogProviderAbortRecordStatus = RecordStatus.SRILCS_DIALOG_P_ABORT;
                     referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(transaction, "pslLcsReferenceNumber");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                    addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                    addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationSvcEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "PSL";
                     onDialogProviderAbortRecordStatus = RecordStatus.PSL_DIALOG_P_ABORT;
                     referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(transaction, "pslLcsReferenceNumber");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                    addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                    addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationInfoRetrievalContext &&
                     (mapApplicationContextVersion == MAPApplicationContextVersion.version3 || mapApplicationContextVersion == MAPApplicationContextVersion.version2)) {
                     operation = "SRI";
                     onDialogProviderAbortRecordStatus = RecordStatus.SRI_DIALOG_P_ABORT;
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.shortMsgGatewayContext &&
                     (mapApplicationContextVersion == MAPApplicationContextVersion.version3 || mapApplicationContextVersion == MAPApplicationContextVersion.version2)) {
                     operation = "SRISM";
                     onDialogProviderAbortRecordStatus = RecordStatus.SRISM_DIALOG_P_ABORT;
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriForSMImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriForSMImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.subscriberInfoEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "PSI";
                     onDialogProviderAbortRecordStatus = RecordStatus.PSI_DIALOG_P_ABORT;
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriForSMImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriForSMImsi");
                     if (targetImsi == null)
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriImsi");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriImsi");
                     if (targetImsi == null)
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiOnlyImsi");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiOnlyImsi");
                 }
             }
         }
         if (transaction != null)
-            mobileCoreNetworkTransactions.Instance().destroy(transaction);
+            mobileCoreNetworkTransactions.destroy(transaction);
         this.reportLocationRequestError(MLPResponse.MLPResultType.UNSPECIFIED_ERROR, "Dialog P-ABORT", operation, targetMsisdn,
             targetImsi, referenceNumber, nnn, addNum, null, null, mlpTriggeredReportingService);
         MAPDialog mapDialog = event.getMAPDialog();
@@ -6260,10 +6264,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
         RecordStatus onInvokeTimeoutRecordStatus = RecordStatus.FAILED_INVOKE_TIMEOUT;
 
         if (event.getMAPDialog() != null) {
-            transaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-            dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(transaction, "transactionStart");
-            TimerID timerID = (TimerID) mobileCoreNetworkTransactions.Instance().getValue(transaction, "timerID");
-            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(transaction, "mlpTriggeredReportingService");
+            transaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+            dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(transaction, "transactionStart");
+            TimerID timerID = (TimerID) mobileCoreNetworkTransactions.getValue(transaction, "timerID");
+            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.getValue(transaction, "mlpTriggeredReportingService");
             if (timerID != null)
                 this.timerFacility.cancelTimer(timerID);
             if (event.getMAPDialog().getApplicationContext() != null) {
@@ -6272,61 +6276,61 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 if (mapApplicationContextName == MAPApplicationContextName.anyTimeEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "ATI";
                     onInvokeTimeoutRecordStatus = RecordStatus.ATI_INVOKE_TIMEOUT;
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "atiMsisdn");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "atiMsisdn");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationSvcGatewayContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "SRILCS";
                     onInvokeTimeoutRecordStatus = RecordStatus.SRILCS_INVOKE_TIMEOUT;
                     referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(transaction, "pslLcsReferenceNumber");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslImsi");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                    addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslImsi");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                    addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationSvcEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "PSL";
                     onInvokeTimeoutRecordStatus = RecordStatus.PSL_INVOKE_TIMEOUT;
                     referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(transaction, "pslLcsReferenceNumber");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslImsi");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                    addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslImsi");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                    addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationInfoRetrievalContext &&
                     (mapApplicationContextVersion == MAPApplicationContextVersion.version3 || mapApplicationContextVersion == MAPApplicationContextVersion.version2)) {
                     operation = "SRI";
                     onInvokeTimeoutRecordStatus = RecordStatus.SRI_INVOKE_TIMEOUT;
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiNNN");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiNNN");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.shortMsgGatewayContext &&
                     (mapApplicationContextVersion == MAPApplicationContextVersion.version3 || mapApplicationContextVersion == MAPApplicationContextVersion.version2)) {
                     operation = "SRISM";
                     onInvokeTimeoutRecordStatus = RecordStatus.SRISM_INVOKE_TIMEOUT;
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiNNN");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiNNN");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.subscriberInfoEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "PSI";
                     onInvokeTimeoutRecordStatus = RecordStatus.PSI_INVOKE_TIMEOUT;
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiNNN");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriForSMImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiNNN");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriForSMImsi");
                     if (targetImsi == null)
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriImsi");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriImsi");
                     if (targetImsi == null)
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiOnlyImsi");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiOnlyImsi");
                 }
             }
         }
         if (transaction != null)
-            mobileCoreNetworkTransactions.Instance().destroy(transaction);
+            mobileCoreNetworkTransactions.destroy(transaction);
         this.reportLocationRequestError(MLPResponse.MLPResultType.TIMEOUT, "Invoke timeout", operation, targetMsisdn, targetImsi,
             referenceNumber, nnn, addNum, null, null, mlpTriggeredReportingService);
         MAPDialog mapDialog = event.getMAPDialog();
@@ -6359,10 +6363,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
         RecordStatus onErrorComponentRecordStatus = RecordStatus.MAP_COMPONENT_ERROR;
 
         if (event.getMAPDialog() != null) {
-            transaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-            dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(transaction, "transactionStart");
-            TimerID timerID = (TimerID) mobileCoreNetworkTransactions.Instance().getValue(transaction, "timerID");
-            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(transaction, "mlpTriggeredReportingService");
+            transaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+            dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(transaction, "transactionStart");
+            TimerID timerID = (TimerID) mobileCoreNetworkTransactions.getValue(transaction, "timerID");
+            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.getValue(transaction, "mlpTriggeredReportingService");
             if (timerID != null)
                 this.timerFacility.cancelTimer(timerID);
             if (event.getMAPDialog().getRemoteAddress() != null)
@@ -6373,48 +6377,48 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 MAPApplicationContextVersion mapApplicationContextVersion = event.getMAPDialog().getApplicationContext().getApplicationContextVersion();
                 if (mapApplicationContextName == MAPApplicationContextName.anyTimeEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "ATI";
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "atiMsisdn");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "atiMsisdn");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationSvcGatewayContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "SRILCS";
                     referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(transaction, "pslLcsReferenceNumber");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                    addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                    addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationSvcEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "PSL";
                     referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(transaction, "pslLcsReferenceNumber");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                    addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                    addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationInfoRetrievalContext &&
                     (mapApplicationContextVersion == MAPApplicationContextVersion.version3 || mapApplicationContextVersion == MAPApplicationContextVersion.version2)) {
                     operation = "SRI";
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.shortMsgGatewayContext &&
                     (mapApplicationContextVersion == MAPApplicationContextVersion.version3 || mapApplicationContextVersion == MAPApplicationContextVersion.version2)) {
                     operation = "SRISM";
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.subscriberInfoEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "PSI";
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriForSMImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriForSMImsi");
                     if (targetImsi == null)
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriImsi");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriImsi");
                     if (targetImsi == null)
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiOnlyImsi");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiOnlyImsi");
                 }
             }
         }
@@ -7384,7 +7388,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 break;
         }
         if (transaction != null)
-            mobileCoreNetworkTransactions.Instance().destroy(transaction);
+            mobileCoreNetworkTransactions.destroy(transaction);
         this.reportLocationRequestError(mlpResultType, "MAP Component error: " + mapErrorComponentString + ", MAP error code value: " + error_code,
             operation, targetMsisdn, targetImsi, referenceNumber, nnn, addNum, null, null, mlpTriggeredReportingService);
         MAPDialog mapDialog = event.getMAPDialog();
@@ -7422,10 +7426,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
         InvokeProblemType onRejectComponentInvokeProblemType = null;
         MLPResponse.MLPResultType mlpResultType = MLPResponse.MLPResultType.SYSTEM_FAILURE;
         if (event.getMAPDialog() != null) {
-            transaction = mobileCoreNetworkTransactions.Instance().getTransactionId(event.getMAPDialog().getLocalDialogId());
-            dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(transaction, "transactionStart");
-            TimerID timerID = (TimerID) mobileCoreNetworkTransactions.Instance().getValue(transaction, "timerID");
-            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(transaction, "mlpTriggeredReportingService");
+            transaction = mobileCoreNetworkTransactions.getTransactionId(event.getMAPDialog().getLocalDialogId());
+            dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(transaction, "transactionStart");
+            TimerID timerID = (TimerID) mobileCoreNetworkTransactions.getValue(transaction, "timerID");
+            mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.getValue(transaction, "mlpTriggeredReportingService");
             if (timerID != null)
                 this.timerFacility.cancelTimer(timerID);
             if (event.getMAPDialog().getRemoteAddress() != null)
@@ -7436,53 +7440,53 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 MAPApplicationContextVersion mapApplicationContextVersion = event.getMAPDialog().getApplicationContext().getApplicationContextVersion();
                 if (mapApplicationContextName == MAPApplicationContextName.anyTimeEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "ATI";
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "atiMsisdn");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "atiMsisdn");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationSvcGatewayContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "SRILCS";
                     referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(transaction, "pslLcsReferenceNumber");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                    addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                    addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationSvcEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "PSL";
                     referenceNumber = (Integer) mobileCoreNetworkTransactions.getValue(transaction, "pslLcsReferenceNumber");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslImsi");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    nnn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslNNN");
-                    addNum = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "pslRemoteAddress");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    nnn = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslNNN");
+                    addNum = (String) mobileCoreNetworkTransactions.getValue(transaction, "pslRemoteAddress");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.locationInfoRetrievalContext &&
                     (mapApplicationContextVersion == MAPApplicationContextVersion.version3 || mapApplicationContextVersion == MAPApplicationContextVersion.version2)) {
                     operation = "SRI";
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.shortMsgGatewayContext &&
                     (mapApplicationContextVersion == MAPApplicationContextVersion.version3 || mapApplicationContextVersion == MAPApplicationContextVersion.version2)) {
                     operation = "SRISM";
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
                 }
                 if (mapApplicationContextName == MAPApplicationContextName.subscriberInfoEnquiryContext && mapApplicationContextVersion == MAPApplicationContextVersion.version3) {
                     operation = "PSI";
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    targetMsisdn = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiMsisdn");
-                    targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriForSMImsi");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    targetMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiMsisdn");
+                    targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriForSMImsi");
                     if (targetImsi == null)
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "sriImsi");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "sriImsi");
                     if (targetImsi == null)
-                        targetImsi = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "psiOnlyImsi");
+                        targetImsi = (String) mobileCoreNetworkTransactions.getValue(transaction, "psiOnlyImsi");
                 }
             }
         }
         if (transaction != null)
-            mobileCoreNetworkTransactions.Instance().destroy(transaction);
+            mobileCoreNetworkTransactions.destroy(transaction);
         if (event.getProblem() != null) {
             onRejectComponentInvokeProblemType = event.getProblem().getInvokeProblemType();
             if (event.getProblem().getInvokeProblemType() != null)
@@ -8076,10 +8080,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     if (transaction == null) {
                         throw new SLhException("No transaction found from RIA Diameter Session Id");
                     }
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    httpRequestType = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "httpRequestType");
-                    DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(transaction, "transactionStart");
-                    mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(transaction, "mlpTriggeredReportingService");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    httpRequestType = (String) mobileCoreNetworkTransactions.getValue(transaction, "httpRequestType");
+                    DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(transaction, "transactionStart");
+                    mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.getValue(transaction, "mlpTriggeredReportingService");
                     gmlcCdrState.setDialogStartTime(dialogStartTime);
                     if (gmlcCdrState.isInitialized()) {
                         gmlcCdrState.setCurlUser(curlUser);
@@ -8091,7 +8095,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     if (gmlcCdrState.isInitialized()) {
                         gmlcCdrState.setCurlUser(curlUser);
                     }
-                    TimerID riaTimerID = (TimerID) mobileCoreNetworkTransactions.Instance().getValue(transaction, "timerID");
+                    TimerID riaTimerID = (TimerID) mobileCoreNetworkTransactions.getValue(transaction, "timerID");
                     if (riaTimerID != null)
                         this.timerFacility.cancelTimer(riaTimerID);
                     SLhRirAvpValues slhRirRequestValues = (SLhRirAvpValues) mobileCoreNetworkTransactions.getValue(transaction, "slhRirRequestValues");
@@ -8187,22 +8191,22 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                             gmlcCdrState.setISDNAddressString(AVPHandler.tbcd2IsdnAddressString(msisdn));
                             gmlcCdrState.setLmsi(AVPHandler.byte2Lmsi(lmsi));
                             if (additionalServingNodeAvp != null) {
-                                gmlcCdrState.setSgsnNumber(AVPHandler.byte2IsdnAddressString(additionalSgsnNumber));
+                                gmlcCdrState.setSgsnNumber(AVPHandler.tbcd2IsdnAddressString(additionalSgsnNumber));
                                 gmlcCdrState.setSgsnName(AVPHandler.diameterIdToMapDiameterId(additionalSgsnName));
                                 gmlcCdrState.setSgsnRealm(AVPHandler.diameterIdToMapDiameterId(additionalSgsnRealm));
                                 gmlcCdrState.setMmeName(AVPHandler.diameterIdToMapDiameterId(additionalMmeName));
                                 gmlcCdrState.setMmeRealm(AVPHandler.diameterIdToMapDiameterId(additionalMmeRealm));
-                                gmlcCdrState.setMscNumber(AVPHandler.byte2IsdnAddressString(additionalMscNumber));
+                                gmlcCdrState.setMscNumber(AVPHandler.tbcd2IsdnAddressString(additionalMscNumber));
                                 gmlcCdrState.setAaaServerName(AVPHandler.diameterIdToMapDiameterId(additional3gppAAAServerName));
                                 gmlcCdrState.sethGmlcAddress(AVPHandler.address2GsnAddress(additionalGmlcAddress));
                             }
                             if (servingNodeAvp != null) {
-                                gmlcCdrState.setSgsnNumber(AVPHandler.byte2IsdnAddressString(sgsnNumber));
+                                gmlcCdrState.setSgsnNumber(AVPHandler.tbcd2IsdnAddressString(sgsnNumber));
                                 gmlcCdrState.setSgsnName(AVPHandler.diameterIdToMapDiameterId(sgsnName));
                                 gmlcCdrState.setSgsnRealm(AVPHandler.diameterIdToMapDiameterId(sgsnRealm));
                                 gmlcCdrState.setMmeName(AVPHandler.diameterIdToMapDiameterId(mmeName));
                                 gmlcCdrState.setMmeRealm(AVPHandler.diameterIdToMapDiameterId(mmeRealm));
-                                gmlcCdrState.setMscNumber(AVPHandler.byte2IsdnAddressString(mscNumber));
+                                gmlcCdrState.setMscNumber(AVPHandler.tbcd2IsdnAddressString(mscNumber));
                                 gmlcCdrState.setAaaServerName(AVPHandler.diameterIdToMapDiameterId(tgppAAAServerName));
                                 gmlcCdrState.sethGmlcAddress(AVPHandler.address2GsnAddress(gmlcAddress));
                             }
@@ -8995,7 +8999,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     } else {
                         if (gmlcCdrState.isInitialized()) {
                             if (transaction != null)
-                                mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                                mobileCoreNetworkTransactions.destroy(transaction);
                             handleRecordAndLocationReportOnDiameterResultCode(resultCode, mlpRespResult, mlpClientErrorMessage, msisdnAddress, imsi,
                                 "RIR", referenceNumber, gmlcCdrState, true,
                                 riaOriginHost != null ? riaOriginHost.toString() : null, riaOriginRealm != null ? riaOriginRealm.toString() : null,
@@ -9014,7 +9018,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     riaOriginHost != null ? riaOriginHost.toString() : null, riaOriginRealm != null ? riaOriginRealm.toString() : null,
                     mlpTriggeredReportingService);
                 if (transaction != null)
-                    mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                    mobileCoreNetworkTransactions.destroy(transaction);
             }
         } catch (Exception e) {
             logger.severe(String.format("Error while trying to process onLCSRoutingInfoAnswer=%s", riaEvent), e);
@@ -9024,7 +9028,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 riaEvent != null ? riaEvent.getOriginHost().toString() : null, riaEvent != null ? riaEvent.getOriginRealm().toString() : null,
                 mlpTriggeredReportingService);
             if (transaction != null)
-                mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                mobileCoreNetworkTransactions.destroy(transaction);
         } finally {
             detachFromSLhClientActivity(aci);
         }
@@ -9089,8 +9093,8 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 if (transaction == null) {
                     throw new Exception();
                 }
-                curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(transaction, "transactionStart");
+                curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(transaction, "transactionStart");
                 gmlcCdrState.setDialogStartTime(dialogStartTime);
                 if (gmlcCdrState.isInitialized()) {
                     gmlcCdrState.setCurlUser(curlUser);
@@ -9099,13 +9103,13 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         gmlcCdrState.setDialogDuration(dialogDuration);
                     }
                 }
-                TimerID plaTimerID = (TimerID) mobileCoreNetworkTransactions.Instance().getValue(transaction, "timerID");
+                TimerID plaTimerID = (TimerID) mobileCoreNetworkTransactions.getValue(transaction, "timerID");
                 if (plaTimerID != null)
                     this.timerFacility.cancelTimer(plaTimerID);
                 SLhRiaAvpValues sLhRiaAvpResponseValues = (SLhRiaAvpValues) mobileCoreNetworkTransactions.getValue(transaction, "sLhRiaAvpResponseValues");
                 SLhRirAvpValues sLhRirRequestValues = (SLhRirAvpValues) mobileCoreNetworkTransactions.getValue(transaction, "slhRirRequestValues");
                 referenceNumber = sLhRirRequestValues.plrLcsReferenceNumber;
-                mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(transaction, "mlpTriggeredReportingService");
+                mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.getValue(transaction, "mlpTriggeredReportingService");
                 mobileCoreNetworkTransactions.destroy(transaction);
                 if (sLhRirRequestValues != null) {
                     if (sLhRirRequestValues.plrMsisdn != null) {
@@ -9357,12 +9361,12 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                             gmlcCdrState.setUtranAdditionalPositioningData(AVPHandler.byte2String(utranPositioningInfoAvp.getUTRANAdditionalPositioningData()));
                         }
                         gmlcCdrState.setServiceAreaIdentity(AVPHandler.byte2String(serviceAreaIdentity));
-                        gmlcCdrState.setSgsnNumber(AVPHandler.byte2IsdnAddressString(sgsnNumber));
+                        gmlcCdrState.setSgsnNumber(AVPHandler.tbcd2IsdnAddressString(sgsnNumber));
                         gmlcCdrState.setSgsnName(AVPHandler.diameterIdToMapDiameterId(sgsnName));
                         gmlcCdrState.setSgsnRealm(AVPHandler.diameterIdToMapDiameterId(sgsnRealm));
                         gmlcCdrState.setMmeName(AVPHandler.diameterIdToMapDiameterId(mmeName));
                         gmlcCdrState.setMmeRealm(AVPHandler.diameterIdToMapDiameterId(mmeRealm));
-                        gmlcCdrState.setMscNumber(AVPHandler.byte2IsdnAddressString(mscNumber));
+                        gmlcCdrState.setMscNumber(AVPHandler.tbcd2IsdnAddressString(mscNumber));
                         gmlcCdrState.setAaaServerName(AVPHandler.diameterIdToMapDiameterId(tgppAAAServerName));
                         gmlcCdrState.sethGmlcAddress(AVPHandler.address2GsnAddress(gmlcAddress));
                         gmlcCdrState.setEUtranCgi(AVPHandler.lteEcgi2MapEutranCgi(ecgi));
@@ -9396,7 +9400,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     plaOriginHost != null ? plaOriginHost.toString() : null, plaOriginRealm != null ? plaOriginRealm.toString() : null,
                     mlpTriggeredReportingService);
                 if (transaction != null)
-                    mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                    mobileCoreNetworkTransactions.destroy(transaction);
             }
         } catch (Exception e) {
             logger.severe(String.format("Error while trying to process onProvideLocationAnswer=%s", plaEvent), e);
@@ -9409,7 +9413,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             this.reportLocationRequestError(MLPResponse.MLPResultType.SYSTEM_FAILURE, "Exception on SLg PLA: " + e.getMessage(),
                 "PLR", msisdnAddress, imsi, referenceNumber, null, null, host, realm, mlpTriggeredReportingService);
             if (transaction != null)
-                mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                mobileCoreNetworkTransactions.destroy(transaction);
         } finally {
             detachFromSLgClientActivity(aci);
         }
@@ -9840,12 +9844,12 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         if (lcsReferenceNumber != null)
                             gmlcCdrState.setLcsReferenceNumber(AVPHandler.byte2Int(lcsReferenceNumber));
                         gmlcCdrState.setPeriodicLDRInfo(AVPHandler.ltePeriodicLDRInfo2MapPeriodicLDRInfo(periodicLDRInformationAvp));
-                        gmlcCdrState.setSgsnNumber(AVPHandler.byte2IsdnAddressString(sgsnNumber));
+                        gmlcCdrState.setSgsnNumber(AVPHandler.tbcd2IsdnAddressString(sgsnNumber));
                         gmlcCdrState.setSgsnName(AVPHandler.diameterIdToMapDiameterId(sgsnName));
                         gmlcCdrState.setSgsnRealm(AVPHandler.diameterIdToMapDiameterId(sgsnRealm));
                         gmlcCdrState.setMmeName(AVPHandler.diameterIdToMapDiameterId(mmeName));
                         gmlcCdrState.setMmeRealm(AVPHandler.diameterIdToMapDiameterId(mmeRealm));
-                        gmlcCdrState.setMscNumber(AVPHandler.byte2IsdnAddressString(mscNumber));
+                        gmlcCdrState.setMscNumber(AVPHandler.tbcd2IsdnAddressString(mscNumber));
                         gmlcCdrState.setAaaServerName(AVPHandler.diameterIdToMapDiameterId(tgppAAAServerName));
                         gmlcCdrState.sethGmlcAddress(AVPHandler.address2GsnAddress(servingNodeGmlcAddress));
                         gmlcCdrState.setCellPortionId(cellPortionId);
@@ -9995,12 +9999,12 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     if (transaction == null) {
                         throw new Exception();
                     }
-                    TimerID udaTimerID = (TimerID) mobileCoreNetworkTransactions.Instance().getValue(transaction, "timerID");
+                    TimerID udaTimerID = (TimerID) mobileCoreNetworkTransactions.getValue(transaction, "timerID");
                     if (udaTimerID != null)
                         this.timerFacility.cancelTimer(udaTimerID);
                     shUdrMsisdn = (String) mobileCoreNetworkTransactions.getValue(transaction, "shUdrMsisdn");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(transaction, "transactionStart");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(transaction, "transactionStart");
                     gmlcCdrState.setDialogStartTime(dialogStartTime);
                     if (gmlcCdrState.isInitialized()) {
                         gmlcCdrState.setCurlUser(curlUser);
@@ -10540,7 +10544,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     udaEvent.getOriginRealm().toString(),
                     false);
                 if (transaction != null)
-                    mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                    mobileCoreNetworkTransactions.destroy(transaction);
             }
         } catch (Exception e) {
             logger.severe(String.format("Error while trying to process onUserDataAnswer=%s", udaEvent), e);
@@ -10551,7 +10555,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 udaEvent != null ? udaEvent.getOriginRealm().toString() : null,
                 false);
             if (transaction != null)
-                mobileCoreNetworkTransactions.Instance().destroy(transaction);
+                mobileCoreNetworkTransactions.destroy(transaction);
         } finally {
             detachFromShClientActivity(aci);
         }
@@ -10602,13 +10606,13 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     if (transaction == null) {
                         throw new Exception();
                     }
-                    TimerID diameterOperationTimerID = (TimerID) mobileCoreNetworkTransactions.Instance().getValue(transaction, "timerID");
+                    TimerID diameterOperationTimerID = (TimerID) mobileCoreNetworkTransactions.getValue(transaction, "timerID");
                     if (diameterOperationTimerID != null)
                         this.timerFacility.cancelTimer(diameterOperationTimerID);
                     msisdnAddress = (String) mobileCoreNetworkTransactions.getValue(transaction, "shUdrMsisdn");
-                    curlUser = (String) mobileCoreNetworkTransactions.Instance().getValue(transaction, "curlUser");
-                    DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.Instance().getValue(transaction, "transactionStart");
-                    mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.Instance().getValue(transaction, "mlpTriggeredReportingService");
+                    curlUser = (String) mobileCoreNetworkTransactions.getValue(transaction, "curlUser");
+                    DateTime dialogStartTime = (DateTime) mobileCoreNetworkTransactions.getValue(transaction, "transactionStart");
+                    mlpTriggeredReportingService = (Boolean) mobileCoreNetworkTransactions.getValue(transaction, "mlpTriggeredReportingService");
                     gmlcCdrState.setDialogStartTime(dialogStartTime);
                     if (gmlcCdrState.isInitialized()) {
                         gmlcCdrState.setCurlUser(curlUser);
@@ -11645,14 +11649,14 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
 
                 mapDialogMobility.addAnyTimeInterrogationRequest(subscriberIdentity, requestedInfo, gscmSCFAddress, mapExtensionContainer);
 
-                Long transaction = mobileCoreNetworkTransactions.Instance().create();
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "atiMsisdn", requestingMSISDN);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "atiHttpRespType", httpResponseType);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "curlUser", curlUser);
-                mobileCoreNetworkTransactions.Instance().setDialog(transaction, mapDialogMobility.getLocalDialogId());
+                Long transaction = mobileCoreNetworkTransactions.create();
+                mobileCoreNetworkTransactions.setValue(transaction, "atiMsisdn", requestingMSISDN);
+                mobileCoreNetworkTransactions.setValue(transaction, "atiHttpRespType", httpResponseType);
+                mobileCoreNetworkTransactions.setValue(transaction, "curlUser", curlUser);
+                mobileCoreNetworkTransactions.setDialog(transaction, mapDialogMobility.getLocalDialogId());
                 DateTime transactionStart = DateTime.now();
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "transactionStart", transactionStart);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "mlpTriggeredReportingService", false);
+                mobileCoreNetworkTransactions.setValue(transaction, "transactionStart", transactionStart);
+                mobileCoreNetworkTransactions.setValue(transaction, "mlpTriggeredReportingService", false);
 
                 ActivityContextInterface atiDialogACI = this.mapAcif.getActivityContextInterface(mapDialogMobility);
                 atiDialogACI.attach(this.sbbContext.getSbbLocalObject());
@@ -11660,7 +11664,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
 
                 // set new timer for ATI cycle
                 TimerID timerID = timerFacility.setTimer(atiDialogACI, null, System.currentTimeMillis() + MAP_OPERATION_TIMEOUT, defaultTimerOptions);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "timerID", timerID);
+                mobileCoreNetworkTransactions.setValue(transaction, "timerID", timerID);
 
 
             } catch (MAPException e) {
@@ -11747,45 +11751,45 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 mapDialogLsmSRIforLCS.addSendRoutingInfoForLCSRequest(gmlcAddress, subscriberIdentity, mapExtensionContainer);
 
                 // Transaction
-                Long transaction = mobileCoreNetworkTransactions.Instance().create();
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslMsisdn", locationRequestParams.pslMsisdn);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslImsi", locationRequestParams.pslImsi);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslLcsReferenceNumber", locationRequestParams.pslLcsReferenceNumber);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslImei", locationRequestParams.pslImei);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslLocationEstimateType", locationRequestParams.pslLocationEstimateType);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslDeferredLocationEventType", locationRequestParams.pslDeferredLocationEventType);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslLcsClientType", locationRequestParams.pslLcsClientType);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslClientExternalID", locationRequestParams.pslClientExternalID);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslClientInternalID", locationRequestParams.pslClientInternalID);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslClientName", locationRequestParams.pslClientName);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslClientFormatIndicator", locationRequestParams.pslClientFormatIndicator);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslRequestorIdString", locationRequestParams.pslRequestorIdString);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslRequestorFormatIndicator", locationRequestParams.pslRequestorFormatIndicator);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslLcsServiceTypeID", locationRequestParams.pslLcsServiceTypeID);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslLcsPriority", locationRequestParams.pslLcsPriority);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslLcsHorizontalAccuracy", locationRequestParams.pslLcsHorizontalAccuracy);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslLcsVerticalAccuracy", locationRequestParams.pslLcsVerticalAccuracy);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslVerticalCoordinateRequest", locationRequestParams.pslVerticalCoordinateRequest);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslResponseTimeCategory", locationRequestParams.pslResponseTimeCategory);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslAreaType", locationRequestParams.pslAreaType);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslAreaId", locationRequestParams.pslAreaId);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslOccurrenceInfo", locationRequestParams.pslOccurrenceInfo);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslIntervalTime", locationRequestParams.pslIntervalTime);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslReportingAmount", locationRequestParams.pslReportingAmount);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslReportingInterval", locationRequestParams.pslReportingInterval);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslPLMNIdList", locationRequestParams.pslPLMNIdList);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslVisitedPLMNIdRAN", locationRequestParams.pslVisitedPLMNIdRAN);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslPeriodicLocationSupportIndicator", locationRequestParams.pslPeriodicLocationSupportIndicator);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslPrioritizedListIndicator", locationRequestParams.pslPrioritizedListIndicator);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "pslLcsCodeword", locationRequestParams.pslLcsCodeword);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "slrCallbackUrl", locationRequestParams.slrCallbackUrl);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "httpRequestType", locationRequestParams.httpRespType);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "curlUser", locationRequestParams.curlUser);
-                mobileCoreNetworkTransactions.Instance().setDialog(transaction, mapDialogLsmSRIforLCS.getLocalDialogId());
+                Long transaction = mobileCoreNetworkTransactions.create();
+                mobileCoreNetworkTransactions.setValue(transaction, "pslMsisdn", locationRequestParams.pslMsisdn);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslImsi", locationRequestParams.pslImsi);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslLcsReferenceNumber", locationRequestParams.pslLcsReferenceNumber);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslImei", locationRequestParams.pslImei);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslLocationEstimateType", locationRequestParams.pslLocationEstimateType);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslDeferredLocationEventType", locationRequestParams.pslDeferredLocationEventType);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslLcsClientType", locationRequestParams.pslLcsClientType);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslClientExternalID", locationRequestParams.pslClientExternalID);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslClientInternalID", locationRequestParams.pslClientInternalID);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslClientName", locationRequestParams.pslClientName);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslClientFormatIndicator", locationRequestParams.pslClientFormatIndicator);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslRequestorIdString", locationRequestParams.pslRequestorIdString);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslRequestorFormatIndicator", locationRequestParams.pslRequestorFormatIndicator);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslLcsServiceTypeID", locationRequestParams.pslLcsServiceTypeID);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslLcsPriority", locationRequestParams.pslLcsPriority);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslLcsHorizontalAccuracy", locationRequestParams.pslLcsHorizontalAccuracy);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslLcsVerticalAccuracy", locationRequestParams.pslLcsVerticalAccuracy);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslVerticalCoordinateRequest", locationRequestParams.pslVerticalCoordinateRequest);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslResponseTimeCategory", locationRequestParams.pslResponseTimeCategory);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslAreaType", locationRequestParams.pslAreaType);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslAreaId", locationRequestParams.pslAreaId);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslOccurrenceInfo", locationRequestParams.pslOccurrenceInfo);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslIntervalTime", locationRequestParams.pslIntervalTime);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslReportingAmount", locationRequestParams.pslReportingAmount);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslReportingInterval", locationRequestParams.pslReportingInterval);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslPLMNIdList", locationRequestParams.pslPLMNIdList);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslVisitedPLMNIdRAN", locationRequestParams.pslVisitedPLMNIdRAN);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslPeriodicLocationSupportIndicator", locationRequestParams.pslPeriodicLocationSupportIndicator);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslPrioritizedListIndicator", locationRequestParams.pslPrioritizedListIndicator);
+                mobileCoreNetworkTransactions.setValue(transaction, "pslLcsCodeword", locationRequestParams.pslLcsCodeword);
+                mobileCoreNetworkTransactions.setValue(transaction, "slrCallbackUrl", locationRequestParams.slrCallbackUrl);
+                mobileCoreNetworkTransactions.setValue(transaction, "httpRequestType", locationRequestParams.httpRespType);
+                mobileCoreNetworkTransactions.setValue(transaction, "curlUser", locationRequestParams.curlUser);
+                mobileCoreNetworkTransactions.setDialog(transaction, mapDialogLsmSRIforLCS.getLocalDialogId());
                 DateTime transactionStart = DateTime.now();
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "transactionStart", transactionStart);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "sriLcsOnly", sriLcsOnly);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "mlpTriggeredReportingService", mlpTriggeredReportingService);
+                mobileCoreNetworkTransactions.setValue(transaction, "transactionStart", transactionStart);
+                mobileCoreNetworkTransactions.setValue(transaction, "sriLcsOnly", sriLcsOnly);
+                mobileCoreNetworkTransactions.setValue(transaction, "mlpTriggeredReportingService", mlpTriggeredReportingService);
 
                 // Create the ACI and attach this SBB
                 ActivityContextInterface sriForLcsDialogACI = this.mapAcif.getActivityContextInterface(mapDialogLsmSRIforLCS);
@@ -11794,7 +11798,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
 
                 // set new timer for SRILCS cycle
                 TimerID timerID = timerFacility.setTimer(sriForLcsDialogACI, null, System.currentTimeMillis() + MAP_OPERATION_TIMEOUT, defaultTimerOptions);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "timerID", timerID);
+                mobileCoreNetworkTransactions.setValue(transaction, "timerID", timerID);
 
             } catch (MAPException e) {
                 this.logger.severe("MAPException while trying to send MAP SRILCS request for Subscriber Identity=" + targetSubscriberIdentity, e);
@@ -11978,18 +11982,18 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     null, false, null, null, null, false, null, false, false, null, null);
 
                 // Transaction
-                Long transaction = mobileCoreNetworkTransactions.Instance().create();
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "sriPsiDomain", domain);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "locationInfoEPS", epsLocationInfo);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "psiMsisdn", requestingMSISDN);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "sriAcnVersion", acnVersion);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "tt", translationType);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "curlUser", curlUser);
-                mobileCoreNetworkTransactions.Instance().setDialog(transaction, mapDialogSms.getLocalDialogId());
+                Long transaction = mobileCoreNetworkTransactions.create();
+                mobileCoreNetworkTransactions.setValue(transaction, "sriPsiDomain", domain);
+                mobileCoreNetworkTransactions.setValue(transaction, "locationInfoEPS", epsLocationInfo);
+                mobileCoreNetworkTransactions.setValue(transaction, "psiMsisdn", requestingMSISDN);
+                mobileCoreNetworkTransactions.setValue(transaction, "sriAcnVersion", acnVersion);
+                mobileCoreNetworkTransactions.setValue(transaction, "tt", translationType);
+                mobileCoreNetworkTransactions.setValue(transaction, "curlUser", curlUser);
+                mobileCoreNetworkTransactions.setDialog(transaction, mapDialogSms.getLocalDialogId());
                 DateTime transactionStart = DateTime.now();
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "transactionStart", transactionStart);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "sriSmOnly", sriSmOnly);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "mlpTriggeredReportingService", false);
+                mobileCoreNetworkTransactions.setValue(transaction, "transactionStart", transactionStart);
+                mobileCoreNetworkTransactions.setValue(transaction, "sriSmOnly", sriSmOnly);
+                mobileCoreNetworkTransactions.setValue(transaction, "mlpTriggeredReportingService", false);
 
                 // Create the ACI and attach this SBB
                 ActivityContextInterface sriForSmDialogACI = this.mapAcif.getActivityContextInterface(mapDialogSms);
@@ -12000,7 +12004,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
 
                 // set new timer for SRISM cycle
                 TimerID timerID = timerFacility.setTimer(sriForSmDialogACI, null, System.currentTimeMillis() + MAP_OPERATION_TIMEOUT, defaultTimerOptions);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "timerID", timerID);
+                mobileCoreNetworkTransactions.setValue(transaction, "timerID", timerID);
 
             } catch (MAPException e) {
                 this.logger.severe("MAP Exception while trying to send MAP SRISM request for MSISDN=" + requestingMSISDN, e);
@@ -12081,18 +12085,18 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     false, null, null, null, false, null);
 
                 // Transaction
-                Long transaction = mobileCoreNetworkTransactions.Instance().create();
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "sriPsiDomain", domain);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "locationInfoEPS", epsLocationInfo);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "psiMsisdn", requestingMSISDN);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "sriAcnVersion", acnVersion);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "tt", translationType);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "curlUser", curlUser);
-                mobileCoreNetworkTransactions.Instance().setDialog(transaction, mapDialogCallHandling.getLocalDialogId());
+                Long transaction = mobileCoreNetworkTransactions.create();
+                mobileCoreNetworkTransactions.setValue(transaction, "sriPsiDomain", domain);
+                mobileCoreNetworkTransactions.setValue(transaction, "locationInfoEPS", epsLocationInfo);
+                mobileCoreNetworkTransactions.setValue(transaction, "psiMsisdn", requestingMSISDN);
+                mobileCoreNetworkTransactions.setValue(transaction, "sriAcnVersion", acnVersion);
+                mobileCoreNetworkTransactions.setValue(transaction, "tt", translationType);
+                mobileCoreNetworkTransactions.setValue(transaction, "curlUser", curlUser);
+                mobileCoreNetworkTransactions.setDialog(transaction, mapDialogCallHandling.getLocalDialogId());
                 DateTime transactionStart = DateTime.now();
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "transactionStart", transactionStart);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "sriOnly", sriOnly);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "mlpTriggeredReportingService", false);
+                mobileCoreNetworkTransactions.setValue(transaction, "transactionStart", transactionStart);
+                mobileCoreNetworkTransactions.setValue(transaction, "sriOnly", sriOnly);
+                mobileCoreNetworkTransactions.setValue(transaction, "mlpTriggeredReportingService", false);
 
                 // Create the ACI and attach this SBB
                 ActivityContextInterface sriDialogACI = this.mapAcif.getActivityContextInterface(mapDialogCallHandling);
@@ -12103,7 +12107,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
 
                 // set new timer for SRI cycle
                 TimerID timerID = timerFacility.setTimer(sriDialogACI, null, System.currentTimeMillis() + MAP_OPERATION_TIMEOUT, defaultTimerOptions);
-                mobileCoreNetworkTransactions.Instance().setValue(transaction, "timerID", timerID);
+                mobileCoreNetworkTransactions.setValue(transaction, "timerID", timerID);
 
             } catch (MAPException e) {
                 this.logger.severe("MAP Exception while trying to send MAP SRI request for MSISDN=" + requestingMSISDN, e);
@@ -12212,17 +12216,17 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             slhRirRequestValues.plrFlags = locationRequestParams.plrFlags;
 
             Long transaction = mobileCoreNetworkTransactions.create();
-            mobileCoreNetworkTransactions.Instance().setValue(transaction, "slhRirRequestValues", slhRirRequestValues);
-            mobileCoreNetworkTransactions.Instance().setSession(transaction, slhClientSessionActivity.getSessionId());
-            mobileCoreNetworkTransactions.Instance().setValue(transaction, "curlUser", locationRequestParams.curlUser);
-            mobileCoreNetworkTransactions.Instance().setValue(transaction, "httpRequestType", locationRequestParams.httpRespType);
+            mobileCoreNetworkTransactions.setValue(transaction, "slhRirRequestValues", slhRirRequestValues);
+            mobileCoreNetworkTransactions.setSession(transaction, slhClientSessionActivity.getSessionId());
+            mobileCoreNetworkTransactions.setValue(transaction, "curlUser", locationRequestParams.curlUser);
+            mobileCoreNetworkTransactions.setValue(transaction, "httpRequestType", locationRequestParams.httpRespType);
             DateTime transactionStart = DateTime.now();
-            mobileCoreNetworkTransactions.Instance().setValue(transaction, "transactionStart", transactionStart);
-            mobileCoreNetworkTransactions.Instance().setValue(transaction, "mlpTriggeredReportingService", mlpTriggeredReportingService);
+            mobileCoreNetworkTransactions.setValue(transaction, "transactionStart", transactionStart);
+            mobileCoreNetworkTransactions.setValue(transaction, "mlpTriggeredReportingService", mlpTriggeredReportingService);
 
             // set the new timer for the RIR/RIA cycle
             TimerID timerID = timerFacility.setTimer(slhACIF, null, System.currentTimeMillis() + DIAMETER_COMMAND_TIMEOUT, defaultTimerOptions);
-            mobileCoreNetworkTransactions.Instance().setValue(transaction, "timerID", timerID);
+            mobileCoreNetworkTransactions.setValue(transaction, "timerID", timerID);
 
             if (logger.isFineEnabled()) {
                 this.logger.fine(String.format("Saving RIR values with session '%s' and transaction '%d'.", slhClientSessionActivity.getSessionId(), transaction));
@@ -12347,16 +12351,16 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             udr.setAuthSessionState(authSessionStateType);
 
             Long transaction = mobileCoreNetworkTransactions.create();
-            mobileCoreNetworkTransactions.Instance().setValue(transaction, "shUdrMsisdn", msisdn);
-            mobileCoreNetworkTransactions.Instance().setSession(transaction, shClientActivity.getSessionId());
-            mobileCoreNetworkTransactions.Instance().setValue(transaction, "curlUser", curlUser);
+            mobileCoreNetworkTransactions.setValue(transaction, "shUdrMsisdn", msisdn);
+            mobileCoreNetworkTransactions.setSession(transaction, shClientActivity.getSessionId());
+            mobileCoreNetworkTransactions.setValue(transaction, "curlUser", curlUser);
             DateTime transactionStart = DateTime.now();
-            mobileCoreNetworkTransactions.Instance().setValue(transaction, "transactionStart", transactionStart);
-            mobileCoreNetworkTransactions.Instance().setValue(transaction, "mlpTriggeredReportingService", false);
+            mobileCoreNetworkTransactions.setValue(transaction, "transactionStart", transactionStart);
+            mobileCoreNetworkTransactions.setValue(transaction, "mlpTriggeredReportingService", false);
 
             // set the new timer for the UDR/UDA cycle
             TimerID timerID = timerFacility.setTimer(shACIF, null, System.currentTimeMillis() + DIAMETER_COMMAND_TIMEOUT, defaultTimerOptions);
-            mobileCoreNetworkTransactions.Instance().setValue(transaction, "timerId", timerID);
+            mobileCoreNetworkTransactions.setValue(transaction, "timerId", timerID);
 
             shClientActivity.sendUserDataRequest(udr);
             if (logger.isFineEnabled()) {
@@ -12394,7 +12398,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
         }
         // CDR initialization
         GMLCCDRState gmlcCdrState = CDRCreationHelper.suplCdrInitializer(aci, this.getCDRInterface(), locationRequestParams,
-                localSocketAddress, localSocketPort, remoteSocketAddress, remoteSocketPort);
+            localSocketAddress, localSocketPort, remoteSocketAddress, remoteSocketPort);
         // Set timer last
         this.setTimer(aci);
 
@@ -12403,10 +12407,10 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             if (locationRequestParams.suplHorizontalAccuracy != null) {
                 qoP = new QoP(locationRequestParams.suplHorizontalAccuracy);
                 if (locationRequestParams.suplVerticalAccuracy != null && locationRequestParams.suplMaximumLocationAge != null &&
-                        locationRequestParams.suplDelay != null && locationRequestParams.suplResponseTime != null) {
+                    locationRequestParams.suplDelay != null && locationRequestParams.suplResponseTime != null) {
                     if (locationRequestParams.suplResponseTime != null) {
                         qoP = new QoP(locationRequestParams.suplHorizontalAccuracy, locationRequestParams.suplVerticalAccuracy,
-                                locationRequestParams.suplMaximumLocationAge, locationRequestParams.suplDelay, locationRequestParams.suplResponseTime);
+                            locationRequestParams.suplMaximumLocationAge, locationRequestParams.suplDelay, locationRequestParams.suplResponseTime);
                     }
                 }
             }
@@ -12487,7 +12491,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     AreaIdList[] areaIdListArray = new AreaIdList[]{areaIdList};
                     AreaEventParams_areaIdLists areaIdLists = new AreaEventParams_areaIdLists(areaIdListArray);
                     AreaEventParams areaEventParams = new AreaEventParams(areaEventType, locationEstimateRequired, repeatedReportingParams,
-                            startTime, stopTime, geographicTargetAreaList, areaIdLists);
+                        startTime, stopTime, geographicTargetAreaList, areaIdLists);
                     triggerParams.setAreaEventParams(areaEventParams);
                     suplResponseHelperForMLP = networkInitiatedSuplLocation.processNetworkInitiatedSuplBySmppAreaEventTriggeredService(qoP, SuplTriggerType.AreaEvent.getSuplTriggerType(), posMethod, SLPMode.nonProxy(), triggerParams, transactionId, locationRequestParams.getTargetingMSISDN());
                     String splId = new String(suplResponseHelperForMLP.getSessionID().getSlpSessionID().getSessionID().value);
@@ -12513,7 +12517,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         httpSubscriberLocationReport = getHttpSubscriberLocationReport();
                         boolean isMlp = true;
                         suplResponseHelperForMLP.suplReportReferenceNumber = httpSubscriberLocationReport.Register(transactionId,
-                                locationRequestParams.suplAgentCallbackUrl, null, isMlp, locationRequestParams.curlUser);
+                            locationRequestParams.suplAgentCallbackUrl, null, isMlp, locationRequestParams.curlUser);
                         httpSubscriberLocationReport.closeMongo();
                     }
                 } else {
@@ -12549,7 +12553,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         httpSubscriberLocationReport = getHttpSubscriberLocationReport();
                         boolean isMlp = true;
                         suplResponseHelperForMLP.suplReportReferenceNumber = httpSubscriberLocationReport.Register(transactionId,
-                                locationRequestParams.suplAgentCallbackUrl, null, isMlp, locationRequestParams.curlUser);
+                            locationRequestParams.suplAgentCallbackUrl, null, isMlp, locationRequestParams.curlUser);
                         httpSubscriberLocationReport.closeMongo();
                     }
                 }
@@ -12581,7 +12585,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             }
             if (suplResponseHelperForMLP != null && !suplResponseHelperForMLP.getTimeOut()) {
                 handleSUPLResponse(MLPResponse.MLPResultType.OK, "", locationRequestParams.targetingMSISDN,
-                        locationRequestParams.targetingIMSI, transactionId, suplResponseHelperForMLP, mlpTriggeredReportingService, false);
+                    locationRequestParams.targetingIMSI, transactionId, suplResponseHelperForMLP, mlpTriggeredReportingService, false);
                 if (suplResponseHelperForMLP.isReport()) {
                     handleSuplReports(suplResponseHelperForMLP, aci, triggerParams, locationRequestParams, gmlcCdrState, transactionId, mlpTriggeredReportingService);
                 } else {
@@ -12609,7 +12613,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 if (suplResponseHelperForMLP.getTimeOut()) {
                     this.createCDRRecord(RecordStatus.SUPL_TIMEOUT);
                     reportLocationRequestError(MLPResponse.MLPResultType.TIMEOUT, "Network Initiated SUPL positioning timeout", "SUPL",
-                            locationRequestParams.targetingMSISDN, locationRequestParams.targetingIMSI, null, null, null, null, null, mlpTriggeredReportingService);
+                        locationRequestParams.targetingMSISDN, locationRequestParams.targetingIMSI, null, null, null, null, null, mlpTriggeredReportingService);
                 } else {
                     if (gmlcCdrState.isInitialized()) {
                         if (triggerParams != null) {
@@ -12626,7 +12630,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         this.createCDRRecord(RecordStatus.SUPL_SYSTEM_FAILURE);
                     }
                     reportLocationRequestError(MLPResponse.MLPResultType.POSITION_METHOD_FAILURE, "Network Initiated SUPL positioning failure", "SUPL",
-                            locationRequestParams.targetingMSISDN, locationRequestParams.targetingIMSI, null, null, null, null, null, mlpTriggeredReportingService);
+                        locationRequestParams.targetingMSISDN, locationRequestParams.targetingIMSI, null, null, null, null, null, mlpTriggeredReportingService);
 
                 }
             }
@@ -12637,7 +12641,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 this.createCDRRecord(RecordStatus.SUPL_SYSTEM_FAILURE);
             }
             reportLocationRequestError(MLPResponse.MLPResultType.FORMAT_ERROR, "Exception on SUPL request", "SUPL", locationRequestParams.targetingMSISDN,
-                    locationRequestParams.targetingIMSI, null, null, null, null, null, mlpTriggeredReportingService);
+                locationRequestParams.targetingIMSI, null, null, null, null, null, mlpTriggeredReportingService);
         } finally {
             aci.detach(this.sbbContext.getSbbLocalObject());
         }
