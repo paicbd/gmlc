@@ -1,0 +1,15 @@
+# Objective Systems products license file.
+#
+# This file must be present in one of the following directories on your
+# PC or server:
+#
+# 1. In a directory pointed to by the OSLICDIR environment variable
+# 2. In the directory in which product executable file is installed
+# 3. In any directory within your PATH
+#
+Product: ASN1C
+Version: 7.5-7.6
+Expiration: Wed Aug 17 00:45:01 2022
+Key:
+dd326d74b3a387b571102124680c122045140bc7081d9ae8825f5dd023b17d50
+e417c4863c68ffb497dc732db16193697ee504fbc13e327f78b66b3ab08ec922

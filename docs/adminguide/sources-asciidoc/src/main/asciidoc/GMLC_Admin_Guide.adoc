@@ -1,0 +1,80 @@
+= Admin Guide of {this-platform} {this-application}
+:doctype: book
+:sectnums:
+:toc: left
+:icons: font
+:experimental:
+:sourcedir: .
+:sectnumlevels: 7
+
+:leveloffset: 1
+
+include::Book_Info.adoc[]
+
+:leveloffset: 0
+
+:leveloffset: 1
+
+include::Common_Content/Preface.adoc[]
+
+:leveloffset: 0
+
+:leveloffset: 1
+
+include::Chapter-Introduction.adoc[]
+
+:leveloffset: 0
+
+:leveloffset: 1
+
+include::Chapter-Overview.adoc[]
+
+:leveloffset: 0
+
+:leveloffset: 1
+
+include::Chapter-JSON-API.adoc[]
+
+:leveloffset: 0
+
+:leveloffset: 1
+
+include::Chapter-MLP-API.adoc[]
+
+:leveloffset: 0
+
+:leveloffset: 1
+
+include::Chapter-Message-Flow.adoc[]
+
+:leveloffset: 0
+
+:leveloffset: 1
+
+include::Chapter-ESMLC.adoc[]
+
+:leveloffset: 0
+
+:leveloffset: 1
+
+include::Chapter-RAN.adoc[]
+
+:leveloffset: 0
+
+:leveloffset: 1
+
+include::Chapter-CDR.adoc[]
+
+:leveloffset: 0
+
+:leveloffset: 1
+
+include::Chapter-Running-WildFly.adoc[]
+
+:leveloffset: 0
+
+:leveloffset: 1
+
+include::Revision_History.adoc[]
+
+:leveloffset: 0

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE MgmtTree PUBLIC "-//OMA//DTD-DM-DDF 1.2//EN"
+             "http://www.openmobilealliance.org/tech/DTD/dm_ddf-v1_2.dtd"
+             [<?oma-dm-ddf-ver supported-versions="1.2"?>]>
+
+<!--
+
+Secure User Plane Location (SUPL) Management Object
+
+    version - 3.0
+    date    - 20 Sep 2011
+
+This DDF represents the SUPL Management Object supported by DM 1.2 
+
+FILE INFORMATION
+
+  OMA Permanent Document
+    File: OMA-SUP-MO_oma_supl-V3_0-20110920-C
+    Type: Text
+
+  Public Reachable Information
+    Path: http://www.openmobilealliance.org/tech/omna/dm_mo
+    Name: oma_supl-v3_0.ddf
+
+NORMATIVE INFORMATION
+
+  Information about this file can be found in 
+
+    OMA-TS-SUPL_MO-V3_0
+
+  This is available at http://www.openmobilealliance.org/
+
+  Send comments to technical-comments@mail.openmobilealliance.org
+
+CHANGE HISTORY
+
+20092011 Status changed to Candidate by TP, TP Ref # OMA-TP-2011-0332-INP_SUPL_3.0_ERP_for_Candidate_approval
+
+LEGAL DISCLAIMER
+
+Use of this document is subject to all of the terms and conditions
+of the Use Agreement located at
+	http://www.openmobilealliance.org/UseAgreement.html
+
+You may use this document or any part of the document for internal
+or educational purposes only, provided you do not modify, edit or
+take out of context the information in this document in any manner.
+Information contained in this document may be used, at your sole
+risk, for any purposes.
+
+You may not use this document in any other manner without the prior
+written permission of the Open Mobile Alliance.  The Open Mobile
+Alliance authorizes you to copy this document, provided that you
+retain all copyright and other proprietary notices contained in the
+original materials on any copies of the materials and that you
+comply strictly with these terms.  This copyright permission does
+not constitute an endorsement of the products or services.  The
+Open Mobile Alliance assumes no responsibility for errors or
+omissions in this document.
+
+Each Open Mobile Alliance member has agreed to use reasonable
+endeavours to inform the Open Mobile Alliance in a timely manner of
+Essential IPR as it becomes aware that the Essential IPR is related
+to the prepared or published specification.  However, the members
+do not have an obligation to conduct IPR searches.  The declared
+Essential IPR is publicly available to members and non-members of
+the Open Mobile Alliance and may be found on the "OMA IPR
+Declarations" list at http://www.openmobilealliance.org/ipr.html.
+The Open Mobile Alliance has not conducted an independent IPR review
+of this document and the information contained herein, and makes no
+representations or warranties regarding third party IPR, including
+without limitation patents, copyrights or trade secret rights.  This
+document may contain inventions for which you must obtain licenses
+from third parties before making, using or selling the inventions.
+Defined terms above are set forth in the schedule to the Open Mobile
+Alliance Application Form.
+
+NO REPRESENTATIONS OR WARRANTIES (WHETHER EXPRESS OR IMPLIED) ARE
+MADE BY THE OPEN MOBILE ALLIANCE OR ANY OPEN MOBILE ALLIANCE MEMBER
+OR ITS AFFILIATES REGARDING ANY OF THE IPRS REPRESENTED ON THE "OMA
+IPR DECLARATIONS" LIST, INCLUDING, BUT NOT LIMITED TO THE ACCURACY,
+COMPLETENESS, VALIDITY OR RELEVANCE OF THE INFORMATION OR WHETHER OR
+NOT SUCH RIGHTS ARE ESSENTIAL OR NON-ESSENTIAL.
+
+THE OPEN MOBILE ALLIANCE IS NOT LIABLE FOR AND HEREBY DISCLAIMS ANY
+DIRECT, INDIRECT, PUNITIVE, SPECIAL, INCIDENTAL, CONSEQUENTIAL, OR
+EXEMPLARY DAMAGES ARISING OUT OF OR IN CONNECTION WITH THE USE OF
+DOCUMENTS AND THE INFORMATION CONTAINED IN THE DOCUMENTS.
+
+(c) 2011 Open Mobile Alliance Ltd.  All Rights Reserved.
+Used with the permission of the Open Mobile Alliance Ltd. under the
+terms set forth above.
+-->
+
+<MgmtTree> 
+    <VerDTD>1.2</VerDTD>
+
+<!--  /<X>  -->
+    <Node>
+	<NodeName/>
+	<DFProperties>
+	    <AccessType>	<Get/>		</AccessType>
+	    <DFFormat>		<node/>		</DFFormat>
+	    <Occurrence>	<OneOrMore/>	</Occurrence>
+	    <DFTitle>OMA SUPL Management Object node</DFTitle>
+	    <DFType>		<DDFName>urn:oma:mo:oma-supl:3.0</DDFName>	    </DFType>
+	</DFProperties>
+    
+<!--  /<X>/Name/  -->
+	<Node>
+	    <NodeName>Name</NodeName>
+	    <DFProperties>
+		<AccessType>	<Get/> <Replace/>	</AccessType>
+		<DFFormat>	<chr/>			</DFFormat>
+		<Occurrence>	<ZeroOrOne/>		</Occurrence> 
+		<DFTitle>User Readable Identity of the H-SLP</DFTitle>
+		<DFType>	<MIME>text/plain</MIME>	</DFType>
+	    </DFProperties>
+	</Node>
+    
+<!--  /<X>/ProviderID/  -->
+	<Node>
+	    <NodeName>ProviderID</NodeName>
+	    <DFProperties>
+		<AccessType>	<Get/> <Replace/>	</AccessType>
+		<DFFormat>	<chr/>			</DFFormat>
+		<Occurrence>	<ZeroOrOne/>		</Occurrence>
+		<DFTitle>identifier for the H-SLP</DFTitle>
+		<DFType>	<MIME>text/plain</MIME>	</DFType>
+	    </DFProperties>
+	</Node>
+
+<!--  /<X>/PrefConRef/  -->
+	<Node>
+	    <NodeName>PrefConRef</NodeName>
+	    <DFProperties>
+		<AccessType>	<Get/> <Replace/>	</AccessType>
+		<DFFormat>	<chr/>			</DFFormat>
+		<Occurrence>	<ZeroOrOne/>		</Occurrence>
+		<DFTitle>preferred linkage to connectivity parameters</DFTitle>
+		<DFType>	<MIME>text/plain</MIME>	</DFType>
+	    </DFProperties>
+	</Node>
+
+<!--  /<X>/ToConRef  -->
+	<Node>
+	    <NodeName>ToConRef</NodeName>
+	    <DFProperties>
+		<AccessType>	<Get/>			</AccessType>
+		<DFFormat>	<node/>			</DFFormat>
+		<Occurrence>	<ZeroOrOne/>		</Occurrence>
+		<DFTitle>collection of references to connections</DFTitle>
+		<DFType>		<DDFName></DDFName>    </DFType>
+	    </DFProperties>
+
+<!--  /<X>/ToConRef/<X>  -->
+	    <Node>
+		<NodeName/>
+		<DFProperties>
+		    <AccessType>	<Get/>		</AccessType>
+		    <DFFormat>		<node/>		</DFFormat>
+		    <Occurrence>	<ZeroOrMore/>	</Occurrence>
+		    <DFTitle>Placeholder for zero or more connectivity parameters</DFTitle>
+		    <DFType>		<DDFName></DDFName>    </DFType>
+		</DFProperties>
+
+<!--  /<X>/ToConRef/<X>/ConRef/  -->
+		<Node>
+		    <NodeName>ConRef</NodeName>
+		    <DFProperties>
+			<AccessType>	<Get/> <Replace/>	</AccessType>
+			<DFFormat>	<chr/>			</DFFormat>
+			<Occurrence>	<One/>			</Occurrence>
+			<DFTitle>specific connectivity item</DFTitle>
+			<DFType>	<MIME>text/plain</MIME>	</DFType>
+		    </DFProperties>
+		</Node>
+	    </Node>
+	</Node>
+
+<!--  /<X>/Addr/  -->
+	<Node>
+	    <NodeName>Addr</NodeName>
+	    <DFProperties>
+		<AccessType>	<Get/> <Replace/>	</AccessType>
+		<DFFormat>	<chr/>			</DFFormat>
+		<Occurrence>	<ZeroOrOne/>		</Occurrence>  
+		<DFTitle>Address of the H-SLP</DFTitle>
+		<DFType>	<MIME>text/plain</MIME>	</DFType>
+	    </DFProperties>
+	</Node>
+
+<!--  /<X>/AddrType/  -->
+	<Node>
+	    <NodeName>AddrType</NodeName>
+	    <DFProperties>
+		<AccessType>	<Get/> <Replace/>	</AccessType>
+		<DFFormat>	<chr/>			</DFFormat>
+		<Occurrence>	<ZeroOrOne/>		</Occurrence>  
+		<DFTitle>defines format and interpretation of the Addr</DFTitle>
+		<DFType>	<MIME>text/plain</MIME>	</DFType>
+	    </DFProperties>
+	</Node>
+
+<!--  /<X>/Ext/  -->
+	<Node>
+	    <NodeName>Ext</NodeName>
+	    <DFProperties>
+		<AccessType>	<!-- none -->	</AccessType>
+		<DFFormat>	<node/>		</DFFormat>
+		<Occurrence>	<ZeroOrOne/>	</Occurrence>
+		<DFTitle>A node that can be used to provide vendor-specific extensions</DFTitle>
+		<DFType>		<DDFName></DDFName>    </DFType>
+	    </DFProperties>
+	</Node>
+
+    </Node>
+</MgmtTree>

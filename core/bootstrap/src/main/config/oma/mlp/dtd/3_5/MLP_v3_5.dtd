@@ -1,0 +1,485 @@
+
+<!--
+
+MLP DTD - Mobile Location Protocol
+   version - 3.5
+   date    - 04 Aug 2020
+
+FILE INFORMATION
+
+  OMA Permanent Document
+    File: OMA-SUP-DTD_MLP-V3_5-20200804-C
+    Type: Text
+
+  Public Reachable Information
+    Path: http://www.openmobilealliance.org/tech/dtd
+    Name: MLP_v3_5.dtd
+
+NORMATIVE INFORMATION
+
+  Information about this file can be found in the latest revision of
+
+    OMA-TS-MLP-V3_5
+
+  This is available at http://www.openmobilealliance.org/
+
+  Send comments to technical-comments@mail.openmobilealliance.org
+
+CHANGE HISTORY
+
+01072104 Initial version 
+06112014 Implemented CR OMA-LOC-2014-0168-CR_MLS_1_4_SUP_MLP_CONR_Resolutions
+23012015 Implemented CR OMA-LOC-2014-0192-CR_MLS_1_4_SUP_MLP_XML_Validate_Resolutions
+11022015 Editorial correction to resolve character encoding exception
+24022015 Status changed to Candidate by TP, TP Ref # OMA-TP-2015-0061-INP_MLS_V1_4_ERP_and_ETR_for_Candidate_Approval
+10062015 Incorporated CR OMA-LOC-2015-0027-CR_SUP_MLP_35__adding_missing_civic_types
+16112015 Incorporated CR OMA-LOC-2015-0052R02-CR_SUP_DTD_MLP_35_Adding_BarometricPressure
+25012016 Incorporated CR OMA-LOC-2016-0012R01-CR_SUP_DTD_MLP_3.5_updates_for_hybrid_positioning
+20112018 Incorporated CR OMA-LOC-2018-0005-CR_SUP_MLP_3.5_5G_Location
+20112018 Status changed to Candidate by LOC, LOC Ref# OMA-LOC-2018-0021-INP_MLS_Evolution_v1.4_ERP_for_Candidate_reapproval_notification
+08062020 Incorporated CR OMA-LOC-2020-0010R01-CR_SUP_MLP_35_5G_Rel16_Location
+04082020 Status changed to Candidate by LOC, OMA-LOC-2020-0023-INP_MLS_Evolution_1.4_for_Candidate_Approval
+
+LEGAL DISCLAIMER
+
+Copyright 2020 Open Mobile Alliance. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+3. Neither the name of the copyright holder nor the names of its
+contributors may be used to endorse or promote products derived
+from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+The above license is used as a license under copyright only. Please
+reference the company patent licensing terms:
+https://www.omaspecworks.org/about/intellectual-property-rights/
+
+TYPICAL USAGE IN XML DOCUMENT
+
+  <?xml version="1.0"?>
+  <!DOCTYPE FooBarMsg PUBLIC "-//OMA//DTD FooBar 1.0//EN"
+            "http://www.openmobilealliance.org/tech/DTD/foobar-v1_0.dtd"
+            [<?oma-foobar-ver supported-versions="1.0"?>]>
+  <FooBarMsg>
+     ...
+  </FooBarMsg>
+
+-->
+<!--   START OF   MLP_CTXT    -->
+<!ELEMENT	client	(id, pwd?, serviceid?, requestmode?, applicationid?)>
+<!ELEMENT	sessionid	(#PCDATA)>
+<!ELEMENT	id	(#PCDATA)>
+<!ELEMENT	requestor	(id, serviceid?)>
+<!ATTLIST	requestor	
+	type (MSISDN | IMSI | NAME | E-MAIL | URL | SIPURL | IMS | MDN | ASID | ASPID) 	"MSISDN">
+<!ELEMENT	pwd	(#PCDATA)>
+<!ELEMENT	serviceid	(#PCDATA)>
+<!ELEMENT	requestmode	EMPTY>
+<!ATTLIST	requestmode	
+	type (ACTIVE | PASSIVE)	"PASSIVE">
+<!ELEMENT	applicationid EMPTY>
+<!ATTLIST	applicationid
+	appProvider CDATA #REQUIRED
+	appName     CDATA #REQUIRED
+	appVersion  CDATA #IMPLIED>
+<!ELEMENT	subclient	(id, pwd?, serviceid?)>
+<!ATTLIST	subclient	
+	last_client (YES | NO)	"NO">
+<!ELEMENT	supported_shapes		EMPTY>
+<!ATTLIST	supported_shapes	
+	Point  CDATA	"0"
+	LineString CDATA	"0"
+	Polygon CDATA	"0"
+	Box CDATA	"0"
+	CircularArea CDATA	"0"
+	CircularArcArea CDATA	"0"
+	EllipticalArea CDATA	"0"
+	MultiLineString CDATA	"0"
+	MultiPoint CDATA	"0"
+	MultiPolygon CDATA	"0"
+	LinearRing CDATA	"0"
+	Altitude (YES|NO)	"NO">
+<!ELEMENT	serving_node_privacy_action	EMPTY>
+<!ATTLIST	serving_node_privacy_action	
+	passive_type (POSITION_NOT_ALLOWED | POSITION | NOTIFY_AND_POSITION | POSITION_IF_NOT_DISALLOWED | POSITION_IF_ALLOWED)	#REQUIRED
+	active_type (POSITION_NOT_ALLOWED | POSITION | NOTIFY_AND_POSITION | POSITION_IF_NOT_DISALLOWED | POSITION_IF_ALLOWED)	"POSITION_NOT_ALLOWED">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_EME_LIA   -->
+<!ENTITY	% extension.param	"">
+<!ELEMENT	eme_lia	((eme_pos+ | req_id | (result, add_info?)) %extension.param;)>
+<!ATTLIST	eme_lia 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_EME_LIR  -->
+<!ENTITY	% extension.param	"">		
+<!ELEMENT	eme_lir	((msids | (msid+, gsm_net_param?, trans_id?, esrd?, esrk? , supl_support_params?, target_serving_node?)+), eqop?, geo_info?, loc_type? , pushaddr?, MapRequest? %extension.param;)>
+<!ATTLIST	eme_lir 	
+	ver CDATA	#FIXED "3.5.0"
+	res_type (SYNC | ASYNC)	"SYNC">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_EME_LIREP  -->
+<!ENTITY	% extension.param	"">		
+<!ELEMENT	eme_lirep	(req_id, (eme_pos+ | (result, add_info?)) %extension.param;)>
+<!ATTLIST	eme_lirep 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_EMEREP  -->
+<!ENTITY	% extension.param	"">		
+<!ELEMENT	emerep	(eme_event,locationserver_address? %extension.param;)>
+<!ATTLIST	emerep 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_FUNC  -->
+<!ELEMENT	eme_event	(eme_pos+)>
+<!ATTLIST	eme_event	
+	eme_trigger (EME_ORG | EME_REL | EME_HO)	#REQUIRED>
+<!ELEMENT	tlrr_event	((ms_action | change_area | velocity_event | distance_event | equidistance_event | aln_event), group_condition?, persistence?)>
+<!ELEMENT	analytic_report	(target_area | aln)>
+<!ELEMENT	ms_action	EMPTY>
+<!ATTLIST	ms_action	
+	type (MS_AVAIL)	#REQUIRED>
+<!ELEMENT	change_area	(target_area, no_of_reports?, minimumIntervalTime?)>
+<!ATTLIST	change_area	
+	type (MS_ENTERING | MS_LEAVING | MS_WITHIN_AREA | MS_OUTSIDE_AREA)	#REQUIRED
+	loc_estimates (TRUE | FALSE)	#REQUIRED>
+<!ELEMENT	velocity_event	(target_speed, no_of_reports?, minimumIntervalTime?)>
+<!ATTLIST	velocity_event	
+	type (INCREASING_ABOVE | ABOVE | DECREASING_BELOW | BELOW)	#REQUIRED
+	vel_estimates (TRUE | FALSE)	#REQUIRED>
+<!ELEMENT	distance_event	(target_distance,reference_object+, no_of_reports?, minimumIntervalTime?)>
+<!ATTLIST	distance_event	
+	type (ENTERING_DISTANCE | LEAVING_DISTANCE | WITHIN_DISTANCE | OUTSIDE_DISTANCE)	#REQUIRED
+	loc_estimates (TRUE | FALSE)	#REQUIRED>
+<!ELEMENT	equidistance_event	(target_equidistance, no_of_reports?, minimumIntervalTime?)>
+<!ATTLIST	equidistance_event	
+	loc_estimates (TRUE | FALSE)	#REQUIRED>
+<!ELEMENT	aln_event	(aln, no_of_reports?, minimumIntervalTime?)>
+<!ATTLIST	aln_event	
+	type (MS_ENTERING | MS_LEAVING | MS_WITHIN_AREA)	#REQUIRED
+	loc_estimates (TRUE | FALSE)	#REQUIRED>
+<!ELEMENT	aln	(aln_id?, aln_name?, aln_node_set?)>
+<!ELEMENT	aln_id	(#PCDATA)>
+<!ATTLIST	aln_id	
+	type (SSID | BSSID | OTHER)	#REQUIRED>
+<!ELEMENT	aln_name	(#PCDATA)>
+<!ELEMENT	aln_node_set	(aln_node+)>
+<!ELEMENT	aln_node	(#PCDATA)>
+<!ATTLIST	aln_node	
+	type (WIFI | BT | SRN | OTHER)	#REQUIRED
+	id_type (MAC_ADDRESS | OTHER)	#REQUIRED>
+<!ELEMENT	target_area	(shape | (shape, civicloc) | civicloc | cc | plmn | name_area)>
+<!ELEMENT	target_speed	(speed)>
+<!ELEMENT	target_distance	(#PCDATA)>
+<!ELEMENT	target_equidistance	(#PCDATA)>
+<!ELEMENT	reference_object	(msid)>
+<!ELEMENT	no_of_reports	(#PCDATA)>
+<!ELEMENT	minimumIntervalTime	(#PCDATA)>
+<!ELEMENT	name_area	(#PCDATA)>
+<!ELEMENT	plmn	(mcc, mnc)>
+<!ELEMENT	interval	(#PCDATA)>
+<!ELEMENT	loc_type	(batch_cond?)>
+<!ATTLIST	loc_type	
+	type (CURRENT | LAST |CURRENT_OR_LAST | LAST_OR_CURRENT | INITIAL | CURRENT_AND_INTERMEDIATE | LOCATION_URI)	"CURRENT"
+	per_type (REALTIME | QUASIREALTIME | BATCH)	"REALTIME">
+<!ELEMENT	batch_cond	(#PCDATA)>
+<!ATTLIST	batch_cond	
+	batch_type (MEASUREMENTS | MINUTES | ENDOFSERVICE )  	"ENDOFSERVICE">
+<!ELEMENT	prio	EMPTY>
+<!ATTLIST	prio	
+	type (NORMAL | HIGH)	"NORMAL">
+<!ELEMENT	pushaddr	(url, id?, pwd?)>
+<!ELEMENT	req_id	(#PCDATA)>
+<!ELEMENT	start_time	(#PCDATA)>
+<!ATTLIST	start_time	
+	utc_off CDATA	"0000">
+<!ELEMENT	stop_time	(#PCDATA)>
+<!ATTLIST	stop_time	
+	utc_off CDATA	"0000">
+<!ELEMENT	duration	(#PCDATA)>
+<!ELEMENT	url	(#PCDATA)>
+<!ELEMENT	time_remaining	(#PCDATA)>
+<!ELEMENT	lcs_ref	(#PCDATA)>
+<!ELEMENT	supl_support_params	(ip_address?, shape?)>
+<!ELEMENT	ip_address	(#PCDATA)>
+<!ELEMENT	trigger_data	(req_id, msid+, tlrr?)>
+<!ELEMENT	target_serving_node	(vmscid | (mme_name, diameter_realm?) | sgsnid | (sgsn_name, diameter_realm?)| amf_name)>
+<!ELEMENT	mme_name	(#PCDATA)>
+<!ELEMENT	sgsnid	(cc?, ndc?, sgsnno)>
+<!ELEMENT	sgsnno	(#PCDATA)>
+<!ELEMENT	sgsn_name	(#PCDATA)>
+<!ELEMENT	diameter_realm	(#PCDATA)>
+<!ELEMENT	amf_name	(#PCDATA)>
+<!ELEMENT	query_id	(#PCDATA)>
+<!ELEMENT	locationserver_address	(url)>
+<!ELEMENT	group_condition	(#PCDATA)>
+<!ATTLIST	group_condition	
+	threshold_type (ALL | MINIMUM | MAXIMUM)	"ALL"
+	value_type (RELATIVE | ABSOLUTE)	"ABSOLUTE">
+<!ELEMENT	persistence	(#PCDATA)>
+<!-- END OF SECTION -->
+<!--   START OF   MLP_GSM_NET  -->
+<!ELEMENT	gsm_net_param	(cgi?, neid?, nmr?, ta?,
+ lmsi?, imsi?)>
+<!ELEMENT	cgi	(mcc, mnc, lac, cellid)>
+<!ELEMENT	neid	(vlrid |
+ (vmscid, vlrid?))>
+<!ELEMENT	vmscid	(cc?, ndc?, vmscno)>
+<!ELEMENT	vlrid	(cc?, ndc?, vlrno)>
+<!ELEMENT	nmr	(#PCDATA)>
+<!ELEMENT	mcc	(#PCDATA)>
+<!ELEMENT	mnc	(#PCDATA)>
+<!ELEMENT	ndc	(#PCDATA)>
+<!ELEMENT	cc	(#PCDATA)>
+<!ELEMENT	vmscno	(#PCDATA)>
+<!ELEMENT	vlrno	(#PCDATA)>
+<!ELEMENT	lac	(#PCDATA)>
+<!ELEMENT	cellid	(#PCDATA)>
+<!ELEMENT	ta	(#PCDATA)>
+<!ELEMENT	lmsi	(#PCDATA)>
+<!ELEMENT	imsi	(#PCDATA)>
+<!-- END OF SECTION -->
+<!--   START OF   MLP_HDR  -->
+<!ELEMENT	hdr	((sessionid | (client , sessionid?)), subclient*, requestor?, supported_shapes?, serving_node_privacy_action?)>
+<!ATTLIST	hdr 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_HLIA  -->
+<!ENTITY	% extension.param	"">
+<!ELEMENT	hlia	((pos+ | req_id | (result, add_info?)) %extension.param;)>
+<!ATTLIST	hlia 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_HLIR  -->
+<!ENTITY	% extension.param	"">
+		
+<!ELEMENT	hlir	(msid, trans_id?, start_time?, stop_time?, interval?, qop?, geo_info?, no_of_reports?, pushaddr?, prio? %extension.param;)>
+<!ATTLIST	hlir 	
+	ver CDATA	#FIXED "3.5.0"
+	res_type (SYNC | ASYNC)	"SYNC">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_HLIREP  -->
+<!ENTITY	% extension.param	"">
+		
+<!ELEMENT	hlirep	(req_id, pos+ %extension.param;)>
+<!ATTLIST	hlirep 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_LOC  -->
+<!ELEMENT	pos	(msid, (pd | location_uri |  poserr),
+ gsm_net_param?, trans_id? , add_info?, positioning_data*)>
+<!ATTLIST	pos	
+	pos_method (CELL | OTDOA | GPS | A-GPS | GNSS | A-GNSS | E-OTD | U-TDOA | AFLT | EFLT | E-CID | BARO | BT | MBS | WLAN | NR_E-CID | Multi-RTT | DL-AoD | DL-TDOA | UL-TDOA | UL-AoA | UNKNOWN | OTHER)	#IMPLIED
+	result_type (INTERMEDIATE | FINAL)	"FINAL">
+<!ELEMENT	eme_pos	(msid+, (pd | location_uri | poserr)?, esrd?, esrk?, trans_id?, serving_cell?, target_serving_node?, location_id?, positioning_data*)>
+<!ATTLIST	eme_pos	
+	pos_method (CELL | OTDOA | GPS | A-GPS | GNSS | A-GNSS | E-OTD | U-TDOA | AFLT | EFLT | E-CID | BARO | BT | MBS | WLAN | NR_E-CID | Multi-RTT | DL-AoD | DL-TDOA | UL-TDOA | UL-AoA | UNKNOWN | OTHER)	#IMPLIED
+	result_type (INTERMEDIATE | FINAL)	"FINAL">
+<!ELEMENT	trl_pos	(msid?, reference_object*, (pd | poserr | time | analytic_data), positioning_data*)>
+<!ATTLIST	trl_pos	
+	trl_trigger (PERIODIC | MS_AVAIL | CHANGE_AREA | VELOCITY | DISTANCE | EQUIDISTANCE | ALN_EVENT)	#REQUIRED
+	pos_method (CELL | OTDOA | GPS | A-GPS | GNSS | A-GNSS | E-OTD | U-TDOA | AFLT | EFLT | E-CID | BARO | BT | MBS | WLAN | NR_E-CID | Multi-RTT | DL-AoD | DL-TDOA | UL-TDOA | UL-AoA | UNKNOWN | OTHER)	#IMPLIED>
+<!ELEMENT	positioning_data	EMPTY>
+<!ATTLIST	positioning_data 
+	positioning_method (CELL | OTDOA | GPS | A-GPS | GNSS | A-GNSS | E-OTD | U-TDOA | AFLT | EFLT | E-CID | BARO | BT | MBS | WLAN | NR_E-CID | Multi-RTT | DL-AoD | DL-TDOA | UL-TDOA | UL-AoA | OTHER | UNKNOWN)	#IMPLIED
+	positioning_mode (UE-BASED | UE-ASSISTED | CONVENTIONAL)	#IMPLIED
+	ganss_id (GALILEO | SBAS | MODERNIZED-GPS | QZSS | GLONASS | BDS | NavIC | UNKNOWN | OTHER) #IMPLIED>
+<!ELEMENT	analytic_data	(time, num_of_ms, dwell_time?)>
+<!ELEMENT	num_of_ms	(num_start?, num_entered, num_left, num_mean?, num_std_dev?)>
+<!ELEMENT	dwell_time	(mean_dwell_time, dwell_time_std_dev?)>
+<!ELEMENT	num_start	(#PCDATA)>
+<!ELEMENT	num_entered	(#PCDATA)>
+<!ELEMENT	num_left	(#PCDATA)>
+<!ELEMENT	num_mean	(#PCDATA)>
+<!ELEMENT	num_std_dev	(#PCDATA)>
+<!ELEMENT	mean_dwell_time	(duration)>
+<!ELEMENT	dwell_time_std_dev	(duration)>
+<!ELEMENT	pd	(time, (shape | civicloc | (shape, civicloc) | relativelocation), MapData?, (alt, alt_unc?)?, speed?, direction?, lev_conf?, qos_not_met?, MotionStateList?, (floor_number, floor_number_unc?)? , uncompensatedBarometricPressure?)>
+<!ELEMENT	poserr	(result, add_info?, time)>
+<!ELEMENT	relativelocation	((Point | CircularArea | EllipticalArea), ReferencePoint?)>
+<!ELEMENT	floor_number	(#PCDATA)>
+<!ELEMENT	floor_number_unc	(#PCDATA)>
+<!ELEMENT	MapData	(Base64Map | Url)>
+<!ELEMENT	Base64Map	(#PCDATA)>
+<!ELEMENT	Url	(#PCDATA)>
+<!ELEMENT	MapRequest	(Width?, Height?, Zoom?)>
+<!ATTLIST	MapRequest	
+	MapdataType (MAP | URL)	"MAP"
+	MimeType (GIF | JPEG |  PNG  | TIFF )	"GIF">
+<!ELEMENT	Width	(#PCDATA)>
+<!ELEMENT	Height	(#PCDATA)>
+<!ELEMENT	Zoom	(#PCDATA)>
+<!ATTLIST	Zoom	
+	ZoomType (KILOMETER | METER | MILE | INCH)	"KILOMETER">
+<!ELEMENT	time	(#PCDATA)>
+<!ATTLIST	time	
+	utc_off CDATA	"0000">
+<!ELEMENT	alt	(#PCDATA)>
+<!ELEMENT	alt_unc	(#PCDATA)>
+<!ELEMENT	civicloc	(civicloc_element+)>
+<!ATTLIST	civicloc	
+	xml:lang CDATA	#IMPLIED>
+<!ELEMENT	civicloc_element	(#PCDATA)>
+<!ATTLIST	civicloc_element	
+	element_type (COUNTRY | A1 | A2 | A3 | A4 | A5 | A6 | PRD | POD | STS | HNO | HNS | LMK | LOC | FLR | NAM | PC | BLD | UNIT | ROOM | PLC | PCN | POBOX | ADDCODE | SEAT | RD | RDSEC | RDBR | RDSUBBR | PRM | POM | PN | MP | STP | HNP | STPS | LMKP | VENUE_NAME |  VENUE_ID | VENUE_SPECIFIC_NAME | IANA)	#REQUIRED
+	xml:lang CDATA 	#IMPLIED
+	iana_type CDATA 	#IMPLIED>
+<!ELEMENT	MotionStateList	(PrimaryMotionState, SecondaryMotionState*, Confidence)>
+<!ELEMENT	PrimaryMotionState	(MotionState)>
+<!ELEMENT	SecondaryMotionState	(MotionState)>
+<!ELEMENT	MotionState	(#PCDATA)>
+<!ELEMENT	Confidence	(#PCDATA)>
+<!ELEMENT	qos_not_met	EMPTY>
+<!ELEMENT	direction	(#PCDATA)>
+<!ELEMENT	speed	(#PCDATA)>
+<!ELEMENT	lev_conf	(#PCDATA)>
+<!ELEMENT	geo_info	(CoordinateReferenceSystem)>
+<!ATTLIST	geo_info	
+	requested_positiondata ( SHAPE |CIVICLOC | SHAPE_AND_CIVICLOC)	"SHAPE"
+	Strict (YES | NO)	"YES">
+<!ELEMENT	CoordinateReferenceSystem	(Identifier)>
+<!ELEMENT	Identifier	(code, codeSpace, edition)>
+<!ELEMENT	code	(#PCDATA)>
+<!ELEMENT	codeSpace	(#PCDATA)>
+<!ELEMENT	edition	(#PCDATA)>
+<!ELEMENT	service_coverage	((cc, ndc*)+)>
+<!ELEMENT	MotionStateRequest	EMPTY>
+<!ELEMENT	serving_cell	(cgi | sai | (mcc, mnc, lte_ci)| (mcc, mnc, nr_ci))>
+<!ELEMENT	sai	(mcc, mnc, lac, sac)>
+<!ELEMENT	sac	(#PCDATA)>
+<!ELEMENT	lte_ci	(#PCDATA)>
+<!ELEMENT	nr_ci	(#PCDATA)>
+<!ELEMENT	location_uri	(#PCDATA)>
+<!ELEMENT	location_id	(#PCDATA)>
+<!ELEMENT	ReferencePoint	(Point?, civicloc?, floor_number?)>
+<!ATTLIST	ReferencePoint	
+	referencepoint_id CDATA	#REQUIRED
+	referencepoint_name CDATA	#IMPLIED>
+<!ELEMENT	uncompensatedBarometricPressure	(#PCDATA)>
+<!-- END OF SECTION -->
+
+<!--   START OF   MLP_SLIA  -->
+<!ENTITY	% extension.param	"">		
+<!ELEMENT	slia	((pos+ | req_id | (result, add_info?)) %extension.param;)>
+<!ATTLIST	slia 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_SLIR  -->
+<!ENTITY	% extension.param	"">
+		
+<!ELEMENT	slir	((msids | (msid, codeword?, gsm_net_param, trans_id?)+), eqop?, geo_info?, loc_type?, prio?, pushaddr?, service_coverage?, MapRequest?, MotionStateRequest?, ReferencePoint? %extension.param;)>
+<!ATTLIST	slir 	
+	ver CDATA	#FIXED "3.5.0"
+	res_type (SYNC | ASYNC)	"SYNC">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_SLIREP  -->
+<!ENTITY	% extension.param	"">
+<!ELEMENT	slirep	(req_id, pos+ %extension.param;)>
+<!ATTLIST	slirep 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_SLRA  -->
+<!ENTITY	% extension.param	"">
+<!ELEMENT	slra	((result, add_info?) %extension.param;)>
+<!ATTLIST	slra 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_SLREP  -->
+<!ENTITY	% extension.param	"">		
+<!ELEMENT	slrep	(pos+ %extension.param;)>
+<!ATTLIST	slrep 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_SVC_INIT  -->
+<!ENTITY	% extension.message	"">		
+<!ELEMENT	svc_init	(hdr, (slir | eme_lir | tlrr | tlrsr | hlir | tlrqr %extension.message;))>
+<!ATTLIST	svc_init 	
+	ver CDATA	#FIXED "3.5.0">
+<!ENTITY	% mlp_id_qop_res_shape.dtd	SYSTEM "MLP_ID_QOP_RES_SHAPE_v3_5.DTD">
+%mlp_id_qop_res_shape.dtd;
+<!-- END OF SECTION -->
+<!--   START OF   MLP_SVC_RESULT  -->
+<!ENTITY	% extension.message	"">
+<!ELEMENT	svc_result	(hdr?, (slia | slirep | slrep | slra | eme_lia | emerep | eme_lirep | tlra | tlrep | tlrsa | hlia | hlirep | tlrpr | tlrqa | tlqrep %extension.message;))>
+<!ATTLIST	svc_result	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_TLRA  -->
+<!ENTITY	% extension.param	"">		
+<!ELEMENT	tlra	(((req_id, lcs_ref?) | (result, add_info?)) %extension.param;)>
+<!ATTLIST	tlra 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_TLRR  -->
+<!ENTITY	% extension.param	"">
+		
+<!ELEMENT	tlrr	(msids, interval?, start_time?, stop_time?, duration?, tlrr_event?, analytic_report?, qop?, geo_info?, pushaddr?, loc_type?, prio?, service_coverage?, MapRequest?, ReferencePoint?  %extension.param;)>
+<!ATTLIST	tlrr 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_TLREP  -->
+<!ENTITY	% extension.param	"">
+		
+<!ELEMENT	tlrep	(req_id, lcs_ref?, trl_pos+, time_remaining? %extension.param;)>
+<!ATTLIST	tlrep 	
+	ver CDATA	#FIXED "3.5.0"
+	more (YES | NO)	"NO">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_TLRPR  -->
+<!ENTITY	% extension.param	"">
+<!ELEMENT	tlrpr	(msid, req_id, lcs_ref? %extension.param;)>
+<!ATTLIST	tlrpr 	
+	ver CDATA	#FIXED "3.5.0"
+	cause (PAUSE | RESUME)	#REQUIRED>
+<!-- END OF SECTION -->
+<!--   START OF   MLP_TLRQA  -->
+<!ENTITY	% extension.param	"">
+<!ELEMENT	tlrqa	((query_id | (result, add_info?)) %extension.param;)>
+<!ATTLIST	tlrqa 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_TLRQR  -->
+<!ENTITY	% extension.param	"">
+<!ELEMENT	tlrqr	(pushaddr? %extension.param;)>
+<!ATTLIST	tlrqr 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_TLRQREP  -->
+<!ENTITY	% extension.param	"">
+<!ELEMENT	tlqrep	(query_id, trigger_data* %extension.param;)>
+<!ATTLIST	tlqrep 	
+	ver CDATA	#FIXED "3.5.0"
+	last (YES | NO)	#REQUIRED>
+<!-- END OF SECTION -->
+<!--   START OF   MLP_TLRSA  -->
+<!ENTITY	% extension.param	"">
+		
+<!ELEMENT	tlrsa	((((msids | msid)?, req_id) | (result, add_info?)) %extension.param;)>
+<!ATTLIST	tlrsa 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->
+<!--   START OF   MLP_TLRSR   -->
+<!ENTITY	% extension.param	"">		
+<!ELEMENT	tlrsr	((msids | msid)?, req_id, lcs_ref? %extension.param;)>
+<!ATTLIST	tlrsr 	
+	ver CDATA	#FIXED "3.5.0">
+<!-- END OF SECTION -->

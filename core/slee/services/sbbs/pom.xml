@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>org.mobicents.gmlc</groupId>
+        <artifactId>services-parent</artifactId>
+        <version>5.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>sbbs</artifactId>
+    <name>Core : SLEE : Services Sbbs</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>gmlc-library</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>sun-jaxb</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <artifactId>restcomm-slee-ra-map-ratype</artifactId>
+            <groupId>org.restcomm.resources</groupId>
+            <version>${restcomm.resources.map.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mobicents.servers.jainslee.api</groupId>
+            <artifactId>jain-slee-11-ext</artifactId>
+            <version>${jslee.ext.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <artifactId>sccp-impl</artifactId>
+            <groupId>org.restcomm.protocols.ss7.sccp</groupId>
+            <version>${jss7.restcomm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mobicents.resources</groupId>
+            <artifactId>http-servlet-ratype</artifactId>
+            <version>${restcomm.resources.http.servlet.version}</version>
+        </dependency>
+        <!-- jdiameter for SLh and SLg interfaces -->
+        <dependency>
+            <groupId>org.mobicents.diameter</groupId>
+            <artifactId>jdiameter-api</artifactId>
+            <version>${restcomm.jdiameter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mobicents.diameter</groupId>
+            <artifactId>jdiameter-impl</artifactId>
+            <version>${restcomm.jdiameter.version}</version>
+        </dependency>
+        <!-- jain-slee.diameter for SLh interface RA -->
+        <dependency>
+            <artifactId>restcomm-slee-ra-diameter-slh-events</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.slee.diameter.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>sun-jaxb</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <artifactId>restcomm-slee-ra-diameter-slh-ra</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.slee.diameter.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>sun-jaxb</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <artifactId>restcomm-slee-ra-diameter-slh-ratype</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.slee.diameter.version}</version>
+        </dependency>
+        <!-- jain-slee.diameter for SLg interface RA -->
+        <dependency>
+            <artifactId>restcomm-slee-ra-diameter-slg-events</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.slee.diameter.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>restcomm-slee-ra-diameter-slg-ra</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.slee.diameter.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>restcomm-slee-ra-diameter-slg-ratype</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.slee.diameter.version}</version>
+        </dependency>
+        <!-- jain-slee.diameter for Sh interface RA (Client) -->
+        <dependency>
+            <artifactId>restcomm-slee-ra-diameter-sh-client-events</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.slee.diameter.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>restcomm-slee-ra-diameter-sh-client-ra</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.slee.diameter.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>restcomm-slee-ra-diameter-sh-client-ratype</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.slee.diameter.version}</version>
+        </dependency>
+        <!-- jain-slee.diameter for Sh interface RA (Server) -->
+        <dependency>
+            <artifactId>restcomm-slee-ra-diameter-sh-server-events</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.slee.diameter.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>restcomm-slee-ra-diameter-sh-server-ra</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.slee.diameter.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>restcomm-slee-ra-diameter-sh-server-ratype</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.slee.diameter.version}</version>
+        </dependency>
+        <!-- jain-slee.diameter for Diameter Base RA -->
+        <dependency>
+            <artifactId>restcomm-slee-ra-diameter-base-events</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.slee.diameter.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>restcomm-slee-ra-diameter-base-ra</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.slee.diameter.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>restcomm-slee-ra-diameter-base-ratype</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${restcomm.slee.diameter.version}</version>
+        </dependency>
+        <!-- jodatime -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${jodatime.version}</version>
+        </dependency>
+        <!-- MAP -->
+        <dependency>
+            <artifactId>map-api</artifactId>
+            <groupId>org.restcomm.protocols.ss7.map</groupId>
+            <version>${jss7.restcomm.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>map-impl</artifactId>
+            <groupId>org.restcomm.protocols.ss7.map</groupId>
+            <version>${jss7.restcomm.version}</version>
+        </dependency>
+        <!-- jakarta for XML binding-->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <artifactId>exec-maven-plugin</artifactId>
+            <groupId>org.codehaus.mojo</groupId>
+            <version>1.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+        <!-- Apache commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <!-- Apache commons-codec -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.13</version>
+        </dependency>
+        <!-- MongoDB -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+        <!-- ASN1C Objective Systems -->
+        <!--dependency>
+            <groupId>com.objsys</groupId>
+            <artifactId>asn1j.runtime</artifactId>
+            <version>7.3.0</version>
+        </dependency-->
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.auto.value</groupId>
+            <artifactId>auto-value</artifactId>
+            <version>1.5.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.google.gdata/core -->
+        <dependency>
+            <groupId>com.google.gdata</groupId>
+            <artifactId>core</artifactId>
+            <version>1.47.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hierynomus</groupId>
+            <artifactId>asn-one</artifactId>
+            <version>0.5.0</version>
+        </dependency>
+        <!-- jain-slee.ulp for SUPL -->
+        <dependency>
+            <artifactId>jain-slee-ra-ulp-events</artifactId>
+            <groupId>com.paicbd.resources</groupId>
+            <version>${supl-jain-slee-ra.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>jain-slee-ra-ulp-ra</artifactId>
+            <groupId>com.paicbd.resources</groupId>
+            <version>${supl-jain-slee-ra.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>jain-slee-ra-ulp-ratype</artifactId>
+            <groupId>com.paicbd.resources</groupId>
+            <version>${supl-jain-slee-ra.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.22</version>
+        </dependency>
+
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.9.0</version>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>test</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.testng</groupId>
+                    <artifactId>testng</artifactId>
+                    <version>${testng.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler.plugin.version}</version>
+                <configuration>
+                    <source>${compile.source}</source>
+                    <target>${compile.source}</target>
+                </configuration>
+            </plugin>
+
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <!-- plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.jibx</groupId>
+                                        <artifactId>
+                                            jibx-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.2.6,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>bind</goal>
+                                            <goal>schema-codegen</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin -->
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>

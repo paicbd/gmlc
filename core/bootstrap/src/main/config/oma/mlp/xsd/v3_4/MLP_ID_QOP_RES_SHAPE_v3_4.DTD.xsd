@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    
+    MLP DTD - Mobile Location Protocol
+       version - 3.4.1
+       date    - 11 Dec 2018
+    FILE INFORMATION
+    
+      OMA Permanent Document
+        File: OMA-SUP-DTD_MLP_ID_QOP_RES_SHAPE-V3_4_1-20181211-A
+        Type: Text
+    
+      Public Reachable Information
+        Path: http://www.openmobilealliance.org/tech/dtd
+        Name: MLP_ID_QOP_RES_SHAPE_v3_4.dtd
+    
+    NORMATIVE INFORMATION
+    
+      Information about this file can be found in the latest revision of
+    
+        OMA-TS-MLP-V3_4
+    
+      This is available at http://www.openmobilealliance.org/
+    
+      Send comments to technical-comments@mail.openmobilealliance.org
+    
+    CHANGE HISTORY
+    
+    12052015 Status changed to Approved by TP, TP Ref # OMA-TP-2015-0081-INP_MLS_V1_3_ERP_for_final_Approval
+    11122018 Status changed to Approved by LOC WG, Ref LOC WG Doc# OMA-LOC-2018-0020-INP_MLS_Evolution_v1_3_1_ERP_for_Final_Approval_notification
+    
+    
+    LEGAL DISCLAIMER
+    
+    Copyright 2018 Open Mobile Alliance.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions
+    are met:
+    
+    1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+    
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+    
+    The above license is used as a license under copyright only.  Please
+    reference the OMA IPR Policy for patent licensing terms:
+    http://www.openmobilealliance.org/ipr.html
+    
+    TYPICAL USAGE IN XML DOCUMENT
+    
+      <?xml version="1.0"?>
+      <!DOCTYPE FooBarMsg PUBLIC "-//OMA//DTD FooBar 1.0//EN"
+                "http://www.openmobilealliance.org/tech/DTD/foobar-v1_0.dtd"
+                [<?oma-foobar-ver supported-versions="1.0"?>]>
+      <FooBarMsg>
+         ...
+      </FooBarMsg>
+    
+-->
+<!-- START OF   MLP_GEM -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+    <xs:element name="gem">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="result"/>
+                <xs:element minOccurs="0" ref="add_info"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_ID -->
+    <xs:element name="msid">
+        <xs:complexType mixed="true">
+            <xs:attribute name="type" default="MSISDN">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="MSISDN"/>
+                        <xs:enumeration value="IMSI"/>
+                        <xs:enumeration value="IMEI"/>
+                        <xs:enumeration value="MIN"/>
+                        <xs:enumeration value="MDN"/>
+                        <xs:enumeration value="EME_MSID"/>
+                        <xs:enumeration value="ASID"/>
+                        <xs:enumeration value="OPE_ID"/>
+                        <xs:enumeration value="IPV4"/>
+                        <xs:enumeration value="IPV6"/>
+                        <xs:enumeration value="SESSID"/>
+                        <xs:enumeration value="SIP_URI"/>
+                        <xs:enumeration value="TEL_URL"/>
+                        <xs:enumeration value="NAI"/>
+                        <xs:enumeration value="URI"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="enc" default="ASC">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="ASC"/>
+                        <xs:enumeration value="CRP"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="msid_range">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="start_msid"/>
+                <xs:element ref="stop_msid"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="msids">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:sequence>
+                    <xs:element ref="msid"/>
+                    <xs:element minOccurs="0" ref="codeword"/>
+                    <xs:element minOccurs="0" ref="session"/>
+                    <xs:element minOccurs="0" ref="trans_id"/>
+                </xs:sequence>
+                <xs:sequence>
+                    <xs:element ref="msid_range"/>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="codeword"/>
+                </xs:sequence>
+                <xs:element ref="msid_group"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="msid_group" type="xs:string"/>
+    <xs:element name="codeword" type="xs:string"/>
+    <xs:element name="esrd">
+        <xs:complexType mixed="true">
+            <xs:attribute name="type" default="NA">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="NA"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="esrk">
+        <xs:complexType mixed="true">
+            <xs:attribute name="type" default="NA">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="NA"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="session">
+        <xs:complexType mixed="true">
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="APN"/>
+                        <xs:enumeration value="DIAL"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="start_msid">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="msid"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="stop_msid">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="msid"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="trans_id" type="xs:string"/>
+    <!-- END OF SECTION -->
+    <!-- START OF  MLP_QOP -->
+    <xs:element name="eqop">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="resp_req"/>
+                <xs:element minOccurs="0" ref="resp_timer"/>
+                <xs:choice minOccurs="0">
+                    <xs:element ref="ll_acc"/>
+                    <xs:element ref="hor_acc"/>
+                </xs:choice>
+                <xs:element minOccurs="0" ref="alt_acc"/>
+                <xs:element minOccurs="0" ref="max_loc_age"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="qop">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="0">
+                    <xs:element ref="ll_acc"/>
+                    <xs:element ref="hor_acc"/>
+                </xs:choice>
+                <xs:element minOccurs="0" ref="alt_acc"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ll_acc">
+        <xs:complexType mixed="true">
+            <xs:attribute name="qos_class">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="ASSURED"/>
+                        <xs:enumeration value="BEST_EFFORT"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="hor_acc">
+        <xs:complexType mixed="true">
+            <xs:attribute name="qos_class">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="ASSURED"/>
+                        <xs:enumeration value="BEST_EFFORT"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="alt_acc">
+        <xs:complexType mixed="true">
+            <xs:attribute name="qos_class">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="ASSURED"/>
+                        <xs:enumeration value="BEST_EFFORT"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="max_loc_age" type="xs:string"/>
+    <xs:element name="resp_req">
+        <xs:complexType>
+            <xs:attribute name="type" default="DELAY_TOL">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="NO_DELAY"/>
+                        <xs:enumeration value="LOW_DELAY"/>
+                        <xs:enumeration value="DELAY_TOL"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="resp_timer" type="xs:string"/>
+    <!-- END OF SECTION -->
+    <!-- START OF  MLP_RES -->
+    <xs:element name="add_info" type="xs:string"/>
+    <xs:element name="result">
+        <xs:complexType mixed="true">
+            <xs:attribute name="resid" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF  MLP_SHAPE -->
+    <xs:element name="shape">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element ref="Point"/>
+                <xs:element ref="LineString"/>
+                <xs:element ref="Polygon"/>
+                <xs:element ref="Box"/>
+                <xs:element ref="CircularArea"/>
+                <xs:element ref="CircularArcArea"/>
+                <xs:element ref="EllipticalArea"/>
+                <xs:element ref="MultiLineString"/>
+                <xs:element ref="MultiPoint"/>
+                <xs:element ref="MultiPolygon"/>
+                <xs:element ref="LinearRing"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="distanceUnit" type="xs:string"/>
+    <xs:element name="angularUnit" type="xs:string"/>
+    <xs:element name="angle" type="xs:string"/>
+    <xs:element name="coord">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="X"/>
+                <xs:element minOccurs="0" ref="Y"/>
+                <xs:element minOccurs="0" ref="Z"/>
+                <xs:element minOccurs="0" ref="Zone"/>
+                <xs:element minOccurs="0" ref="Hemisphere"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="X" type="xs:string"/>
+    <xs:element name="Y" type="xs:string"/>
+    <xs:element name="Z" type="xs:string"/>
+    <xs:element name="Zone" type="xs:string"/>
+    <xs:element name="Hemisphere" type="xs:string"/>
+    <xs:element name="Point">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="coord"/>
+            </xs:sequence>
+            <xs:attribute name="gid" type="xs:ID"/>
+            <xs:attribute name="srsName"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="LineString">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="coord"/>
+                <xs:element maxOccurs="unbounded" ref="coord"/>
+            </xs:sequence>
+            <xs:attribute name="gid" type="xs:ID"/>
+            <xs:attribute name="srsName"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Box">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="coord"/>
+                <xs:element ref="coord"/>
+            </xs:sequence>
+            <xs:attribute name="gid" type="xs:ID"/>
+            <xs:attribute name="srsName"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="LinearRing">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="coord"/>
+                <xs:element ref="coord"/>
+                <xs:element ref="coord"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="coord"/>
+            </xs:sequence>
+            <xs:attribute name="gid" type="xs:ID"/>
+            <xs:attribute name="srsName"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Polygon">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="outerBoundaryIs"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="innerBoundaryIs"/>
+            </xs:sequence>
+            <xs:attribute name="gid" type="xs:ID"/>
+            <xs:attribute name="srsName"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="outerBoundaryIs">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="LinearRing"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="innerBoundaryIs">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="LinearRing"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CircularArcArea">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="coord"/>
+                <xs:element ref="inRadius"/>
+                <xs:element ref="outRadius"/>
+                <xs:element ref="startAngle"/>
+                <xs:element ref="stopAngle"/>
+                <xs:element minOccurs="0" ref="angularUnit"/>
+                <xs:element minOccurs="0" ref="distanceUnit"/>
+            </xs:sequence>
+            <xs:attribute name="gid" type="xs:ID"/>
+            <xs:attribute name="srsName"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CircularArea">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="coord"/>
+                <xs:element ref="radius"/>
+                <xs:element minOccurs="0" ref="distanceUnit"/>
+            </xs:sequence>
+            <xs:attribute name="gid" type="xs:ID"/>
+            <xs:attribute name="srsName"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="EllipticalArea">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="coord"/>
+                <xs:element ref="angle"/>
+                <xs:element ref="semiMajor"/>
+                <xs:element ref="semiMinor"/>
+                <xs:element minOccurs="0" ref="angularUnit"/>
+                <xs:element minOccurs="0" ref="distanceUnit"/>
+            </xs:sequence>
+            <xs:attribute name="gid" type="xs:ID"/>
+            <xs:attribute name="srsName"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="inRadius" type="xs:string"/>
+    <xs:element name="outRadius" type="xs:string"/>
+    <xs:element name="radius" type="xs:string"/>
+    <xs:element name="semiMajor" type="xs:string"/>
+    <xs:element name="semiMinor" type="xs:string"/>
+    <xs:element name="startAngle" type="xs:string"/>
+    <xs:element name="stopAngle" type="xs:string"/>
+    <xs:element name="MultiLineString">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="LineString"/>
+            </xs:sequence>
+            <xs:attribute name="gid" type="xs:ID"/>
+            <xs:attribute name="srsName"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="MultiPoint">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="Point"/>
+            </xs:sequence>
+            <xs:attribute name="gid" type="xs:ID"/>
+            <xs:attribute name="srsName"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="MultiPolygon">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element ref="Polygon"/>
+                <xs:element ref="Box"/>
+                <xs:element ref="CircularArea"/>
+                <xs:element ref="CircularArcArea"/>
+                <xs:element ref="EllipticalArea"/>
+            </xs:choice>
+            <xs:attribute name="gid" type="xs:ID"/>
+            <xs:attribute name="srsName"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+<!-- END OF SECTION -->

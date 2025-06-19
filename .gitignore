@@ -1,0 +1,144 @@
+#############################
+## Java
+##############################
+.mtj.tmp/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+
+##############################
+## Maven
+##############################
+~
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+pom.xml.bak
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+# ignore mvn-rpmbuild repo
+/.m2
+
+##############################
+## Gradle
+##############################
+bin/
+build/
+.gradle
+.gradletasknamecache
+gradle-app.setting
+!gradle-wrapper.jar
+
+##############################
+## IntelliJ IDEA
+##############################
+out/
+.idea/
+.idea_modules/
+*.iml
+*.ipr
+*.iws
+.idea
+
+##############################
+## Eclipse
+##############################
+.settings/
+bin/
+tmp/
+.metadata
+.classpath
+.project
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+.factorypath
+
+##############################
+## NetBeans
+##############################
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+catalog.xml
+
+##############################
+## Visual Studio Code
+##############################
+.vscode/
+
+##############################
+## OS X
+##############################
+.DS_Store
+
+##############################
+## Generated directories
+##############################
+logs/
+LICENSE4J-Runtime-Library/
+
+
+# ignore .svn metadata files
+.svn
+
+#
+maven-ant-tasks.jar
+test-output
+transaction.log
+
+# vim files
+*.swp
+/.gitk-tmp.*
+atlassian-ide-plugin.xml
+
+# temp files
+*~
+
+# hprof dumps
+/*.hprof
+
+# ignore 'randomly' strewn around logs
+server.log
+*.log
+
+# H2 databases produced by tests
+*.h2.db
+
+# JBoss transaction generated files
+PutObjectStoreDirHere
+
+# release files
+release/checkout/
+release/docs-bundle/
+release-wildfly/checkout/
+release-wildfly/docs-bundle/
+release-wildfly/target/
+release-wildfly/*.zip
+
+#ignore autogenerate src doco folder
+docs/sources-mobicents/src/
+docs/sources-telscale/src/
+
+#ignore logs from test-suite
+**/logs/
+
+#ignore env.JBOSS_HOME folders
+core/bootstrap/${env.JBOSS_HOME}/
+core/oam/cli/${env.JBOSS_HOME}/
+core/slee/services/du/${env.JBOSS_HOME}/

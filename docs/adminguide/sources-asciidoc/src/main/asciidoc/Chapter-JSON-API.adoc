@@ -1,0 +1,2337 @@
+= JSON API
+
+The following table describes the JSON API for MAP and Diameter operations.
+
+.JSON API parameters
+[%autowidth, cols="b,v,v"]]
+|=======================================================================
+|PROPERTY |PARAMETERS | DESCRIPTION
+
+|*URL* | IP:port/restcomm/gmlc/rest | Example: `127.0.0.1:8080/restcomm/gmlc/rest`
+
+|*Method* | POST | Example: `curl -X POST 127.0.0.1:8080/restcomm/gmlc/rest`
+
+
+|*MAP ATI*|
+
+*Mandatory parameters:*
+
+*msisdn*: [numeric]
+
+*operation*: [string]
+
+*token*: [string]
+
+*Optional parameters:*
+
+*domain*: [string]
+
+*locationInfoEps*: [boolean]
+
+*extraRequestedInfo*: [boolean]
+
+*tt*: [number]
+
+*httpRespType*: [string]
+
+|
+
+*msisdn*: E.164 number of the target subscriber.
+
+*operation*: MAP or Diameter operation for this request. In this case, the only valid option (case insensitive) is *ATI*.
+
+*token*: HTTP POST (cURL) request token. This value must match the one configured as `curltoken` in the `GmlcManagement_gmlcproperties.xml` file or the `token` at the MongoDB database within the `curl-account` collection.
+
+*domain*: core network domain to which the MAP operation is conveyed. Possible values are `cs` (Circuit-Switched) and `ps` (Packet-Switched). If absent, it defaults to `cs`.
+
+*locationInfoEps*: used to set `locationInformationEPS-Supported` flag within MAP ATI requested information. If absent, it defaults to `true`.
+
+*extraRequestedInfo*: used to set `imei`, `ms-classmark` and `mnpRequestedInfo` flags within MAP ATI requested information. If absent, it defaults to `true`. It must be set to `false` when the HLR does not accept those parameters as a MAP ATI request.
+
+*tt*: Translation Type value to be assigned to the SCCP Called Party Address Global Title of the HLR. If absent, it defaults to `0`. Admitted values are positive integers from `0` to `255`.
+
+*httpRespType*: for retro-compatibility with community version. Possible values are `plain` or `json` (defaults to `json` if absent). To be deprecated soon.
+
+See examples in next table.
+
+
+|*MAP SRISM-PSI*|
+
+*Mandatory parameters:*
+
+*msisdn*: [numeric]
+
+*operation*: [string]
+
+*token*: [string]
+
+*Optional parameters:*
+
+*domain*: [string]
+
+*locationInfoEps*: [boolean]
+
+*psiServiceType*: [string]
+
+*tt*: [number]
+
+|
+
+*msisdn*: E.164 number of the target subscriber.
+
+*operation*: MAP or Diameter operation for this request. In this case, the only valid option (case insensitive) is *PSI*.
+
+*token*: cURL request token. This value must match the one configured as `curltoken` in the `GmlcManagement_gmlcproperties.xml` file or the `token` at the MongoDB database within the `curl-account` collection.
+
+*domain*: core network domain to which the MAP operation is conveyed. Possible values are `cs` (Circuit-Switched) and `ps` (Packet-Switched). If absent, it defaults to `cs`.
+
+*locationInfoEps*: used to set `locationInformationEPS-Supported` flag within MAP PSI requested information.
+
+*psiServiceType*: this optional parameter needs to be set to `useSriSm` for sending MAP SRISM previous to MAP PSI. It is the default value, thus it is better not to set it at all when this is the desired behaviour.
+
+*tt*: Translation Type value to be assigned to the SCCP Called Party Address Global Title of the HLR query (SRISM). If absent, it defaults to `0`. Admitted values are positive integers from `0` to `255`.
+
+See examples in next table.
+
+
+
+|*MAP SRI-PSI*|
+
+*Mandatory parameters:*
+
+*msisdn*: [numeric]
+
+*operation*: [string]
+
+*token*: [string]
+
+*psiServiceType*: [string]
+
+*Optional parameters:*
+
+*domain*: [string]
+
+*locationInfoEps*: [string]
+
+*tt*: [number]
+
+|
+
+*msisdn*: E.164 number of the target subscriber.
+
+*operation*: MAP or Diameter operation for this request. In this case, the only valid option (case insensitive) is *PSI*.
+
+*token*: cURL request token. This value must match the one configured as `curltoken` in the `GmlcManagement_gmlcproperties.xml` file or the `token` at the MongoDB database within the `curl-account` collection.
+
+*psiServiceType*: this optional parameter is used for sending MAP SRI previous to MAP PSI, for which must be set to `useSri`, instead of default MAP SRISM.
+
+*domain*: core network domain to which the MAP operation is conveyed. Possible values are `cs` (Circuit-Switched) and `ps` (Packet-Switched). If absent, it defaults to `cs`.
+
+*locationInfoEps*: used to set `locationInformationEPS-Supported` flag within MAP PSI requested information.
+
+*tt*: Translation Type value to be assigned to the SCCP Called Party Address Global Title of the HLR query (SRI). If absent, it defaults to `0`. Admitted values are positive integers from `0` to `255`.
+
+
+See examples in next table.
+
+
+|*MAP PSI*|
+
+*Mandatory parameters:*
+
+*msisdn*: [numeric]
+
+*operation*: [string]
+
+*token*: [string]
+
+*psiServiceType*: [string]
+
+*psiImsi*: [numeric]
+
+*psiNnn*: [numeric]
+
+*Optional parameters:*
+
+*domain*: [string]
+
+*locationInfoEps*: [string]
+
+|
+
+*msisdn*: E.164 number of the target subscriber.
+
+*operation*: MAP or Diameter operation for this request. In this case, the only valid option (case insensitive) is *PSI*.
+
+*token*: cURL request token. This value must match the one configured as `curltoken` in the `GmlcManagement_gmlcproperties.xml` file or the `token` at the MongoDB database within the `curl-account` collection.
+
+*psiServiceType*: this parameter needs to be set to `psiFirst` for not sending any operation previous to MAP PSI. Otherwise, it will use the default value and MAP SRISM will be sent first instead.
+
+*psiImsi*: E.212 value (IMSI) of the target subscriber. If absent, SRISM will be sent previous to MAP PSI.
+
+*psiNnn*: address of the network entity at which the target subscriber is attached to (e.g. GT digits of the serving MSC/VLR). If absent, SRISM will be sent previous to MAP PSI.
+
+*domain*: core network domain to which the MAP operation is conveyed. Possible values are `cs` (Circuit-Switched) and `ps` (Packet-Switched). If absent, it defaults to `cs`.
+
+*locationInfoEps*: used to set `locationInformationEPS-Supported` flag within MAP PSI requested information.
+
+*tt*: Translation Type value to be assigned to the SCCP Called Party Address Global Title of the HLR query (SRILCS). If absent, it defaults to `0`. Admitted values are positive integers from `0` to `255`.
+
+See examples in next table
+
+
+
+|*MAP SRILCS-PSL*|
+
+*Mandatory/Conditional parameters:*
+
+*msisdn*: [numeric]
+
+*imsi*: [numeric]
+
+*operation*: [string]
+
+*lcsLocationType*: [string]
+
+*lcsClientType*: [number]
+
+*token*: [string]
+
+*clientReferenceNumber*: [number]
+
+*Optional/Conditional parameters:*
+
+*lcsDeferredLocationType*: [string]
+
+*lcsClientExternalID*: [number]
+
+*lcsClientInternalID*: [number]
+
+*lcsClientName*: [string]
+
+*lcsClientFormatIndicator*: [number]
+
+*lcsRequestorId*: [string]
+
+*lcsRequestorFormatIndicator* [number]
+
+*horizontalAccuracy*: [number]
+
+*verticalAccuracy*: [number]
+
+*verticalCoordinateRequest*: [boolean]
+
+*responseTime*: [string]
+
+*lcsPriority*: [string]
+
+*lcsServiceTypeId*: [number]
+
+*lcsAreaType*: [string]
+
+*lcsAreaId*: [string]
+
+*lcsAreaEventOccurrenceInfo*: [string]
+
+*lcsAreaEventIntervalTime*: [number]
+
+*reportingAmount*: [number]
+
+*reportingInterval*: [number]
+
+*lcsVisitedPLMNId*: [string]
+
+*lcsVisitedPLMNIdRAN*: [number]
+
+*lcsPeriodicLocationSupportIndicator*: [number]
+
+*lcsPrioritizedListIndicator*: [number]
+
+*imei*: [number]
+
+*lcsCallbackUrl*: [string]
+
+*tt*: [number]
+
+|
+
+*msisdn*: E.164 number of the target subscriber. If absent, then the `imsi` must be present.
+
+*imsi*: E.212 value (IMSI) of the target subscriber. If absent, then the `msisdn` must be present.
+
+*operation*: MAP or Diameter operation for this request. In this case, the only valid option (case insensitive) is *PSL*.
+
+*token*: cURL request token. This value must match the one configured as `curltoken` in the `GmlcManagement_gmlcproperties.xml` file or the `token` at the MongoDB database within the `curl-account` collection.
+
+*lcsLocationType*: indication of the type of location request required. Possible values are `currentLocation`, `currentOrLastKnownLocation`, `initialLocation`, `activateDeferredLocation`, `cancelDeferredLocation` or `notificationVerificationOnly`.
+
+*lcsDeferredLocationType*: refers to the type of area or periodic event, when the location estimation is deferred. The allowed values are: `available` for MS available events, `inside`, `entering` or `leaving` for area event reports (geofencing), or `periodicLDR` for deferred periodic location reports (further detailed in this document).
+
+*lcsClientType*: indicates the location service client type, which can be one of the following integer value: `0` (`emergency`), `1` (`value-added services`), `2` (`PLMN operator services`), `3` (`lawful interception`).
+
+*lcsClientExternalID*: indicates the LCS Client external identity. It comprises a number with a maximum length of 16 digits. Mandatory when `lcsClientType` equals `0` (`emergency`) or `1` (`value-added services`).
+
+*lcsClientInternalID*: indicates the LCS Client internal identity. Mandatory when `lcsClientType` equals `2` (PLMN operator services). Must be one of `0` (broadcast service), `1` (Operation and Maintenance HPLMN), `2` (Operation and Maintenance VPLMN), `3` (anonymousLocation) or `4` (target MS subscribed service SIP).
+
+*lcsClientName*: name of the LCS Client, an UTF8 string consistent with its format indicator.
+
+*lcsClientFormatIndicator*: indicates the type of the LCS Client name format. It can take the following integer values: `0` (`logical name`), `1` (`email address`), `2` (`MSISDN`), `3` (`URL`), `4` (`SIP URL`).
+
+*lcsRequestorId*: contains the identification of the requestor,  an UTF8 string consistent with its format indicator.
+
+*lcsRequestorFormatIndicator*: contains the format of the LCS Requestor Id. It can be one of the following integer values: `0` (`logical name`), `1` (`email address`), `2` (`MSISDN`), `3` (`URL`), `4`(`SIP URL`).
+
+*clientReferenceNumber*: correlation reference number between a request and a response of a deferred Mobile Terminating Location Request procedure (MT-LR).
+
+*lcsReferenceNumber*: LCS Reference Number sent by the GMLC to the core network destination entity (MSC/VLR).
+
+*lcsPriority*: indication of the location request prioritization. Accepted values are `highestPriority` or `normalPriority`.
+
+*horizontalAccuracy*: requested horizontal location accuracy. Must be an integer value from 0 to 127, governed by the equation r=C((1+x)^k -1) with C = 10 and x = 0,1. With 0 <= K <= 127, a suitably useful range between 0 and 1800 kilometres. The horizontal location error should be less than the error indicated by the uncertainty code (r) with 67% confidence.
+
+*verticalAccuracy*: requested vertical location accuracy. Must be an integer value from 0 to 127, governed by the equation h=C((1+x)^k -1), with C = 45 and x = 0,025. With 0 <= K <= 127, a suitably useful range between 0 and 990.5 kilometres. The horizontal location error should be less than the error indicated by the uncertainty code (h) with 67% confidence.
+
+*verticalCoordinateRequest*: indication if the vertical coordinate is requested. Accepted values are `highestPriority` (default) or `true`.
+
+*responseTime*: indication of the urgency of the location request. Accepted values are `lowdelay` or `delaytolerant`.
+
+*lcsServiceTypeId*: indication of the service type identity of the location service. Possible values range from 0 to 127 (explained further in this document).
+
+*lcsAreaType*: indicates the area type for area events. Possible values are `countryCode`, `plmnId`, `locationAreaId`,  `routingAreaId`, `cellGlobalId` or `utranCellId`.
+
+*lcsAreaId*: string representation of the identity of the indicated area type. It must contain the area identity parameters used for geo-fencing location reports, separated by a hyphen. For example, for a the area type `cellGlobalId` area type, a valid value would be `502-19-3081-33045` for MCC=502, MNC=19, LAC=3081 and CI=33045.
+
+*lcsAreaEventOccurrenceInfo*: indicates the eventuality occurrence amount of an area event. Possible values are `oneTimeEvent` or `multipleTimeEvent`.
+
+*lcsAreaEventIntervalTime*: indicates the minimum time interval between area reports (in seconds). Values may vary between 1 and 32767.
+
+*reportingAmount*: indicates the amount of periodic location deferred reports. Values may vary between 1 and 8639999.
+
+*reportingInterval*: indicates the time interval between periodic location deferred reports (in seconds). Values may vary between 1 and 8639999.
+
+*lcsVisitedPLMNId*: indicates the ID of the visited PLMN. It must contain the corresponding `MCC` and `MNC` parameters separated by a hyphen, for example: `748-1`.
+
+*lcsVisitedPLMNIdRAN*: indicates the type or Radio Access Network. Possible values as `0` (`GSM`) or `1` (`UMTS`.)
+
+*lcsPeriodicLocationSupportIndicator*: indicates if the given PLMN-ID supports periodic location or not. Possible integer values are: `0` (`not supported`) or `1` (`supported`).
+
+*lcsPrioritizedListIndicator*: indicates if the PLMN-ID-List is provided in prioritized order or not. Possible integer values are: `0` (`not prioritized`) or `1` (`prioritized`).
+
+*imei*: International Mobile Equipment Identity of the target subscriber as specified by 3GPP TS 23.003. It can contain only 14 to 15 digits.
+
+*lcsCallbackUrl*: URL to send the `Subscriber Location Report`. If absent, it defaults to the value set in the correspondent configuration file.
+
+*tt*: Translation Type value to be assigned to the SCCP Called Party Address Global Title (HLR, MSC, VLR or SGSN). If absent, it defaults to `0`. Admitted values are positive integers from `0` to `255`.
+
+See examples in next table
+
+|*Diameter SLh-SLg RIR-PLR*|
+
+*Mandatory/Conditional parameters:*
+
+*msisdn*: [numeric]
+
+*imsi*: [numeric]
+
+*operation*: [string]
+
+*token*: [string]
+
+*clientReferenceNumber*: [number]
+
+*lcsReferenceNumber*: [number]
+
+*lcsLocationType*: [number]
+
+*lcsDeferredLocationType*: [number]
+
+*lcsClientName*: [string]
+
+*lcsClientFormatIndicator*: [number]
+
+*lcsClientType*: [number]
+
+*lcsClientExternalID*: [number]
+
+*lcsClientInternalID*: [number]
+
+*lcsRequestorId*: [string]
+
+*lcsRequestorFormatIndicator*: [number]
+
+*horizontalAccuracy*: [number]
+
+*verticalAccuracy*: [number]
+
+*verticalCoordinateRequest*: [number]
+
+*responseTime*: [number]
+
+*lcsAreaType*: [number]
+
+*lcsAreaId*: [string]
+
+*lcsAreaEventOccurrenceInfo*: [number]
+
+*lcsAreaEventIntervalTime*: [number]
+
+*lcsAreaEventMaxInterval*: [number]
+
+*lcsAreaEventSamplingInterval*: [number]
+
+*lcsAreaEventReportingDuration*: [number]
+
+*lcsAreaEventReportLocationReqs*: [number]
+
+*lcsAdditionalAreaType*: [number]
+
+*lcsAddAreaId*: [number]
+
+*lcsMotionEventLinearDistance*: [number]
+
+*lcsMotionEventOccurrenceInfo*: [number]
+
+*lcsMotionEventIntervalTime*: [number]
+
+*lcsMotionEventMaxInterval*: [number]
+
+*lcsMotionEventSamplingInterval*: [number]
+
+*lcsMotionEventReportingDuration*: [number]
+
+*lcsMotionEventReportLocationReqs*: [number]
+
+*lcsPeriodicReportingAmount*: [number]
+
+*lcsPeriodicReportingInterval*: [number]
+
+*lcsPriority*: [number]
+
+*lcsQoSClass*: [number]
+
+*lcsServiceTypeId*: [number]
+
+*velocityRequested*: [number]
+
+*lcsSupportedGADShapes*: [number]
+
+*lcsVisitedPLMNId*: [string]
+
+*lcsPeriodicLocationSupportIndicator*: [number]
+
+*lcsPrioritizedListIndicator*: [number]
+
+*lcsCodeword*: [string]
+
+*lcsPrivacyCheckNonSession*: [number]
+
+*lcsPrivacyCheckSession*: [number]
+
+*lcsApn*: [string]
+
+*imei*: [number]
+
+*lcsCallbackUrl*: [string]
+
+*hssDiameterHost*: [string]
+
+*hssDiameterRealm*: [string]
+
+|
+
+*msisdn*: ITU-T E.164 number of the target subscriber. If absent, then the `imsi` must be present.
+
+*imsi*: ITU-T E.212 value (IMSI) of the target subscriber. If absent, then the `msisdn` must be present.
+
+*operation*: MAP or Diameter operation for this request. In this case, the only valid option (case insensitive) is *PLR*.
+
+*token*: cURL request token. This value must match the one configured as `curltoken` in the `GmlcManagement_gmlcproperties.xml` file or the `token` at the MongoDB database within the `curl-account` collection.
+
+*clientReferenceNumber*: reference number of the GMLC Client for correlating requests and a immediate/deferred responses. Especially important for deferred EPC-MT-LR procedures, when `SLR` or `LRR` can arrive hours or even days after the initial `PSL` or `PSL` response. Different, but coupled with `lcsReferenceNumber` parameter.
+
+*lcsReferenceNumber*: LCS Reference Number sent by the GMLC to the LTE EPC destination entity (MME).
+
+*lcsLocationType*: indicates the type of location request. It can take the following integer values: `0` (`current location`), `1` (`current or last known location`), `2` (`initial location`), `3` (`active deferred location`), `4` (`cancel deferred location`), `5` (`notification verification only`).
+
+*lcsDeferredLocationType*: indicates a type of event, until when the location estimation is deferred. The allowed values are: `0` (`UE-Available`), `1` (`Entering-Into-Area`), `2` (`Leaving-From-Area`), `3` (`Being-Inside-Area`), `4` (`Periodic-LDR`), `5` (`Motion-Event`), `6` (`LDR-Activated`) and `7` (`Maximum-Interval-Expiration`).
+
+*lcsClientName*: name of the LCS Client, an UTF8 string consistent with its format indicator.
+
+*lcsClientFormatIndicator*: indicates the type of the LCS Client name format. It can take the following integer values: `0` (`logical name`), `1` (`email address`), `2` (`MSISDN`), `3` (`URL`), `4` (`SIP URL`).
+
+*lcsClientType*: indicates the type of location service being conducted by the PLR command: It can take the following integer values: `0` (`emergency services`), `1` (`value-added services`), `2` (`PLMN operator services`), `3` (`lawful interception services`)
+
+*lcsQoSClass*: indicates the quality treatment requested. Allowed values are: `0` (`assured`) or `1` (`best effort`).
+
+*horizontalAccuracy*: requested horizontal location accuracy (meters).
+
+*verticalAccuracy*: requested vertical location accuracy (meters).
+
+*verticalCoordinateRequest*: indication if vertical coordinate is requested. Accepted values are `0` (`not requested`) or `1` (`requested`).
+
+*responseTime*: indication of the urgency of the location request. Accepted values are `0` (`low delay`) or `1` (`delay tolerant`).
+
+*lcsRequestorId*: contains the identification of the requestor,  an UTF8 string consistent with its format indicator.
+
+*lcsRequestorFormatIndicator*: contains the format of the LCS Requestor Id. It can be one of the following integer values: `0` (`logical name`), `1` (`email address`), `2` (`MSISDN`), `3` (`URL`), `4`(`SIP URL`).
+
+*lcsPriority*: indicates the priority treatment requested. Allowed values are: `0` (`highest priority`) `1` or any other integer value (`normal priority`).
+
+*lcsServiceTypeId*: indication of the service type identity of the location service. Possible values range from 0 to 127 (explained further in this document).
+
+*velocityRequested*: indicates if the velocity is requested or not. Possible values are: `0` (`velocity not requested`) or `1` (`velocity requested`).
+
+*lcsSupportedGADShapes*: indicates the Geographical Area Definitions (GAD) shapes supported as per 3GPP TS 23.032.
+Possible values are:  `0` (`ellipsoidPoint`), `1` (`ellipsoidPointWithUncertaintyCircle`), `2` (`ellipsoidPointWithUncertaintyEllipse`), `3` (`polygon`), `4` (`ellipsoidPointWithAltitude`), `5` (`ellipsoidPointWithAltitudeAndUncertaintyEllipsoid`), `6` (`ellipsoidArc`).
+
+*lcsVisitedPLMNId*: indicates the ID of the visited PLMN. It must contain the corresponding `MCC` and `MNC` parameters separated by a hyphen, for example: `748-1`.
+
+*lcsPeriodicLocationSupportIndicator*: indicates if the given PLMN-ID supports periodic location or not. Possible integer values are: `0` (`not supported`) or `1` (`supported`).
+
+*lcsPrioritizedListIndicator*: indicates if the PLMN-ID-List is provided in prioritized order or not. Possible integer values are: `0` (`not prioritized`) or `1` (`prioritized`).
+
+*lcsCodeword*: indicates the potential codeword string to send in a notification message to the UE.
+
+*lcsPrivacyCheckNonSession*: indication of how the positioning operation should proceed in the relation to the checking of the session-related privacy settings of the user. Possible integer values are: `0` (`allowed without notification`), `1` (`allowed with notification`), `2` (`allowed if no response`), `3` (`restricted if no response`).
+
+*lcsPrivacyCheckSession*: indication of how the positioning operation should proceed in the relation to the checking of the non-session-related privacy settings of the user. Possible integer values are: `0` (`allowed without notification`), `1` (`allowed with notification`), `2` (`allowed if no response`), `3` (`restricted if no response`).
+
+*lcsApn*: `Access Point Name` (APN) Network Identifier of the LCS client, as used by the target UE. It shall only be included in session-related location requests.
+
+*imei* `International Mobile Equipment Identity` of the target subscriber as specified by 3GPP TS 23.003. It can contain only 14 to 15 digits.
+
+*lcsAreaType*: refers to the type of area of the geofence event. It can take one of the following integer values: `1` (`PLMN ID`), `2` (`Location Area ID`), `3` (`Routing Area ID`), `4` (`Cell Global ID`), `5` (`UTRAN Cell ID`), `6` (`Tracking Area ID`), `7` (`E-UTRAN Cell Global ID`).
+
+*lcsAreaId*: string representation of the identity of the indicated area type. It must contain the area identity parameters used for geo-fencing location reports, separated by a hyphen. For example, for a the area type `7` (`E-UTRAN Cell Global ID`), a valid value would be `502-18-811059-103` for MCC=502, MNC=19, eNBId=811059 and CI=103, or `502-18-207631207` for MCC=502, MNC=19, ECI=207631207.
+
+*lcsAreaEventOccurrenceInfo*: indicates the eventuality occurrence amount of an area event. Possible values are `0` (`one time event`) or `1` (`multiple time event`).
+
+*lcsAreaEventIntervalTime*: refers to the minimum time interval between area reports (in seconds). Accepted values between 1 and 32767 seconds.
+
+*lcsAreaEventMaxInterval*: refers to the maximum time interval between consecutive event reports (in seconds). Accepted values between 1 and 86400 seconds. Only applicable to a deferred EPC-MT-LR.
+
+*lcsAreaEventSamplingInterval*: refers to the maximum time interval between consecutive evaluations by a UE of an area event (in seconds). Accepted values between 1 and 3600 seconds. Only applicable to a deferred EPC-MT-LR.
+
+*lcsAreaEventReportingDuration*: refers to the maximum duration of event reporting (in seconds). Accepted values between 1 and 8640000 seconds. Only applicable to a deferred EPC-MT-LR.
+
+*lcsAreaEventReportLocationReqs*: indicates the requirements on location provision for a deferred EPC-MT-LR. It takes integer values from 0 to 31.
+
+*lcsAdditionalAreaType*: same as lcsAreaType argument, but for an additional area.
+
+*lcsAddAreaId*: same as lcsAreaId argument, but for an additional area.
+
+*lcsMotionEventLinearDistance*: refers the minimum linear (straight line) distance for motion event reports (in meters). Accepted values between 1 and 10,000. Only applicable to a deferred EPC-MT-LR.
+
+*lcsMotionEventOccurrenceInfo*: refers to the amount of motion events to be reported. It can take the following integer values: 0 (one time event) or 1 (multiple time events).
+
+*lcsMotionEventIntervalTime*: refers to the minimum time interval between motion event reports (in seconds). Accepted values between 1 and 32767 seconds.
+
+*lcsMotionEventMaxInterval*: refers to the maximum time interval between motion event reports (in seconds). Accepted values between 1 and 86400 seconds.
+
+*lcsMotionEventSamplingInterval*: refers to the maximum time interval between consecutive evaluations by a UE of a motion event (in seconds). Accepted values between 1 and 3600 seconds. Only applicable to a deferred EPC-MT-LR.
+
+*lcsMotionEventReportingDuration*: refers to the maximum duration of motion event reporting (in seconds). Accepted values between 1 and 8640000. Only applicable to a deferred EPC-MT-LR.
+
+*lcsMotionEventReportLocationReqs*: indicates the requirements on location provision for a deferred EPC-MT-LR. It takes integer values from 0 to 31.
+
+*lcsPeriodicReportingAmount*: refers to the reporting frequency (in seconds). Accepted values between 1 and 8639999 seconds.
+
+*lcsPeriodicReportingInterval*: refers to reporting interval (in seconds). Accepted values between 1 and 8639999 seconds.
+
+*lcsCallbackUrl*: URL to send the Subscriber Location Report. If absent, it defaults to the value set in the correspondent configuration file.
+
+*hssDiameterHost*: Diameter host name to set in the Destination-Host AVP of the SLh Routing-Info-Request or the Sh User-Data-Request commands. If absent, the default parameter set in the `diameterdesthost` value of the `GmlcManagement_gmlcproperties.xml` file shall be used.
+
+*hssDiameterRealm*: Diameter host realm to set in the Destination-Realm AVP of the SLh Routing-Info-Request or the Sh User-Data-Request commands. If absent, the default parameter set in the `diameterdestrealm` value of the `GmlcManagement_gmlcproperties.xml` file shall be used.
+
+See examples in next table.
+
+
+|*Diameter Sh UDR*|
+
+*Mandatory parameters:*
+
+*msisdn*: [numeric]
+
+*operation*: [string]
+
+*token*: [string]
+
+*Optional parameters:*
+
+*domain*: [string]
+
+*activeLocation*: [string]
+
+*locationInfoEps*: [string]
+
+*ratTypeRequested*: [string]
+
+*locationInfo5gs*: [string]
+
+*hssDiameterHost*: [string]
+
+*hssDiameterRealm*: [string]
+
+|
+
+*msisdn*: the E.164 number of the target subscriber.
+
+*operation*: MAP or Diameter operation for this request. In this case, the only valid option (case insensitive) is *UDR*.
+
+*token*: cURL request token. This value must match the one configured as `curltoken` in the `GmlcManagement_gmlcproperties.xml` file or the `token` at the MongoDB database within the `curl-account` collection.
+
+*domain*: core network domain to which the Diameter operation is conveyed. Possible values are `cs` (Circuit-Switched) and `ps` (Packet-Switched). If absent, it defaults to `ps`.
+
+*activeLocation*: used to indicate if an active location retrieval needs to be performed or not. Possible values are `true` or `false`. If absent, it defaults to `true`.
+
+*locationInfoEps*: used to set indicate if EPS Location Information may be sent or not to the GMLC. Possible values are `true` or `false`. If absent, it defaults to `true`. If set to `false`, EPS Location Information will not be retrieved.
+
+*ratTypeRequested*: used to indicate if the Radio Access type is requested. Possible values are `true` or `false`. If absent, it defaults to `false`.
+
+*hssDiameterHost*: Diameter host name to set in the Destination-Host AVP of the SLh Routing-Info-Request or the Sh User-Data-Request commands. If absent, the default parameter set in the `diameterdesthost` value of the `GmlcManagement_gmlcproperties.xml` file shall be used.
+
+*hssDiameterRealm*: Diameter host realm to set in the Destination-Realm AVP of the SLh Routing-Info-Request or the Sh User-Data-Request commands. If absent, the default parameter set in the `diameterdestrealm` value of the `GmlcManagement_gmlcproperties.xml` file shall be used.
+
+See examples in next table.
+
+
+|*Response parameters* (including all SS7 and Diameter operations) |
+
+*network*: [string]
+
+*protocol*: [string]
+
+*operation*: [string]
+
+*result*: [string]
+
+*CSLocationInformation*: [array]
+
+*LocationNumber*: [array]
+
+*oddFlag*: [boolean]
+
+*natureOfAddressIndicator*: [number]
+
+*internalNetworkNumberIndicator*: [number]
+
+*numberingPlanIndicator*: [number]
+
+*addressPresentationRestrictedIndicator*: [number]
+
+*screeningIndicator*: [number]
+
+*address*: [number]
+
+*LAI*: [array]
+
+*mcc*: [number]
+
+*mnc*: [number]
+
+*lac*: [number]
+
+*CGI*: [array]
+
+*ci*: [number]
+
+*SAI*: [array]
+
+*sac*: [number]
+
+*GeographicalInformation*: [array]
+
+*typeOfShape*: [string]
+
+*latitude*: [number]
+
+*longitude*: [number]
+
+*uncertainty*: [number]
+
+*GeodeticInformation*: [array]
+
+*confidence*: [number]
+
+*screeningAndPresentationIndicators*: [number]
+
+*EPSLocationInformation*: [array]
+
+*TAI*: [array]
+
+*tac*: [integer]
+
+*ECGI*: [array]
+
+*eci*: [number]
+
+*eNBId*: [number]
+
+*PSLocationInformation*: [array]
+
+*lsaIdType*: [string]
+
+*lsaId*: [number]
+
+*RAI*: [array]
+
+*rac*: [number]
+
+*GPRSMSClass*: [array]
+
+*msNetworkCapability*: [string]
+
+*msRadioAccessCapability*: [string]
+
+*MNPInfoResult*: [array]
+
+*mnpStatus*: [string]
+
+*mnpMsisdn*: [number]
+
+*mnpImsi*: [number]
+
+*mnpRouteingNumber*: [string]
+
+*saiPresent*: [boolean]
+
+*ageOfLocationInformation*: [number]
+
+*currentLocationRetrieved*: [boolean]
+
+*msisdn*: [number]
+
+*imsi*: [number]
+
+*imei*: [string]
+
+*lmsi*: [string]
+
+*vlrNumber*: [number]
+
+*mscNumber*: [number]
+
+*sgsnNumber*: [number]
+
+*mmeName*: [string]
+
+*subscriberState*: [string]
+
+*msClassmark*: [string]
+
+*lcsReferenceNumber*: [number]
+
+*clientReferenceNumber*: [number]
+
+*SRILCS*: [array]
+
+*networkNodeNumber*: [number]
+
+*gprsNodeIndicator*: [boolean]
+
+*mmeName*: [string]
+
+*3GPPAAAServerName*: [string]
+
+*hGmlcAddress*: [string]
+
+*vGmlcAddress*: [string]
+
+*pprAddress*: [string]
+
+*gmlcAddress*: [string]
+
+*PSL*: [array]
+
+*LocationEstimate*: [array]
+
+*uncertaintySemiMajorAxis*: [number]
+
+*uncertaintySemiMinorAxis*: [number]
+
+*angleOfMajorAxis*: [number]
+
+*altitude*: [number]
+
+*uncertaintyAltitude*: [number]
+
+*AdditionalLocationEstimate*: [array]
+
+*numberOfPoints*: [number]
+
+*polygonPointN*: [array] (N=1,2,3...15)
+
+*polygonCentroid*: [array]
+
+*ageOfLocationEstimate*: [number]
+
+*accuracyFulfilmentIndicator*: [string]
+
+*deferredMTLRresponseIndicator*: [boolean]
+
+*moLrShortCircuitIndicator*: [boolean]
+
+*GERANPositioningInfo*: [array]
+
+*geranPositioningData*: [string]
+
+*geranGanssPositioningData*: [string]
+
+*UTRANPositioningInfo*: [array]
+
+*utranPositioningData*: [string]
+
+*utranGanssPositioningData*: [string]
+
+*VelocityEstimate*: [array]
+
+*horizontalSpeed*: [number]
+
+*bearing*: [number]
+
+*verticalSpeed*: [number]
+
+*uncertaintyHorizontalSpeed*: [number]
+
+*uncertaintyVerticalSpeed"*: [number]
+
+*velocityType*: [string]
+
+*lcsServiceTypeID*: [number]
+
+*lcsClientID*: [array]
+
+*lcsClientType*: [number]
+
+*lcsClientInternalID*: [number]
+
+*lcsClientIDName*: [array]
+
+*lcsClientName*: [string]
+
+*lcsClientDataCodingScheme*: [number]
+
+*lcsClientDataFormatIndicator*: [number]
+
+*lcsClientAPN*: [string]
+
+*lcsClientRequestorID*: [array]
+
+*requestorIDEncodedString*: [string]
+
+*requestorIDDataCodingScheme*: [number]
+
+*requestorIDFormatIndicator*: [number]
+
+*lcsClientDialedByMS*: [string]
+
+*pseudonymIndicator*: [string]
+
+*lcsEvent*: [string]
+
+*moLrShortCircuitIndicator*: [boolean]
+
+*PeriodicLDRInfo*: [boolean]
+
+*reportingAmount*: [number]
+
+*reportingInterval*: [number]
+
+*sequenceNumber*: [number]
+
+*DeferredMTLRData*: [array]
+
+*deferredLocationEventType*: [string]
+
+*terminationCause*: [string]
+
+*aaaServerName*: [string]
+
+*SupportedLCSCapabilitySets*: [array]
+
+*AdditionalLCSCapabilitySets*: [array]
+
+*RELEASE98_99*: [boolean]
+
+*RELEASE4*: [boolean]
+
+*RELEASE5*: [boolean]
+
+*RELEASE6*: [boolean]
+
+*RELEASE7*: [boolean]
+
+*Routing-Info-Answer*: [array]
+
+*mmeRealm"*: [string]
+
+*sgsnName*: [string]
+
+*sgsnRealm*: [string]
+
+*3GPPAAAServerName*: [string]
+
+*gmlcAddress*: [string]
+
+*Provide-Location-Answer*: [array]
+
+*cellPortionId*: [number]
+
+*utranAdditionalPositioningData*: [string]
+
+*E-UTRANPositioningInfo*: [array]
+
+*eUtranPositioningData*: [string]
+
+*civicAddress*: [string]
+
+*barometricPressure*: [number]
+
+*deferredLocationType*: [string]
+
+*lcsEPSClientName*: [array]
+
+*lcsEPSClientNameString*: [string]
+
+*terminationCause*: [string]
+
+*lcsCapabilitySets*: [string]
+
+*PublicIdentifiers*: array]
+
+*imsPublicIdentity*: [string]
+
+*csgId*: [string]
+
+| Description and examples of these parameters are provided along this document.
+
+However, it is important to point out that some parameters are repeated along array parameters.
+
+Hence, contents of each array parameter are described here:
+
+*network*: possible values are `GSM/UMTS`, `IMS` or `LTE` (informative only).
+
+*protocol*: possible values are `MAP`, `UMTS`, `Diameter SLh-SLg(ELP)` or `Diameter Sh` (informative only).
+
+*operation*: possible values are `ATI`, `PSI`, `SRILCS-PSL` `SLR`, `RIR-RIA-PLR-PLA`, `LRR` or `UDR-UDA`.
+
+*result*: possible values are `SUCCESS` or `ERROR`.
+
+*CSLocationInformation*: retrievable by either SS7 MAP ATI or MAP PSI, as well as for Diameter Sh UDR/UDA, if not null, contains some of the following parameters:
+
+*LocationNumber*: as defined in ITU-T Q.763. If not null, contains the following parameters:
+
+*oddFlag*: possible values are: `true` (`ODD`) or `false` (`EVENi).
+
+*natureOfAddressIndicator*: possible values are: `0` (`spare`), `1` (`reserved for subscriber number -national use-`), `2` (`reserved for unknown -national use-`), `3` (`national significant number -national use-`), `4` (`international number`), `5-111` (`spare`), `112-126` (`reserved for national use`), `127` (`spare`).
+
+*internalNetworkNumberIndicator*: possible values are: `0` (`false - routing to internal number allowed`), `1` (`true - routing to internal number not allowed`).
+
+*numberingPlanIndicator* `0` (`spare`), `1` (`ISDN (telephony) numbering plan as per ITU-T Recommendation E.164`), `2` (`spare`), `3` (`Data numbering plan as per ITU-T Recommendation X.121`), `4` (`Telex numbering plan as per ITU-T Recommendation F.69 -national use-`), `5` (`private numbering plan`), `6` (`reserved for national use`), `7` (`spare`).
+
+*addressPresentationRestrictedIndicator* possible values are: `0` (`presentation allowed`), `1` (`presentation restricted`), `2` (`address not available -national use-`), `3` (`spare`).
+
+*screeningIndicator*: possible values are: `0` (`reserved`), `1` (`user provided, verified and passed`), `2` (`network`), `3` (`network provided`).
+
+*address*: Location Number `address digits` (ITU-T Q.763).
+
+`LocationNumber` example:
+
+"LocationNumber": {
+
+      "oddFlag": true,
+
+      "natureOfAddressIndicator": 4,
+
+      "internalNetworkNumberIndicator": 1,
+
+      "numberingPlanIndicator": 1,
+
+      "addressPresentationRestrictedIndicator": 1,
+
+      "screeningIndicator": 3,
+
+      "address": 50671204104
+
+}
+
+
+*CGI*: Cell Global Identification. If not null, it contains the following parameters:
+
+*mcc*: `Mobile Country Code`.
+
+*mnc*: `Mobile Country Code`.
+
+*lac*: `Location Area Code`.
+
+*ci*: `Cell Id`.
+
+`CGI` example:
+
+"CGI": {
+
+      "mcc": 712,
+
+      "mnc": 4,
+
+      "lac": 42004,
+
+      "ci": 10932
+
+}
+
+
+*SAI*: Service Area Identification. If not null, it contains the same parameters as `CGI` except for `sac` instead if `ci`:
+
+*sac*: `Service Area Code`.
+
+`SAI` example:
+
+"SAI": {
+
+      "mcc": 502,
+
+      "mnc": 19,
+
+      "lac": 1472,
+
+      "sac": 15079
+}
+
+*LAI* Location Area Identification. If not null, it contains the same parameters as `CGI` or `SAI`, but without `ci` or `sac`.
+
+`LAI` example:
+
+"LAI": {
+
+      "mcc": 712,
+
+      "mnc": 4,
+
+      "lac": 42004
+
+}
+
+
+*GeographicalInformation*: Geographical information as derived from the VLR from either the `CGI` or `SAI`. Included parameters are:
+
+*typeOfShape*: it can only be `EllipsoidPointWithUncertaintyCircle` for SS7 MAP ATI or MAP PSI, as well as for Diameter Sh UDR/UDA.
+
+*latitude*: expressed in the range -90&#186;, +90&#186;, negative decimal values refer to South degrees of latitude, while positive to North degrees of latitude.
+
+*longitude*: expressed in the range -180&#186;, +180&#186;, negative decimal values refer to West degrees of longitude, while positive to East degrees of longitude.
+
+*uncertainty*: method of describing the uncertainty for latitude and longitude (in metres).
+
+`GeographicalInformation` example:
+
+"GeographicalInformation": {
+
+      "typeOfShape": "EllipsoidPointWithUncertaintyCircle",
+
+      "latitude": 19.484427,
+
+      "longitude": -99.239695,
+
+      "uncertainty": 0.0
+
+}
+
+*GeodeticInformation* Geodetic information as derived from the VLR from either the `CGI` or `SAI`. Included parameters are the same as for _GeographicalInformation_ plus the following:
+
+*confidence*: confidence by which the position of a target entity is known to be within the shape description (expressed as a percentage)
+
+*screeningAndPresentationIndicators*: indicators for `allowed` or `not allowed` geodetic info and if it is `user` or `network provided`.
+
+`GeodeticInformation` example:
+
+"GeodeticInformation": {
+
+      "typeOfShape": "EllipsoidPointWithUncertaintyCircle",
+
+      "latitude": 18.919073,
+
+      "longitude": -99.239695,
+
+      "uncertainty": 20.0,
+
+      "confidence": 80,
+
+      "screeningAndPresentationIndicators": 3
+}
+
+*EPSLocationInformation*: retrievable by either SS7 MAP ATI or MAP PSI, as well as for Diameter Sh UDR/UDA, if not null, contains some of the following parameters:
+
+*TAI*: `Tracking Area Identification`, composed by the PLMN-ID (`mcc` and `mnc`) and the `tac`.
+
+*tac*: `Tracking Area Code`, a fixed length code of 2 octets identifying a Tracking Area within a PLMN.
+
+`TAI` example:
+
+"TAI": {
+
+        "mcc": 736,
+
+        "mnc": 1,
+
+        "tac": 10023
+
+}
+
+*ECGI*: E-UTRAN Cell Global Identification, if not null, it shall be composed by the PLMN-ID (`mcc` and `mnc`), `eci`, `eNBId` and `ci`:
+
+*eci*: LTE Cell Identity (ECI=eNBId+CI).
+
+*eNBId*: identity of the LTE base station, known as eNodeB or eNB.
+
+*ci*: ECI Cell Identity.
+
+`ECGI` example:
+
+"ECGI": {
+
+        "mcc": 736,
+
+        "mnc": 1,
+
+        "eci": 23187296,
+
+        "eNBId": 12082,
+
+        "ci": 3
+
+}
+
+*GeographicalInformation*: as explained for _CSLocationInformation_. but obtained from EPS (LTE).
+
+*GeodeticInformation*: as explained for _CSLocationInformation_. but obtained from EPS (LTE).
+
+
+*PSLocationInformation*: retrievable by either SS7 MAP ATI or MAP PSI, as well as for Diameter Sh UDR/UDA, if not null, contains the following array parameters:
+
+*LSA*, if not null, might contain the following parameters:
+
+*lsaIdType*: it might take the values `PLMN` for PLMN significant number or `Universal`.
+
+*lsaId*: 23 bit decoded number.
+
+`LSA` example:
+
+"LSA": {
+
+      "lsaIdType": "Universal",
+
+      "lsaId": "131"
+
+}
+
+*RAI*: if not null, might contain the same parameters as the _CSLocationInformation_ plus the `rac`:
+
+*rac*: `Routing Area Code`, a fixed 1 octet length code identifying a routing area within a location area.
+
+`RAI` example:
+
+"RAI": {
+
+      "mcc": 748,
+
+      "mnc": 1,
+
+      "lac": 14645,
+
+      "rac": 50
+
+}
+
+*GeographicalInformation*: with identical content as described earlier for _CSLocationInformation_.
+
+*GeodeticInformation* with identical content as described earlier for _CSLocationInformation_.
+
+*GPRSMSClass*, if not null, might contain the following parameters:
+
+*msNetworkCapability*: `MS network capabilities` (e.g. SMS) as part of the GRPS MS Class (only hexadecimal bytes values are shown for now).
+
+*msRadioAccessCapability*: `MS radio access capabilities` (e.g. radio access technologies support) as part of the GRPS MS Class (only hexadecimal bytes values are shown for now).
+
+`GPRSMSClass` example:
+
+"GPRSMSClass": {
+
+    "msNetworkCapability": "10002031",
+
+    "msRadioAccessCapability": "1000203170814"
+
+}
+
+*MNPInfoResult*: MNP Info Result retrieved either by SS7 MAP ATI or PSI. If not null, might contain the following parameters:
+
+*mnpStatus*: `Mobile Number Portability status`. Possible values are: `notKnownToBePorted`, `ownNumberPortedOut`, `foreignNumberPortedToForeignNetwork`, `ownNumberNotPortedOut` or `foreignNumberPortedIn`.
+
+*mnpMsisdn*: `Mobile Number Portability MSISDN`.
+
+*mnpImsi*: `Mobile Number Portability IMSI`.
+
+*mnpRouteingNumber*: `Mobile Number Portability Routeing Number`.
+
+`MNPInfoResult` example:
+
+"MNPInfoResult": {
+
+    "mnpStatus": "ownNumberPortedOut",
+
+    "mnpMsisdn": 60169285586,
+
+    "mnpImsi": 204040000000,
+
+    "mnpRouteingNumber": "2081"
+
+}
+
+*SRILCS*: `SS7 MAP SRILCS response`. If not null, might contain the following parameters:
+
+*msisdn*: ITU-T E.164 digits of the target subscriber.
+
+*imsi*: ITU-T E.212 digits of the target subscriber.
+
+*lmsi*: temporary identification that can be assigned to a visiting UE, allocated by the VLR upon location updates and sent to the HLR along with the IMSI.
+
+*networkNodeNumber*: `Network Node Number` (GT of the network entity at which the target subscriber is attached to. i.e. MSC/VLR or SGSN).
+
+*gprsNodeIndicator*: `GPRS Node Indicator`. Possible values are `true` or `false`.
+
+*mmeName*: String which contains the LTE EPC MME-Name in a format consistent with the Network Access Identifier (NAI) specification.
+
+*3GPPAAAServerName*: String which contains the 3GPP AAA Server name in a format consistent with the Network Access Identifier (NAI) specification.
+
+*hGmlcAddress*: Home Network GMLC address.
+
+*vGmlcAddress*: Visited Network GMLC address.
+
+*pprAddress*: `Privacy Profile Register` address.
+
+*gmlcAddress*: GMLC address.
+
+`SRILCS` example:
+
+"SRILCS": {
+
+    "msisdn": 59899077937,
+
+    "imsi": 748026871012345,
+
+    "lmsi": "7213917157",
+
+    "networkNodeNumber": 5982123007,
+
+    "gprsNodeIndicator": false,
+
+    "mmeName": "mmec03.mmeer3000.mme.epc.mnc002.mcc748.3gppnetwork.org",
+
+    "3GPPAAAServerName": "aaa04.aaa3000.aaa.epc.mnc002.mcc748.3gppnetwork.org",
+
+    "hGmlcAddress": "191.32.101.7"
+
+    "vGmlcAddress": "200.10.21.34"
+
+    "pprAddress": "191.32.102.17"
+
+    "gmlcAddress": "191.32.101.7"
+
+}
+
+*PSL*: `SS7 MAP Provide Subscriber Location response`. It shall contain an estimate of the location of the UE in universal coordinates and other parameters depending on the type of shape. If not null, might contain the following array parameters:
+
+*LocationEstimate*: if not null, might contain the following parameters (being their presence determined by the type of shape):
+
+*typeOfShape*: Indicates the Geographical Area Definitions supported as per 3GPP TS 23.032 Possible values are: `EllipsoidPoint`, `EllipsoidPointWithUncertaintyCircle`, `EllipsoidPointWithUncertaintyEllipse`, `Polygon`, `EllipsoidPointWithAltitude`, `EllipsoidPointWithAltitudeAndUncertaintyEllipsoid` and `ellipsoidArc`.
+
+*latitude*: expressed in the range -90&#186;, +90&#186;, negative decimal values refer to South degrees of latitude, while positive to North degrees of latitude.
+
+*longitude*: expressed in the range -180&#186;, +180&#186;, negative decimal values refer to West degrees of longitude, while positive to East degrees of longitude.
+
+*uncertainty*: method of describing the uncertainty for latitude and longitude (in metres).
+
+*uncertaintySemiMajorAxis*: Semi-major axis uncertainty (in meters) of the location estimate shape. Only applies to types of shapes `EllipsoidPointWithUncertaintyEllipse` and `EllipsoidPointWithAltitudeAndUncertaintyEllipsoid`.
+
+*uncertaintySemiMinorAxis*: Semi-minor axis uncertainty (in meters) of the location estimate shape. Only applies to types of shapes `EllipsoidPointWithUncertaintyEllipse` and `EllipsoidPointWithAltitudeAndUncertaintyEllipsoid`.
+
+*angleOfMajorAxis*: Orientation of major axis of the location estimate shape. Only applies to types of shapes `EllipsoidPointWithUncertaintyEllipse` and `EllipsoidPointWithAltitudeAndUncertaintyEllipsoid`.
+
+*confidence*: The confidence by which the position of a target entity is known to be within the location estimate shape description (expressed as a percentage). Only applies to types of shapes `EllipsoidPointWithUncertaintyEllipse`, `EllipsoidPointWithAltitudeAndUncertaintyEllipsoid` and `EllipsoidArc`.
+
+*altitude*: Altitude (in meters) of the location estimate shape. Only applies to types of shapes `EllipsoidPointWithAltitude`, `EllipsoidPointWithAltitudeAndUncertaintyEllipsoid`.
+
+*uncertaintyAltitude*: Altitude uncertainty (in meters) of the location estimate shape. Only applies to type of shape `EllipsoidPointWithAltitudeAndUncertaintyEllipsoid`.
+
+*innerRadius*: Inner radius (in meters) of the location estimate shape. Only applies to type of shape `EllipsoidArc`.
+
+*uncertaintyInnerRadius*: Inner radius uncertainty (in meters) of the location estimate shape. Only applies to type of shape `EllipsoidArc`.
+
+*offsetAngle*: Offset angle of the location estimate shape. Only applies to type of shape `EllipsoidArc`.
+
+*includedAngle*: Included angle of the location estimate shape. Only applies to type of shape `EllipsoidArc`.
+
+`LocationEstimate` example:
+
+"LocationEstimate": {
+
+    "typeOfShape": "EllipsoidPointWithAltitudeAndUncertaintyEllipsoid",
+
+    "latitude": 45.907005,
+
+    "longitude": -99.000207,
+
+    "altitude": 570,
+
+    "uncertaintySemiMajorAxis": 24.5,
+
+    "uncertaintySemiMinorAxis": 11.4,
+
+    "angleOfMajorAxis": 30.0,
+
+    "uncertaintyAltitude": 79.5,
+
+    "confidence": 5
+
+}
+
+*AdditionalLocationEstimate*: contain an estimate of the location of the UE in universal coordinates and other parameters when `LocationEstimate` type of shape is either `Polygon` or `EllipsoidPointWithAltitude`.
+
+*typeOfShape*: sames as for _LocationEstimate_ but only for `Polygon` or `EllipsoidPointWithAltitude`.
+
+*numberOfPoints*: number of points of a `Polygon` type of shape.
+
+*polygonPointN*: array of coordinates for point N of the `Polygon` type of shape (with N = 1 to 15)
+
+*polygonCentroid*: array of coordinates for the `center of mass` or `centroid` of the polygon coordinates array.
+
+*latitude*: sames as for _LocationEstimate_ but only for each `Polygon` point or `EllipsoidPointWithAltitude`.
+
+*longitude*: sames as for _LocationEstimate_ but only for each `Polygon` point or `EllipsoidPointWithAltitude`.
+
+*altitude* (for `EllipsoidPointwithAltitude` _typeOfShape_ only)
+
+`AdditionalLocationEstimate` example:
+
+"AdditionalLocationEstimate": {
+
+      "typeOfShape": "Polygon",
+
+      "numberOfPoints": 3,
+
+      "polygonPoint1": {
+
+              "latitude": 31.019168,
+
+              "longitude": 75.781095
+
+      },
+      "polygonPoint2": {
+
+              "latitude": 31.019222,
+
+              "longitude": 75.780988
+      },
+      "polygonPoint3": {
+
+              "latitude": 31.019189,
+
+              "longitude": 75.780838
+
+      },
+      "polygonCentroid": {
+              "latitude": 31.018989,
+              "longitude": 75.780474
+      }
+
+}
+
+*ageOfLocationEstimate*: indication in minutes of how old is the location estimate.
+
+*accuracyFulfilmentIndicator*: indication if the requested accuracy was fulfilled or not. Possible values are: `REQUESTED_ACCURACY_FULFILLED` and `REQUESTED_ACCURACY_NOT_FULFILLED`.
+
+*deferredMTLRresponseIndicator*: indication if an MT-LR is requested or not. Possible values are `true` or `false`.
+
+*moLrShortCircuitIndicator*: indication if an MO-LR is requested or not. Possible values are `true` or `false`.
+
+*CGI*: if not null, with identical content as described earlier for _CSLocationInformation_
+
+*SAI*: if not null, with identical content as described earlier for _CSLocationInformation_.
+
+*LAI* if not null, with identical content as described earlier for _CSLocationInformation_.
+
+*GERANPositioningInfo*: if not null, might contain the following parameters:
+
+*geranPositioningData*: if present, indicates the usage of each positioning method that was attempted to determine the location estimate within the GERAN.
+
+*geranGanssPositioningData*: if present, hexadecimal value (for now) of GERAN GANSS (Galileo and Additional Navigation Satellite Systems) positioning data within the GERAN.
+
+`GERANPositioningInfo` example:
+
+"GERANPositioningInfo": {
+
+      "geranPositioningData": "29152",
+
+      "geranGanssPositioningData": "820135"
+
+}
+
+*UTRANPositioningInfo*: if not null, might contain the following parameters:
+
+*utranPositioningData*: if present, indicates the usage of each positioning method that was attempted to determine the location estimate within the UTRAN (for now, only the retrieved hexadecimal value is indicated).
+
+*utranGanssPositioningData*: if present, hexadecimal value retrieved (for now) of GERAN GANSS (Galileo and Additional Navigation Satellite Systems) positioning data within the UTRAN.
+
+`UTRANPositioningInfo` example:
+
+"UTRANPositioningInfo": {
+
+      "utranPositioningData": "81",
+
+      "utranGanssPositioningData": "4c34",
+
+}
+
+*VelocityEstimate*, if not null, might contain the following parameters:
+
+*horizontalSpeed*: the horizontal speed gives the magnitude of the horizontal component of the velocity of the target entity.
+
+*bearing*: provides the direction of the horizontal component of velocity taken clockwise from North.
+
+*verticalSpeed*: vertical component of the velocity of the target entity.
+
+*uncertaintyHorizontalSpeed*: uncertainty of the horizontal speed.
+
+*uncertaintyVerticalSpeed*: uncertainty of the vertical speed.
+
+*velocityType*: type of velocity estimate. Possible values are `HorizontalVelocity`, `HorizontalWithVerticalVelocity`, `HorizontalVelocityWithUncertainty` and `HorizontalWithVerticalVelocityAndUncertainty`.
+
+`VelocityEstimate` example:
+
+"VelocityEstimate": {
+
+      "horizontalSpeed": 101,
+
+      "bearing": 3,
+
+      "verticalSpeed": 2,
+
+      "uncertaintyHorizontalSpeed": 5,
+
+      "uncertaintyVerticalSpeed": 1,
+
+      "velocityType": "HorizontalWithVerticalVelocityAndUncertainty"
+
+}
+
+`PSL` operation example:
+
+"PSL": {
+
+    "LocationEstimate": {
+
+      "typeOfShape": "EllipsoidPointWithAltitudeAndUncertaintyEllipsoid",
+
+      "latitude": 45.907005,
+
+      "longitude": -99.000227,
+
+      "altitude": 570,
+
+      "uncertaintySemiMajorAxis": 24.5,
+
+      "uncertaintySemiMinorAxis": 11.4,
+
+      "angleOfMajorAxis": 30.0,
+
+      "uncertaintyAltitude": 79.5,
+
+      "confidence": 5
+
+    },
+
+    "AdditionalLocationEstimate": {},
+
+    "ageOfLocationEstimate": 0,
+
+    "accuracyFulfilmentIndicator": "REQUESTED_ACCURACY_FULFILLED",
+
+    "deferredMTLRresponseIndicator": true,
+
+    "moLrShortCircuitIndicator": true,
+
+    "SAI": {
+
+      "mcc": 437,
+
+      "mnc": 109,
+
+      "lac": 8304,
+
+      "sac": 17185
+
+    },
+
+    "GERANPositioningInfo": {},
+
+    "UTRANPositioningInfo": {},
+
+    "VelocityEstimate": {
+
+      "horizontalSpeed": 101,
+
+      "bearing": 3,
+
+      "verticalSpeed": 2,
+
+      "uncertaintyHorizontalSpeed": 5,
+
+      "uncertaintyVerticalSpeed": 1,
+
+      "velocityType": "HorizontalWithVerticalVelocityAndUncertainty"
+
+    }
+
+}
+
+*lcsClientID*: if not null, it might contain the following array parameters:
+
+*lcsClientType*: type of positioning request issues by the LCS Client. Possible values are: `0` (`emergency`), `1` (`value-added services`), `2` (`PLMN operator services`), `3` (`lawful interception`).
+
+*lcsClientInternalID*: internal identity of the LCS client issuing the positioning request.
+
+*lcsClientIDName*: if not null, it might contain the following array parameters:
+
+*lcsClientName*: name of the LCS client issuing the positioning request.
+
+*lcsClientDataCodingScheme*: data coding scheme (information of the alphabet and the language used) of the LCS client issuing the positioning request.
+Possible values are: `0`(`LOGICAL_NAME`), `1` (`EMAIL_ADDRESS`), `2` (`MSISDN`), `3` (`URL`) or `4` (`SIP_URL`).
+
+*lcsClientDataFormatIndicator*: format indicator of the LCS client issuing the positioning request.
+Possible values are: `0`(`LOGICAL_NAME`), `1` (`EMAIL_ADDRESS`), `2` (`MSISDN`), `3` (`URL`) or `4` (`SIP_URL`).
+
+*lcsClientAPN*: Access Point Name (APN) Network Identifier of the LCS client issuing the positioning request.
+
+*lcsClientRequestorID*: if not null, might contain the following array parameters:
+
+*requestorIDEncodedString*: requestor identity in UTF8 string format of the LCS requestor issuing the positioning request.
+
+*requestorIDDataCodingScheme*: requestor identity data coding scheme (information of the alphabet and the language used) of the LCS requestor issuing the positioning request.
+Possible values are: `0`(`LOGICAL_NAME`), `1` (`EMAIL_ADDRESS`), `2` (`MSISDN`), `3` (`URL`) or `4` (`SIP_URL`).
+
+*requestorIDFormatIndicator*: requestor identity format indicator of the LCS requestor issuing the positioning request.
+
+*lcsClientDialedByMS*: identity of the LCS client issuing the positioning request, dialed by the MS.
+
+`lcsClientID` example:
+
+"lcsClientID": {
+
+    "lcsClientType": 0,
+
+    "lcsClientInternalID": 3,
+
+    "lcsClientIDName": {
+
+      "lcsClientName": "3",
+
+      "lcsClientDataCodingScheme": 15,
+
+      "lcsClientDataFormatIndicator": 3
+
+    },
+
+    "lcsClientAPN": "mnc02.mcc598.gprs",
+
+    "lcsClientRequestorID": {
+
+    "requestorIDEncodedString": "restcomm",
+
+    "requestorIDDataCodingScheme": 15,
+
+    "requestorIDFormatIndicator": 3
+
+    },
+
+    "lcsClientDialedByMS": "545248"
+
+}
+
+*PeriodicLDRInfo*, if not null, might contain the following parameters:
+
+*reportingAmount*: reporting frequency. Possible vales are between 1 and 8639999.
+
+*reportingInterval*: reporting interval in seconds. Possible vales are between 1 and 8639999.
+
+`PeriodicLDRInfo` example:
+
+"PeriodicLDRInfo": {
+
+    "reportingAmount": 10,
+
+    "reportingInterval": 60
+
+}
+
+*DeferredMTLRData*: data obtained of `SS7 MAP SLR` for Mobile-Terminated Location-Reports (`MT-LR`). If not nul, it might contain the following parameters:
+
+*deferredLocationEventType*: type of deferred location event. Possible values refer to area events such as `ENTERING_INTO_AREA`, `BEING_INSIDE_AREA`, `LEAVING_FROM_AREA` and `MS_AVAILABLE`, or periodic location deferred reports, i.e. `PERIODIC_LDR`.
+
+*terminationCause*: refers to the MT-LR termination cause . Possible values are: `NORMAL`, `ERROR_UNDEFINED`, `INTERNAL_TIMEOUT`, `CONGESTION`, `MT_LR_RESTART`, `PRIVACY_VIOLATION`, `SHAPE_OF_LOCATION_ESTIMATE_NOT_SUPPORTED`, `SUBSCRIBER_TERMINATION`, `UE_TERMINATION` or `NETWORK_TERMINATION`.
+
+*gprsNodeIndicator*: indicates if the MT-LR was reported by a GPRS node. Possible values are `true` or `false`.
+
+*networkNodeNumber*: GT digits of the network node that sends the report.
+
+*lmsi*: same as explained previously for _SRILCS_.
+
+*mmeName*: same as explained previously for _SRILCS_.
+
+*aaaServerName*: same as explained previously for _SRILCS_.
+
+*SupportedLCSCapabilitySets*: LCS capability sets as per 3GPP specification releases. If not null, it might contain the following array parameters:
+
+*RELEASE98_99*: possible values are `true` or `false`.
+
+*RELEASE4*: possible values are `true` or `false`.
+
+*RELEASE5*: possible values are `true` or `false`.
+
+*RELEASE6*: possible values are `true` or `false`.
+
+*RELEASE7*: possible values are `true` or `false`.
+
+*AdditionalLCSCapabilitySets*: Additional LCS capability sets as per 3GPP specification releases. If not null, it might contain the same array parameters as _SupportedLCSCapabilitySets_.
+
+`DeferredMTLRData` example:
+
+"DeferredMTLRData": {
+
+    "deferredLocationEventType": "BEING_INSIDE_AREA",
+
+    "terminationCause": "CONGESTION",
+
+    "gprsNodeIndicator": false,
+
+    "networkNodeNumber": 598048,
+
+    "lmsi": "7213917157",
+
+    "mmeName": "mmec03.mmeer3000.mme.epc.mnc002.mcc748.3gppnetwork.org",
+
+    "aaaServerName": "aaa03.aaer3000.aaa.epc.mnc002.mcc748.3gppnetwork.org",
+
+    "SupportedLCSCapabilitySets": {
+
+      "RELEASE98_99": false,
+
+      "RELEASE4": false,
+
+      "RELEASE5": false,
+
+      "RELEASE6": true,
+
+      "RELEASE7": false
+
+    },
+
+    "AdditionalLCSCapabilitySets": {
+
+      "RELEASE98_99": false,
+
+      "RELEASE4": false,
+
+      "RELEASE5": false,
+
+      "RELEASE6": false,
+
+      "RELEASE7": true
+
+}
+
+An *SLR* operation refers to `SS7 MAP Subscriber Location Report request` processed by the GMLC.
+It shall contain some mandatory parameters like the `LCS Event`, `LCS Client ID` and `Network Node Number` and some other conditional parameters like an estimate of the location of the UE in universal coordinates, namely:
+
+`SLR` operation example:
+
+{
+
+  "network": "GSM/UMTS",
+
+  "protocol": "MAP",
+
+  "operation": "SLR",
+
+  "result": "SUCCESS",
+
+  "msisdn": 919418967382,
+
+  "imsi": 404511170527751,
+
+  "lcsClientID": {
+
+    "lcsClientType": 0,
+
+    "lcsClientIDName": {},
+
+    "lcsClientRequestorID": {}
+
+  },
+
+  "LocationEstimate": {
+
+    "typeOfShape": "EllipsoidPointWithUncertaintyEllipse",
+
+    "latitude": 31.234099,
+
+    "longitude": -87.699995,
+
+    "uncertaintySemiMajorAxis": 31.8,
+
+    "uncertaintySemiMinorAxis": 31.8,
+
+    "angleOfMajorAxis": 100.0,
+
+    "confidence": 80
+
+  },
+
+  "ageOfLocationEstimate": 0,
+
+  "AdditionalLocationEstimate": {},
+
+  "CGI": {
+
+    "mcc": 404,
+
+    "mnc": 51,
+
+    "lac": 5000,
+
+    "ci": 21831
+
+  },
+
+  "GERANPositioningInfo": {},
+
+  "UTRANPositioningInfo": {},
+
+  "VelocityEstimate": {},
+
+  "pseudonymIndicator": "PSEUDONYM_NOT_REQUESTED",
+
+  "lcsEvent": "EMERGENCY_CALL_ORIGINATION",
+
+  "moLrShortCircuitIndicator": false,
+
+  "PeriodicLDRInfo": {},
+
+  "DeferredMTLRData": {
+
+    "SupportedLCSCapabilitySets": {},
+
+    "AdditionalLCSCapabilitySets": {}
+
+  }
+
+}
+
+*Routing-Info-Answer*: analogous as _SRILCS_ operation but for LTE LCS. if not null, might contain the following parameters:
+
+*msisdn*: same as explained previously for analogous _SRILCS_ operation in the CS domain, but for LTE LCS.
+
+*imsi*: same as explained previously for analogous _SRILCS_ operation in the CS domain, but for LTE LCS.
+
+*lmsi*: same as explained previously for analogous _SRILCS_ operation in the CS domain, but for LTE LCS.
+
+*mmeName*: same as explained previously for analogous _SRILCS_ operation in the CS domain, but for LTE LCS.
+
+*mmeRealm*: same as explained previously for analogous _SRILCS_ operation in the CS domain, but for LTE LCS.
+
+*sgsnNumber*: same as explained previously for analogous _SRILCS_ operation in the CS domain, but for LTE LCS.
+
+*sgsnName*: same as explained previously for analogous _SRILCS_ operation in the CS domain, but for LTE LCS.
+
+*sgsnRealm*: same as explained previously for analogous _SRILCS_ operation in the CS domain, but for LTE LCS.
+
+*3GPPAAAServerName*: same as explained previously for analogous _SRILCS_ operation in the CS domain, but for LTE LCS.
+
+*gmlcAddress*: same as explained previously for analogous _SRILCS_ operation in the CS domain, but for LTE LCS.
+
+`Routing-Info-Answer` example:
+
+"Routing-Info-Answer": {
+
+    "msisdn": 573195897484,
+
+    "imsi": 732101509580853,
+
+    "lmsi": "7213917157",
+
+    "mmeName": "mmec03.mmeer3000.mme.epc.mnc002.mcc748.3gppnetwork.org",
+
+    "mmeRealm": "epc.mnc002.mcc748.3gppnetwork.org",
+
+    "sgsnNumber": 5730100028,
+
+    "sgsnName": "sgsn01.sgsner2500.sgsn.gprs.mnc002.mcc748.3gppnetwork.org",
+
+    "sgsnRealm": "gprs.mnc002.mcc748.3gppnetwork.org",
+
+    "3GPPAAAServerName": "aaa04.aaa3000.aaa.epc.mnc002.mcc748.3gppnetwork.org"
+
+    "gmlcAddress": "94.10.21.34"
+
+  },
+
+*Provide-Location-Answer*: analogous as _PSL_ operation but for LTE LCS. if not null, might contain the following array parameters:
+
+*LocationEstimate*: same as explained previously for analogous _PSL_ operation in the CS domain, but for LTE LCS.
+
+*ageOfLocationEstimate*: same as explained previously for analogous _PSL_ operation in the CS domain, but for LTE LCS.
+
+*CGI*: same as explained previously for analogous _PSL_ operation in the CS domain, but for LTE LCS.
+
+*SAI*: same as explained previously for analogous _PSL_ operation in the CS domain, but for LTE LCS.
+
+*ECGI*: with identical content as previously described for _ATI_ or _PSI_ operations in the CS domain, but with the addition of *cellPortionId* parameter:
+
+`ECGI example:
+
+"ECGI": {
+
+       "mcc": 732,
+
+       "mnc": 133,
+
+       "eci": 207631107,
+
+       "eNBId": 811059,
+
+       "ci": 3,
+
+       "cellPortionId": 2
+
+    }
+
+*GERANPositioningInfo*: same as explained previously for analogous _PSL_ operation in the CS domain, but for LTE LCS.
+
+*UTRANPositioningInfo*: same as explained previously for analogous _PSL_ operation in the CS domain, but for LTE LCS, and adding `utranAdditionalPositioningData` for LTE.
+
+`UTRANPositioningInfo` example:
+
+"UTRANPositioningInfo": {
+
+      "utranPositioningData": "81",
+
+      "utranGanssPositioningData": "403a",
+
+      "utranAdditionalPositioningData": "0c"
+
+    }
+
+*E-UTRANPositioningInfo*: if not null, might contain the following parameter:
+
+*eUtranPositioningData*: if present, indicates the usage of each positioning method that was attempted to determine the location estimate within the E-UTRAN (represented as the retrieved hexadecimal value for now).
+
+`E-UTRANPositioningInfo` example:
+
+"E-UTRANPositioningInfo": {
+
+      "eUtranPositioningData": "235C6A1911"
+
+}
+
+*VelocityEstimate*: same as explained previously for analogous _PSL_ operation in the CS domain, but for LTE LCS.
+
+*civicAddress*: the `civic address` correspondent with the geographical area at which the UE is located.
+
+*barometricPressure*: the `barometric pressure` of the geographical area at which the UE is located.
+
+`Provide-Location-Answer` example:
+
+"Provide-Location-Answer": {
+
+    "LocationEstimate": {
+
+      "typeOfShape": "EllipsoidArc",
+
+      "latitude": 6.203888,
+
+      "longitude": -75.579722,
+
+      "innerRadius": 32,
+
+      "uncertaintyInnerRadius": 3.3,
+
+      "offsetAngle": 12.0,
+
+      "includedAngle": 20.0,
+
+      "confidence": 20
+
+    },
+
+    "ageOfLocationEstimate": 0,
+
+    "ECGI": {
+
+       "mcc": 732,
+
+       "mnc": 133,
+
+       "eci": 207631107,
+
+       "eNBId": 811059,
+
+       "ci": 3,
+
+       "cellPortionId": 2
+
+    },
+
+    "E-UTRANPositioningInfo": {
+      "eUtranPositioningData": "235C6A1911"
+    },
+
+    "VelocityEstimate": {
+
+      "horizontalSpeed": 50,
+
+      "bearing": 0,
+
+      "verticalSpeed": 0,
+
+      "uncertaintyHorizontalSpeed": 2,
+
+      "uncertaintyVerticalSpeed": 0,
+
+      "velocityType": "HorizontalVelocity"
+
+    },
+
+    "civicAddress": "Calle 2 Sur 20-185, 050022, Medellin, Colombia",
+
+    "barometricPressure": 1012
+
+}
+
+*lcsServiceTypeID*: It is an integer value lower than 128, which refer to the following:
+`emergencyServices` (`0`), `emergencyAlertServices` (`1`), `personTracking` (`2`), `fleetManagement` (`3`),
+`assetManagement` (`4`), `trafficCongestionReporting` (`5`), `roadsideAssistance` (`6`),
+`routingToNearestCommercialEnterprise` (`7`), `navigation` (`8`), `citySightseeing` (`9`),
+`localizedAdvertising` (`10`), `mobileYellowPages` (`11`), `trafficAndPublicTransportationInfo` (`12`),
+`weather` (`13`), `assetAndServiceFinding` (`14`), `gaming` (`15`), `findYourFriend` (`16`), `dating` (`17`),
+`chatting` (`18`), `routeFinding` (`19`), `whereAmI` (`20`).
+
+*lcsEPSClientName*: if not null, might contain the following parameters:
+
+*lcsEPSClientNameString*: identity in UTF8 string format of the LCS client issuing the positioning request.
+
+*lcsClientDataCodingScheme*: data coding scheme (information of the alphabet and the language used) of the LCS client issuing the positioning request.
+
+*lcsClientDataFormatIndicator*: format indicator of the LCS client issuing the positioning request.
+Possible values are: `0`(`LOGICAL_NAME`), `1` (`EMAIL_ADDRESS`), `2` (`MSISDN`), `3` (`URL`) or `4` (`SIP_URL`).
+
+*lcsEPSClientName* example:
+
+"lcsEPSClientName": {
+
+    "lcsEPSClientNameString": "gmlcCl2"
+
+    "lcsClientDataCodingScheme": 15,
+
+    "lcsClientDataFormatIndicator": 2
+
+  }
+
+*lcsQoSClass*: LCS quality of service. Possible values are: `ASSURED` or BEST_EFFORT`.
+
+*DeferredMTLRData*: almost identical as explained for _SLR_, but with parameters enhanced for LTE LCS. If not null, it might contain the following parameters:
+
+*deferredLocationEventType*: type of event of the deferred MT-LR data. Possible values are `area event info` related: `UE-AVAILABLE`, `ENTERING_INTO_AREA`, `LEAVING_FROM_AREA` or `BEING_INSIDE_AREA`, periodic location deferred reports: `PERIODIC_LDR`, `LDR_ACTIVATED` or `MAXIMUM_INTERVAL_EXPIRATION`, or motion event reports: `MOTION_EVENT`.
+
+*terminationCause*: the MT location report termination cause. Possible values are: `NORMAL`, `ERROR_UNDEFINED`, `INTERNAL_TIMEOUT`, `CONGESTION`, `MT_LR_RESTART`, `PRIVACY_VIOLATION`, `SHAPE_OF_LOCATION_ESTIMATE_NOT_SUPPORTED`, `SUBSCRIBER_TERMINATION`, `UE_TERMINATION` or `NETWORK_TERMINATION`.
+
+*ServingNode*: serving node providing service to the target subscriber. Should only be present if `terminationCause` equals `MT_LR_RESTART`.
+If not null, it shall contain the following array parameters:
+
+*mmeName*: same as explained previously for analogous _Provide-Location-Request_ command.
+
+*mmeRealm*: same as explained previously for analogous _Provide-Location-Request_ command.
+
+*sgsnNumber*: same as explained previously for analogous _Provide-Location-Request_ command.
+
+*sgsnName*: same as explained previously for analogous _Provide-Location-Request_ command.
+
+*sgsnRealm*: same as explained previously for analogous _Provide-Location-Request_ command.
+
+*3GPPAAAServerName*: same as explained previously for analogous _Provide-Location-Request_ command.
+
+*gmlcAddress*: same as explained previously for analogous _Provide-Location-Request_ command.
+
+*lcsCapabilitySets*: LCS capability sets as per 3GPP specification releases. Possible values are: `RELEASE98_99`, `RELEASE4`, `RELEASE5`, `RELEASE6`, `RELEASE7`.
+
+`DeferredMTLRData` example:
+
+"DeferredMTLRData": {
+
+    "deferredLocationType": "PERIODIC_LDR",
+
+    "terminationCause": "MT_LR_RESTART",
+
+    "ServingNode": {
+
+      "mmeName": "mmec02.mmeci3000.mme.epc.mnc001.mcc748.3gppnetwork.org",
+
+      "mmeRealm": "epc.mnc001.mcc748.3gppnetwork.org",
+
+      "sgsnName": "sgsn01.sgsnci2500.sgsn.gprs.mnc002.mcc748.3gppnetwork.org",
+
+      "sgsnRealm": "gprs.mnc002.mcc748.3gppnetwork.org",
+
+      "sgsnNumber": 5989900021,
+
+      "3GPPAAAServerName": "aaa04.aaa3000.aaa.epc.mnc002.mcc748.3gppnetwork.org",
+
+      "mscNumber": 5989900008,
+
+      "lcsCapabilitySets": "RELEASE6"
+
+}
+
+*DelayedLocationReportingData*: if not null, it might contain the following array parameter:
+
+*deferredLocationType*: same as explained for _DeferredMTLRData_ for LTE LCS.
+
+*terminationCause*: same as explained for _DeferredMTLRData_ for LTE LCS.
+
+*ServingNode*: same as explained for _DeferredMTLRData_ for LTE LCS. Should only be present if `terminationCause` equals `MT_LR_RESTART`.
+
+`DelayedLocationReportingData` example:
+
+"DelayedLocationReportingData": {
+
+    "deferredLocationType": "BEING_INSIDE_AREA",
+
+    "terminationCause": "MT_LR_RESTART",
+
+    "ServingNode": {
+
+        "mmeName": "mmec03.mmeer3000.mme.epc.mnc002.mcc748.3gppnetwork.org",
+
+        "mmeRealm": "antel.com.uy",
+
+        "sgsnName": "sgsn01.sgsner2500.sgsn.gprs.mnc002.mcc748.3gppnetwork.org",
+
+        "sgsnRealm": "antel.com.uy",
+
+        "sgsnNumber": 5980000437,
+
+        "3GPPAAAServerName": "aaa04.aaa3000.aaa.epc.mnc002.mcc748.3gppnetwork.org",
+
+        "mscNumber": 5980000923,
+
+        "lcsCapabilitySets": "RELEASE7"
+
+        }
+}
+
+An *LRR* is the analogous as the `SS7 MAP Subscriber Location Report request` processed by the GMLC, but for LTE LCS.
+
+`LRR` operation example:
+
+{
+
+  "network": "LTE",
+
+  "protocol": "Diameter SLg (ELP)",
+
+  "operation": "LRR",
+
+  "result": "SUCCESS",
+
+  "clientReferenceNumber": 1971,
+
+  "lcsReferenceNumber": 21,
+
+  "msisdn": 59899077937,
+
+  "imsi": 748026871012345,
+
+  "imei": "01171400466105",
+
+  "lcsServiceTypeID": 0,
+
+  "locationEvent": "DEFERRED_MT_LR_RESPONSE",
+
+  "lcsEPSClientName": {
+
+    "lcsEPSClientNameString": "gmlcClient1",
+
+    "lcsClientDataCodingScheme": 15,
+
+    "lcsEPSClientDataFormatIndicator": 3
+
+  },
+  "LocationEstimate": {
+
+    "typeOfShape": "Polygon",
+
+    "numberOfPoints": 4,
+
+    "polygonPoint1": {
+
+          "latitude": 26.646513,
+
+          "longitude": 73.492055
+
+    },
+
+    "polygonPoint2": {
+
+          "latitude": 26.648026,
+
+          "longitude": 73.495703
+    },
+
+    "polygonPoint3": {
+
+          "latitude": 26.648734,
+
+          "longitude": 73.495617
+
+    },
+
+    "polygonPoint4": {
+
+          "latitude": 26.648744,
+
+          "longitude": 73.495703
+
+    },
+
+    "polygonCentroid": {
+
+          "latitude": 26.647743,
+
+          "longitude": 73.494458
+
+    }
+
+  },
+
+  "ageOfLocationEstimate": 0,
+
+  "lcsQoSClass": "BEST_EFFORT",
+
+  "ServingNode": {
+
+    "mmeName": "mmec02.mmeci3000.mme.epc.mnc001.mcc748.3gppnetwork.org",
+
+    "mmeRealm": "epc.mnc001.mcc748.3gppnetwork.org",
+
+    "sgsnName": "sgsn01.sgsnci2500.sgsn.gprs.mnc002.mcc748.3gppnetwork.org",
+
+    "sgsnRealm": "gprs.mnc002.mcc748.3gppnetwork.org",
+
+    "sgsnNumber": 5989900021,
+
+    "3GPPAAAServerName": "aaa04.aaa3000.aaa.epc.mnc002.mcc748.3gppnetwork.org",
+
+    "mscNumber": 5989900008,
+
+    "lcsCapabilitySets": "RELEASE6"
+
+  },
+
+  "ECGI": {
+
+    "mcc": 732,
+
+    "mnc": 133,
+
+    "eci": 207631107,
+
+    "eNBId": 811059,
+
+    "ci": 3,
+
+    "cellPortionId": 2
+
+  },
+
+  "E-UTRANPositioningInfo": {
+
+    "eUtranPositioningData": "235C10192B"
+
+  },
+
+  "VelocityEstimate": {
+
+    "horizontalSpeed": 20,
+
+    "bearing": 0,
+
+    "verticalSpeed": 0,
+
+    "uncertaintyHorizontalSpeed": 0,
+
+    "uncertaintyVerticalSpeed": 0,
+
+    "velocityType": "HorizontalVelocity"
+
+  },
+
+  "pseudonymIndicator": "PSEUDONYM_NOT_REQUESTED",
+
+  "PeriodicLDRInfo": {
+
+    "reportingAmount": 5,
+
+    "reportingInterval": 30
+
+  },
+
+  "DeferredMTLRData": {
+
+    "deferredLocationType": "PERIODIC_LDR",
+
+    "terminationCause": "MT_LR_RESTART",
+
+    "ServingNode": {
+
+      "mmeName": "mmec02.mmeci3000.mme.epc.mnc001.mcc748.3gppnetwork.org",
+
+      "mmeRealm": "epc.mnc001.mcc748.3gppnetwork.org",
+
+      "sgsnName": "sgsn01.sgsnci2500.sgsn.gprs.mnc002.mcc748.3gppnetwork.org",
+
+      "sgsnRealm": "gprs.mnc002.mcc748.3gppnetwork.org",
+
+      "sgsnNumber": 5989900021,
+
+      "3GPPAAAServerName": "AAA4",
+
+      "mscNumber": 5989900008,
+
+      "lcsCapabilitySets": "RELEASE6"
+
+    }
+
+  },
+
+  "DelayedLocationReportingData": {},
+
+  "civicAddress": "Avenida Italia 8973, 11500, Montevideo, Uruguay",
+
+  "barometricPressure": 1013
+
+}
+
+|=======================================================================
+
+.JSON API cURL examples for all possible SS7 MAP and Diameter Sh & SLh-SLg requests.
+[%autowidth]
+|=======================================================================
+|OPERATION | cURL EXAMPLES
+
+| *MAP ATI* |
+
+__curl -d "msisdn=59899077937&operation=ATI&token=n4ndO" -X POST 127.0.0.1:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=573195897484&operation=ATI&token=RmVybmFuZG9NZW5kaW9yb3o&domain=cs" -X POST 137.51.43.204:8180/restcomm/gmlc/rest__
+
+__curl -d "msisdn=8801913414266&operation=ATI&token=n4ndO&domain=ps" -X POST 180.29.0.18:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=59899077937&operation=ATI&token=RmVybmFuZG9NZW5kaW9yb3o&locationInfoEps=false" -X POST 192.168.1.38:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=70198303030&operation=ATI&token=n4ndO&extraRequestedInfo=false" -X POST 180.29.0.18:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=59899077937&operation=ATI&token=RmVybmFuZG9NZW5kaW9yb3o&tt=33" -X POST 127.0.0.1:8080/restcomm/gmlc/rest__
+
+| *MAP SRISM-PSI* |
+
+__curl -d "msisdn=59899077937&operation=PSI&token=RmVybmFuZG9NZW5kaW9yb3o" -X POST 127.0.0.1:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=8801913414266&operation=PSI&token=RmVybmFuZG9NZW5kaW9yb3o&domain=cs" -X POST 10.0.0.1:8180/restcomm/gmlc/rest__
+
+__curl -d "&msisdn=59173710072&operation=PSI&token=TWVuZGlvcm96&domain=ps" -X POST 127.0.0.1:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=59899077937&operation=PSI&token=RmVybmFuZG9NZW5kaW9yb3o" -X POST 192.168.1.38:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=22503006132&operation=PSI&token=RmVybmFuZG9NZW5kaW9yb3o&psiServiceType=useSriSm&domain=cs" -X POST 172.16.0.122:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=59899077937&operation=PSI&token=TWVuZGlvcm96&tt=63" -X POST 127.0.0.1:8080/restcomm/gmlc/rest__
+
+| *MAP SRI-PSI* |
+
+__curl -d "msisdn=35799324454&operation=PSI&token=n4ndO&psiServiceType=useSri" -X POST 127.0.0.1:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=35799324454&operation=PSI&token=RmVybmFuZG9NZW5kaW9yb3o&psiServiceType=useSri" -X POST 10.0.0.21:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=59899077937&operation=PSI&token=n4ndO&psiServiceType=useSri&domain=cs" -X POST 192.168.0.5:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=56984285265&operation=PSI&token=n4ndO&psiServiceType=useSri&domain=ps" -X POST 10.0.0.4:8280/restcomm/gmlc/rest__
+
+__curl -d "msisdn=35799324454&operation=PSI&token=RmVybmFuZG9NZW5kaW9yb3o&psiServiceType=useSri&tt=45" -X POST 172.16.0.122:8080/restcomm/gmlc/rest__
+
+
+| *MAP PSI* |
+
+__curl -d "msisdn=35799919410&operation=PSI&token=n4ndO&psiServiceType=psiFirst&psiImsi=280101844109995&psiNnn=3579697002" -X POST 127.0.0.1:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=35799919410&operation=PSI&token=RmVybmFuZG9NZW5kaW9yb3o&psiServiceType=psiFirst&psiImsi=280101844109995&psiNnn=3579697002" -X POST 172.16.0.221:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=35799919410&operation=PSI&token=n4ndO&psiServiceType=psiFirst&psiImsi=280101844109995&psiNnn=3579697004&domain=cs" -X POST 192.168.0.5:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=35799919410&operation=PSI&token=RmVybmFuZG9NZW5kaW9yb3o&psiServiceType=psiFirst&psiImsi=280101844109995&psiNnn=3579697021&domain=ps" -X POST 10.0.0.4:8280/restcomm/gmlc/rest__
+
+__curl -d "msisdn=35799919410&operation=PSI&token=RmVybmFuZG9NZW5kaW9yb3o&psiServiceType=psiFirst&psiImsi=280101844109995&psiNnn=3579697002&tt=55" -X POST 127.0.0.1:8080/restcomm/gmlc/rest__
+
+
+| *MAP SRILCS-PSL* |
+
+__curl -d "imsi=748026871012340&operation=PSL&lcsClientType=1&lcsClientExternalID=748203910357&lcsClientName=Fer&lcsClientFormatIndicator=0&lcsRequestorId=sip:fer.bloggs@212.123.1.213&lcsRequestorFormatIndicator=4&lcsLocationType=currentOrLastKnownLocation&clientReferenceNumber=30011&token=RmVybmFuZG9NZW5kaW9yb3o" -X POST 127.0.0.1:8080/restcomm/gmlc/rest
+" -X POST 127.0.0.1:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=59899077937&operation=PSL&clientReferenceNumber=15812&lcsClientType=0&lcsClientExternalID=6543210987654321&lcsLocationType=activateDeferredLocation&lcsDeferredLocationType=inside&lcsAreaType=plmnId&lcsAreaId=748-1&lcsAreaEventOccurrenceInfo=multipleTimeEvent&lcsAreaEventIntervalTime=60&token=RmVybmFuZG9NZW5kaW9yb3o" -X POST 192.168.1.145:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=59899077938&operation=PSL&clientReferenceNumber=21801&lcsClientType=0&lcsClientExternalID=1234567890123456&lcsLocationType=activateDeferredLocation&lcsDeferredLocationType=available&token=RmVybmFuZG9NZW5kaW9yb3o" -X POST 172.16.0.5:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=59899077939&operation=PSL&clientReferenceNumber=1592&lcsClientType=0&lcsClientExternalID=6543210987654321&lcsLocationType=activateDeferredLocation&lcsDeferredLocationType=periodicLDR&lcsPeriodicReportingAmount=5&lcsPeriodicReportingInterval=180&lcsPriority=highestPriority&horizontalAccuracy=127&verticalAccuracy=0&verticalCoordinateRequest=true&responseTime=lowdelay&lcsServiceTypeId=1&lcsCodeword=MSC0d3w0rd&token=n4ndO" -X POST 192.168.0.3:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=59899077937&operation=PSL&lcsClientType=3&lcsLocationType=currentLocation&clientReferenceNumber=4003&lcsVisitedPLMNId=748-2&lcsVisitedPLMNIdRAN=1&lcsPeriodicLocationSupportIndicator=1&token=n4ndO" -X POST 127.0.0.1:8080/restcomm/gmlc/rest__
+
+
+| *Diameter SLh-SLg RIR-PLR* |
+
+__curl -d "msisdn=573195897489&operation=PLR&clientReferenceNumber=104&lcsLocationType=0&lcsClientName=sip:fer.bloggs@212.123.1.213&lcsClientFormatIndicator=4&lcsClientType=0&token=RmVybmFuZG9NZW5kaW9yb3o" -X POST 127.0.0.1:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=573195897484&operation=PLR&clientReferenceNumber=1089&lcsLocationType=1&lcsClientName=fernando.mendioroz@gmail.com&&lcsClientType=1&lcsClientFormatIndicator=1&lcsQoSClass=1&horizontalAccuracy=127&verticalAccuracy=127&verticalCoordinateRequest=1&responseTime=0&token=n4ndO" -X POST 10.0.0.21:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=59899077939&operation=PLR&clientReferenceNumber=801&lcsLocationType=3&lcsClientName=Gmlc1&lcsClientFormatIndicator=0&lcsClientType=0&lcsCallbackUrl=http://localhost:8081/api/report&lcsDeferredLocationType=1&horizontalAccuracy=127&verticalAccuracy=127&verticalCoordinateRequest=1&responseTime=0&lcsRequestorId=landasan&lcsRequestorFormatIndicator=1&lcsPriority=0&lcsServiceTypeId=0&velocityRequested=1&lcsSupportedGADShapes=255&lcsVisitedPLMNId=748-1&lcsPeriodicLocationSupportIndicator=1&lcsPrioritizedListIndicator=0&lcsCodeword=U3C0d3w0rd&lcsPrivacyCheckNonSession=4&lcsPrivacyCheckSession=0&lcsApn=mnc02.mcc598.gprs&imei=011714004661051&plrFlags=2&token=n4ndO" -X POST 192.168.1.131:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=59899077938&operation=PLR&clientReferenceNumber=912&lcsLocationType=4&lcsClientName=fernando.mendioroz@gmail.com&lcsClientFormatIndicator=1&lcsClientType=0&lcsDeferredLocationType=8&lcsAreaType=4&lcsAreaId=502-19-3081-33045&lcsAreaEventOccurrenceInfo=1&lcsAreaEventIntervalTime=600&lcsAreaEventMaxInterval=86400&lcsAreaEventSamplingInterval=3600&lcsAreaEventReportingDuration=8640000&lcsAreaEventReportLocationReqs=0&lcsAdditionalAreaType=7&lcsAdditionalAreaId=502-18-811059-3&token=RmVybmFuZG9NZW5kaW9yb3o" -X POST 172.16.0.201:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=59899077938&operation=PLR&token=n4ndO&clientReferenceNumber=500&lcsLocationType=3&lcsClientName=Fmcgmlc&lcsClientFormatIndicator=0&lcsClientType=0&lcsCallbackUrl=http://localhost:8081/api/report&lcsDeferredLocationType=32&lcsMotionEventLinearDistance=10000&lcsMotionEventOccurrenceInfo=1&lcsMotionEventIntervalTime=32767&lcsMotionEventMaxInterval=86400&lcsMotionEventSamplingInterval=3600&lcsMotionEventReportingDuration=8640000&lcsMotionEventReportLocationReqs=2" -X POST 192.168.1.7:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=573195897484&operation=PLR&clientReferenceNumber=1094&lcsLocationType=3&lcsClientName=fernando.mendioroz@gmail.com&lcsClientFormatIndicator=1&lcsClientType=0&lcsDeferredLocationType=16&lcsPeriodicReportingAmount=8639999&lcsPeriodicReportingInterval=8639999&token=n4ndO" -X POST 192.168.1.7:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=59899077938&operation=PLR&token=RmVybmFuZG9NZW5kaW9yb3o&clientReferenceNumber=5089&lcsLocationType=1&lcsClientName=Fmcgmlc&lcsClientFormatIndicator=0&lcsClientType=0&lcsCallbackUrl=http://localhost:8081/api/report&lcsVisitedPLMNId=748-1&lcsPeriodicLocationSupportIndicator=1&lcsPrioritizedListIndicator=1" -X POST 127.0.0.1:8080/restcomm/gmlc/rest
+
+
+| *Diameter Sh UDR* |
+
+__curl -d "msisdn=573017706052&operation=UDR&token=n4ndO" -X POST 127.0.0.1:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=573195897484&operation=Udr&token=RmVybmFuZG9NZW5kaW9yb3o&domain=ps&activeLocation=false" -X POST 192.168.0.41:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=60192235901&operation=udr&token=n4ndO&domain=cs&locationInfoEps=false&activeLocation=false" -X POST 192.168.2.18:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=59897077938&operation=UDR&token=RmVybmFuZG9NZW5kaW9yb3o&locationInfo5gs=true" -X POST 127.0.0.1:8080/restcomm/gmlc/rest__
+
+__curl -d "msisdn=59897077938&operation=UDR&token=n4ndO&ratTypeRequested=true" -X POST 127.0.0.1:8080/restcomm/gmlc/rest__
+
+|=======================================================================

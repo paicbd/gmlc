@@ -1,0 +1,1511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    
+    MLP DTD - Mobile Location Protocol
+       version - 3.4
+       date    - 12 May 2015
+    
+    FILE INFORMATION
+    
+      OMA Permanent Document
+        File: OMA-SUP-DTD_MLP-V3_4-20150512-A
+        Type: Text
+    
+      Public Reachable Information
+        Path: http://www.openmobilealliance.org/tech/dtd
+        Name: MLP_v3_4.dtd
+    
+    NORMATIVE INFORMATION
+    
+      Information about this file can be found in the latest revision of
+    
+        OMA-TS-MLP-V3_4
+    
+      This is available at http://www.openmobilealliance.org/
+    
+      Send comments to technical-comments@mail.openmobilealliance.org
+    
+    CHANGE HISTORY
+    
+    12052015 Status changed to Approved by TP, TP Ref # OMA-TP-2015-0081-INP_MLS_V1_3_ERP_for_final_Approval
+    
+    LEGAL DISCLAIMER
+    
+    
+      Use of this document is subject to all of the terms and conditions
+      of the Use Agreement located at
+      http://www.openmobilealliance.org/UseAgreement.html,
+      provided, however, that section (d) under "Documents - Terms 
+      of Use" which states, "no modifications are made to such 
+      Documents" does not apply to your use.
+    
+      The Open Mobile Alliance authorizes you to copy this document, 
+      provided that you retain all copyright and other proprietary  
+      notices contained in the original materials on any copies of the 
+      materials and  that you comply strictly with these terms. This 
+      copyright permission does not constitute an endorsement of the 
+      products or services. The Open Mobile Alliance assumes no 
+      responsibility for errors or omissions in this document.
+    
+    
+      Each Open Mobile Alliance member has agreed to use reasonable
+      endeavors to inform the Open Mobile Alliance in a timely manner of
+      Essential IPR as it becomes aware that the Essential IPR is related
+      to the prepared or published specification.  However, the members
+      do not have an obligation to conduct IPR searches.  The declared
+      Essential IPR is publicly available to members and non-members of
+      the Open Mobile Alliance and may be found on the "OMA IPR
+      Declarations" list at http://www.openmobilealliance.org/ipr.html.
+      The Open Mobile Alliance has not conducted an independent IPR review
+      of this document and the information contained herein, and makes no
+      representations or warranties regarding third party IPR, including
+      without limitation patents, copyrights or trade secret rights.  This
+      document may contain inventions for which you must obtain licenses
+      from third parties before making, using or selling the inventions.
+      Defined terms above are set forth in the schedule to the Open Mobile
+      Alliance Application Form.
+    
+      NO REPRESENTATIONS OR WARRANTIES (WHETHER EXPRESS OR IMPLIED) ARE
+      MADE BY THE OPEN MOBILE ALLIANCE OR ANY OPEN MOBILE ALLIANCE MEMBER
+      OR ITS AFFILIATES REGARDING ANY OF THE IPR'S REPRESENTED ON THE "OMA
+      IPR DECLARATIONS" LIST, INCLUDING, BUT NOT LIMITED TO THE ACCURACY,
+      COMPLETENESS, VALIDITY OR RELEVANCE OF THE INFORMATION OR WHETHER OR
+      NOT SUCH RIGHTS ARE ESSENTIAL OR NON-ESSENTIAL.
+    
+      THE OPEN MOBILE ALLIANCE IS NOT LIABLE FOR AND HEREBY DISCLAIMS ANY
+      DIRECT, INDIRECT, PUNITIVE, SPECIAL, INCIDENTAL, CONSEQUENTIAL, OR
+      EXEMPLARY DAMAGES ARISING OUT OF OR IN CONNECTION WITH THE USE OF
+      DOCUMENTS AND THE INFORMATION CONTAINED IN THE DOCUMENTS.
+    
+      Copyright 2015 Open Mobile Alliance Ltd.  All Rights Reserved.
+      Used with the permission of the Open Mobile Alliance Ltd. under the
+      terms set forth above.
+    
+    TYPICAL USAGE IN XML DOCUMENT
+    
+      <?xml version="1.0"?>
+      <!DOCTYPE FooBarMsg PUBLIC "-//OMA//DTD FooBar 1.0//EN"
+                "http://www.openmobilealliance.org/tech/DTD/foobar-v1_0.dtd"
+                [<?oma-foobar-ver supported-versions="1.0"?>]>
+      <FooBarMsg>
+         ...
+      </FooBarMsg>
+    
+-->
+<!-- START OF   MLP_CTXT -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:include schemaLocation="MLP_ID_QOP_RES_SHAPE_v3_4.DTD.xsd"/>
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+    <xs:element name="client">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="id"/>
+                <xs:element minOccurs="0" ref="pwd"/>
+                <xs:element minOccurs="0" ref="serviceid"/>
+                <xs:element minOccurs="0" ref="requestmode"/>
+                <xs:element minOccurs="0" ref="applicationid"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="sessionid" type="xs:string"/>
+    <xs:element name="id" type="xs:string"/>
+    <xs:element name="requestor">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="id"/>
+                <xs:element minOccurs="0" ref="serviceid"/>
+            </xs:sequence>
+            <xs:attribute name="type" default="MSISDN">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="MSISDN"/>
+                        <xs:enumeration value="IMSI"/>
+                        <xs:enumeration value="NAME"/>
+                        <xs:enumeration value="E-MAIL"/>
+                        <xs:enumeration value="URL"/>
+                        <xs:enumeration value="SIPURL"/>
+                        <xs:enumeration value="IMS"/>
+                        <xs:enumeration value="MDN"/>
+                        <xs:enumeration value="ASID"/>
+                        <xs:enumeration value="ASPID"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="pwd" type="xs:string"/>
+    <xs:element name="serviceid" type="xs:string"/>
+    <xs:element name="requestmode">
+        <xs:complexType>
+            <xs:attribute name="type" default="PASSIVE">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="ACTIVE"/>
+                        <xs:enumeration value="PASSIVE"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="applicationid">
+        <xs:complexType>
+            <xs:attribute name="appProvider" use="required"/>
+            <xs:attribute name="appName" use="required"/>
+            <xs:attribute name="appVersion"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="subclient">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="id"/>
+                <xs:element minOccurs="0" ref="pwd"/>
+                <xs:element minOccurs="0" ref="serviceid"/>
+            </xs:sequence>
+            <xs:attribute name="last_client" default="NO">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="YES"/>
+                        <xs:enumeration value="NO"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_EME_LIA -->
+    <xs:element name="eme_lia">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element maxOccurs="unbounded" ref="eme_pos"/>
+                <xs:element ref="req_id"/>
+                <xs:sequence>
+                    <xs:element ref="result"/>
+                    <xs:element minOccurs="0" ref="add_info"/>
+                </xs:sequence>
+            </xs:choice>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_EME_LIR -->
+    <xs:element name="eme_lir">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice>
+                    <xs:element ref="msids"/>
+                    <xs:sequence maxOccurs="unbounded">
+                        <xs:element maxOccurs="unbounded" ref="msid"/>
+                        <xs:element minOccurs="0" ref="gsm_net_param"/>
+                        <xs:element minOccurs="0" ref="trans_id"/>
+                        <xs:element minOccurs="0" ref="esrd"/>
+                        <xs:element minOccurs="0" ref="esrk"/>
+                        <xs:element minOccurs="0" ref="supl_support_params"/>
+                        <xs:element minOccurs="0" ref="target_serving_node"/>
+                    </xs:sequence>
+                </xs:choice>
+                <xs:element minOccurs="0" ref="eqop"/>
+                <xs:element minOccurs="0" ref="geo_info"/>
+                <xs:element minOccurs="0" ref="loc_type"/>
+                <xs:element minOccurs="0" ref="pushaddr"/>
+                <xs:element minOccurs="0" ref="MapRequest"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="res_type" default="SYNC">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="SYNC"/>
+                        <xs:enumeration value="ASYNC"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_EME_LIREP -->
+    <xs:element name="eme_lirep">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="req_id"/>
+                <xs:choice>
+                    <xs:element maxOccurs="unbounded" ref="eme_pos"/>
+                    <xs:sequence>
+                        <xs:element ref="result"/>
+                        <xs:element minOccurs="0" ref="add_info"/>
+                    </xs:sequence>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_EMEREP -->
+    <xs:element name="emerep">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="eme_event"/>
+                <xs:element minOccurs="0" ref="locationserver_address"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_FUNC -->
+    <xs:element name="eme_event">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="eme_pos"/>
+            </xs:sequence>
+            <xs:attribute name="eme_trigger" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="EME_ORG"/>
+                        <xs:enumeration value="EME_REL"/>
+                        <xs:enumeration value="EME_HO"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="tlrr_event">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element ref="ms_action"/>
+                <xs:element ref="change_area"/>
+                <xs:element ref="velocity_event"/>
+                <xs:element ref="distance_event"/>
+                <xs:element ref="equidistance_event"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ms_action">
+        <xs:complexType>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="MS_AVAIL"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="change_area">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="target_area"/>
+                <xs:element minOccurs="0" ref="no_of_reports"/>
+                <xs:element minOccurs="0" ref="minimumIntervalTime"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="MS_ENTERING"/>
+                        <xs:enumeration value="MS_LEAVING"/>
+                        <xs:enumeration value="MS_WITHIN_AREA"/>
+                        <xs:enumeration value="MS_OUTSIDE_AREA"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="loc_estimates" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="TRUE"/>
+                        <xs:enumeration value="FALSE"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="velocity_event">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="target_speed"/>
+                <xs:element minOccurs="0" ref="no_of_reports"/>
+                <xs:element minOccurs="0" ref="minimumIntervalTime"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="INCREASING_ABOVE"/>
+                        <xs:enumeration value="ABOVE"/>
+                        <xs:enumeration value="DECREASING_BELOW"/>
+                        <xs:enumeration value="BELOW"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="vel_estimates" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="TRUE"/>
+                        <xs:enumeration value="FALSE"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="distance_event">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="target_distance"/>
+                <xs:element maxOccurs="unbounded" ref="reference_object"/>
+                <xs:element minOccurs="0" ref="no_of_reports"/>
+                <xs:element minOccurs="0" ref="minimumIntervalTime"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="ENTERING_DISTANCE"/>
+                        <xs:enumeration value="LEAVING_DISTANCE"/>
+                        <xs:enumeration value="WITHIN_DISTANCE"/>
+                        <xs:enumeration value="OUTSIDE_DISTANCE"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="loc_estimates" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="TRUE"/>
+                        <xs:enumeration value="FALSE"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="equidistance_event">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="target_equidistance"/>
+                <xs:element minOccurs="0" ref="no_of_reports"/>
+                <xs:element minOccurs="0" ref="minimumIntervalTime"/>
+            </xs:sequence>
+            <xs:attribute name="loc_estimates" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="TRUE"/>
+                        <xs:enumeration value="FALSE"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="target_area">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element ref="shape"/>
+                <xs:sequence>
+                    <xs:element ref="shape"/>
+                    <xs:element ref="civicloc"/>
+                </xs:sequence>
+                <xs:element ref="civicloc"/>
+                <xs:element ref="cc"/>
+                <xs:element ref="plmn"/>
+                <xs:element ref="name_area"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="target_speed">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="speed"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="target_distance" type="xs:string"/>
+    <xs:element name="target_equidistance" type="xs:string"/>
+    <xs:element name="reference_object">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="msid"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="no_of_reports" type="xs:string"/>
+    <xs:element name="minimumIntervalTime" type="xs:string"/>
+    <xs:element name="name_area" type="xs:string"/>
+    <xs:element name="plmn">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="mcc"/>
+                <xs:element ref="mnc"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="interval" type="xs:string"/>
+    <xs:element name="loc_type">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="batch_cond"/>
+            </xs:sequence>
+            <xs:attribute name="type" default="CURRENT">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="CURRENT"/>
+                        <xs:enumeration value="LAST"/>
+                        <xs:enumeration value="CURRENT_OR_LAST"/>
+                        <xs:enumeration value="LAST_OR_CURRENT"/>
+                        <xs:enumeration value="INITIAL"/>
+                        <xs:enumeration value="CURRENT_AND_INTERMEDIATE"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="per_type" default="REALTIME">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="REALTIME"/>
+                        <xs:enumeration value="QUASIREALTIME"/>
+                        <xs:enumeration value="BATCH"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="batch_cond">
+        <xs:complexType mixed="true">
+            <xs:attribute name="batch_type" default="ENDOFSERVICE">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="MEASUREMENTS"/>
+                        <xs:enumeration value="MINUTES"/>
+                        <xs:enumeration value="ENDOFSERVICE"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="prio">
+        <xs:complexType>
+            <xs:attribute name="type" default="NORMAL">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="NORMAL"/>
+                        <xs:enumeration value="HIGH"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="pushaddr">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="url"/>
+                <xs:element minOccurs="0" ref="id"/>
+                <xs:element minOccurs="0" ref="pwd"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="req_id" type="xs:string"/>
+    <xs:element name="start_time">
+        <xs:complexType mixed="true">
+            <xs:attribute name="utc_off" default="0000"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="stop_time">
+        <xs:complexType mixed="true">
+            <xs:attribute name="utc_off" default="0000"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="duration" type="xs:string"/>
+    <xs:element name="url" type="xs:string"/>
+    <xs:element name="time_remaining" type="xs:string"/>
+    <xs:element name="lcs_ref" type="xs:string"/>
+    <xs:element name="supl_support_params">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="ip_address"/>
+                <xs:element minOccurs="0" ref="shape"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ip_address" type="xs:string"/>
+    <xs:element name="trigger_data">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="req_id"/>
+                <xs:element maxOccurs="unbounded" ref="msid"/>
+                <xs:element minOccurs="0" ref="tlrr"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="target_serving_node">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element ref="vmscid"/>
+                <xs:sequence>
+                    <xs:element ref="mme_name"/>
+                    <xs:element minOccurs="0" ref="diameter_realm"/>
+                </xs:sequence>
+                <xs:element ref="sgsnid"/>
+                <xs:sequence>
+                    <xs:element ref="sgsn_name"/>
+                    <xs:element minOccurs="0" ref="diameter_realm"/>
+                </xs:sequence>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="mme_name" type="xs:string"/>
+    <xs:element name="sgsnid">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="cc"/>
+                <xs:element minOccurs="0" ref="ndc"/>
+                <xs:element ref="sgsnno"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="sgsnno" type="xs:string"/>
+    <xs:element name="sgsn_name" type="xs:string"/>
+    <xs:element name="diameter_realm" type="xs:string"/>
+    <xs:element name="query_id" type="xs:string"/>
+    <xs:element name="locationserver_address">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="url"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_GSM_NET -->
+    <xs:element name="gsm_net_param">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="cgi"/>
+                <xs:element minOccurs="0" ref="neid"/>
+                <xs:element minOccurs="0" ref="nmr"/>
+                <xs:element minOccurs="0" ref="ta"/>
+                <xs:element minOccurs="0" ref="lmsi"/>
+                <xs:element minOccurs="0" ref="imsi"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="cgi">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="mcc"/>
+                <xs:element ref="mnc"/>
+                <xs:element ref="lac"/>
+                <xs:element ref="cellid"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="neid">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element ref="vlrid"/>
+                <xs:sequence>
+                    <xs:element ref="vmscid"/>
+                    <xs:element minOccurs="0" ref="vlrid"/>
+                </xs:sequence>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="vmscid">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="cc"/>
+                <xs:element minOccurs="0" ref="ndc"/>
+                <xs:element ref="vmscno"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="vlrid">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="cc"/>
+                <xs:element minOccurs="0" ref="ndc"/>
+                <xs:element ref="vlrno"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="nmr" type="xs:string"/>
+    <xs:element name="mcc" type="xs:string"/>
+    <xs:element name="mnc" type="xs:string"/>
+    <xs:element name="ndc" type="xs:string"/>
+    <xs:element name="cc" type="xs:string"/>
+    <xs:element name="vmscno" type="xs:string"/>
+    <xs:element name="vlrno" type="xs:string"/>
+    <xs:element name="lac" type="xs:string"/>
+    <xs:element name="cellid" type="xs:string"/>
+    <xs:element name="ta" type="xs:string"/>
+    <xs:element name="lmsi" type="xs:string"/>
+    <xs:element name="imsi" type="xs:string"/>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_HDR -->
+    <xs:element name="hdr">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice>
+                    <xs:element ref="sessionid"/>
+                    <xs:sequence>
+                        <xs:element ref="client"/>
+                        <xs:element minOccurs="0" ref="sessionid"/>
+                    </xs:sequence>
+                </xs:choice>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="subclient"/>
+                <xs:element minOccurs="0" ref="requestor"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_HLIA -->
+    <xs:element name="hlia">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element maxOccurs="unbounded" ref="pos"/>
+                <xs:element ref="req_id"/>
+                <xs:sequence>
+                    <xs:element ref="result"/>
+                    <xs:element minOccurs="0" ref="add_info"/>
+                </xs:sequence>
+            </xs:choice>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_HLIR -->
+    <xs:element name="hlir">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="msid"/>
+                <xs:element minOccurs="0" ref="trans_id"/>
+                <xs:element minOccurs="0" ref="start_time"/>
+                <xs:element minOccurs="0" ref="stop_time"/>
+                <xs:element minOccurs="0" ref="interval"/>
+                <xs:element minOccurs="0" ref="qop"/>
+                <xs:element minOccurs="0" ref="geo_info"/>
+                <xs:element minOccurs="0" ref="no_of_reports"/>
+                <xs:element minOccurs="0" ref="pushaddr"/>
+                <xs:element minOccurs="0" ref="prio"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="res_type" default="SYNC">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="SYNC"/>
+                        <xs:enumeration value="ASYNC"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_HLIREP -->
+    <xs:element name="hlirep">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="req_id"/>
+                <xs:element maxOccurs="unbounded" ref="pos"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_LOC -->
+    <xs:element name="pos">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="msid"/>
+                <xs:choice>
+                    <xs:element ref="pd"/>
+                    <xs:element ref="poserr"/>
+                </xs:choice>
+                <xs:element minOccurs="0" ref="gsm_net_param"/>
+                <xs:element minOccurs="0" ref="trans_id"/>
+                <xs:element minOccurs="0" ref="add_info"/>
+            </xs:sequence>
+            <xs:attribute name="pos_method">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="CELL"/>
+                        <xs:enumeration value="OTDOA"/>
+                        <xs:enumeration value="GPS"/>
+                        <xs:enumeration value="A-GPS"/>
+                        <xs:enumeration value="GNSS"/>
+                        <xs:enumeration value="A-GNSS"/>
+                        <xs:enumeration value="E-OTD"/>
+                        <xs:enumeration value="U-TDOA"/>
+                        <xs:enumeration value="AFLT"/>
+                        <xs:enumeration value="EFLT"/>
+                        <xs:enumeration value="E-CID"/>
+                        <xs:enumeration value="UNKNOWN"/>
+                        <xs:enumeration value="OTHER"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="result_type" default="FINAL">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="INTERMEDIATE"/>
+                        <xs:enumeration value="FINAL"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="eme_pos">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="msid"/>
+                <xs:choice minOccurs="0">
+                    <xs:element ref="pd"/>
+                    <xs:element ref="poserr"/>
+                </xs:choice>
+                <xs:element minOccurs="0" ref="esrd"/>
+                <xs:element minOccurs="0" ref="esrk"/>
+                <xs:element minOccurs="0" ref="trans_id"/>
+                <xs:element minOccurs="0" ref="serving_cell"/>
+                <xs:element minOccurs="0" ref="target_serving_node"/>
+            </xs:sequence>
+            <xs:attribute name="pos_method">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="CELL"/>
+                        <xs:enumeration value="OTDOA"/>
+                        <xs:enumeration value="GPS"/>
+                        <xs:enumeration value="A-GPS"/>
+                        <xs:enumeration value="GNSS"/>
+                        <xs:enumeration value="A-GNSS"/>
+                        <xs:enumeration value="E-OTD"/>
+                        <xs:enumeration value="U-TDOA"/>
+                        <xs:enumeration value="AFLT"/>
+                        <xs:enumeration value="EFLT"/>
+                        <xs:enumeration value="E-CID"/>
+                        <xs:enumeration value="UNKNOWN"/>
+                        <xs:enumeration value="OTHER"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="result_type" default="FINAL">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="INTERMEDIATE"/>
+                        <xs:enumeration value="FINAL"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="trl_pos">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="msid"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="reference_object"/>
+                <xs:choice>
+                    <xs:element ref="pd"/>
+                    <xs:element ref="poserr"/>
+                    <xs:element ref="time"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="trl_trigger" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="PERIODIC"/>
+                        <xs:enumeration value="MS_AVAIL"/>
+                        <xs:enumeration value="CHANGE_AREA"/>
+                        <xs:enumeration value="VELOCITY"/>
+                        <xs:enumeration value="DISTANCE"/>
+                        <xs:enumeration value="EQUIDISTANCE"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="pos_method">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="CELL"/>
+                        <xs:enumeration value="OTDOA"/>
+                        <xs:enumeration value="GPS"/>
+                        <xs:enumeration value="A-GPS"/>
+                        <xs:enumeration value="GNSS"/>
+                        <xs:enumeration value="A-GNSS"/>
+                        <xs:enumeration value="E-OTD"/>
+                        <xs:enumeration value="U-TDOA"/>
+                        <xs:enumeration value="AFLT"/>
+                        <xs:enumeration value="EFLT"/>
+                        <xs:enumeration value="E-CID"/>
+                        <xs:enumeration value="UNKNOWN"/>
+                        <xs:enumeration value="OTHER"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="pd">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="time"/>
+                <xs:choice>
+                    <xs:element ref="shape"/>
+                    <xs:element ref="civicloc"/>
+                    <xs:sequence>
+                        <xs:element ref="shape"/>
+                        <xs:element ref="civicloc"/>
+                    </xs:sequence>
+                </xs:choice>
+                <xs:element minOccurs="0" ref="MapData"/>
+                <xs:sequence minOccurs="0">
+                    <xs:element ref="alt"/>
+                    <xs:element minOccurs="0" ref="alt_unc"/>
+                </xs:sequence>
+                <xs:element minOccurs="0" ref="speed"/>
+                <xs:element minOccurs="0" ref="direction"/>
+                <xs:element minOccurs="0" ref="lev_conf"/>
+                <xs:element minOccurs="0" ref="qos_not_met"/>
+                <xs:element minOccurs="0" ref="MotionStateList"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="poserr">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="result"/>
+                <xs:element minOccurs="0" ref="add_info"/>
+                <xs:element ref="time"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="MapData">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element ref="Base64Map"/>
+                <xs:element ref="url"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Base64Map" type="xs:string"/>
+    <xs:element name="MapRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="Width"/>
+                <xs:element minOccurs="0" ref="Height"/>
+                <xs:element minOccurs="0" ref="Zoom"/>
+            </xs:sequence>
+            <xs:attribute name="MapdataType" default="MAP">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="MAP"/>
+                        <xs:enumeration value="URL"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="MimeType" default="GIF">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="GIF"/>
+                        <xs:enumeration value="JPEG"/>
+                        <xs:enumeration value="PNG"/>
+                        <xs:enumeration value="TIFF"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Width" type="xs:string"/>
+    <xs:element name="Height" type="xs:string"/>
+    <xs:element name="Zoom">
+        <xs:complexType mixed="true">
+            <xs:attribute name="ZoomType" default="KILOMETER">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="KILOMETER"/>
+                        <xs:enumeration value="METER"/>
+                        <xs:enumeration value="MILE"/>
+                        <xs:enumeration value="INCH"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="time">
+        <xs:complexType mixed="true">
+            <xs:attribute name="utc_off" default="0000"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="alt" type="xs:string"/>
+    <xs:element name="alt_unc" type="xs:string"/>
+    <xs:element name="civicloc">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="civicloc_element"/>
+            </xs:sequence>
+            <xs:attribute ref="xml:lang"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="civicloc_element">
+        <xs:complexType mixed="true">
+            <xs:attribute name="element_type" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="COUNTRY"/>
+                        <xs:enumeration value="A1"/>
+                        <xs:enumeration value="A2"/>
+                        <xs:enumeration value="A3"/>
+                        <xs:enumeration value="A4"/>
+                        <xs:enumeration value="A5"/>
+                        <xs:enumeration value="A6"/>
+                        <xs:enumeration value="PRD"/>
+                        <xs:enumeration value="POD"/>
+                        <xs:enumeration value="STS"/>
+                        <xs:enumeration value="HNO"/>
+                        <xs:enumeration value="HNS"/>
+                        <xs:enumeration value="LMK"/>
+                        <xs:enumeration value="LOC"/>
+                        <xs:enumeration value="FLR"/>
+                        <xs:enumeration value="NAM"/>
+                        <xs:enumeration value="PC"/>
+                        <xs:enumeration value="BLD"/>
+                        <xs:enumeration value="UNIT"/>
+                        <xs:enumeration value="ROOM"/>
+                        <xs:enumeration value="PLC"/>
+                        <xs:enumeration value="PCN"/>
+                        <xs:enumeration value="POBOX"/>
+                        <xs:enumeration value="ADDCODE"/>
+                        <xs:enumeration value="SEAT"/>
+                        <xs:enumeration value="RD"/>
+                        <xs:enumeration value="RDSEC"/>
+                        <xs:enumeration value="RDBR"/>
+                        <xs:enumeration value="RDSUBBR"/>
+                        <xs:enumeration value="PRM"/>
+                        <xs:enumeration value="POM"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute ref="xml:lang"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="MotionStateList">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="PrimaryMotionState"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="SecondaryMotionState"/>
+                <xs:element ref="Confidence"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="PrimaryMotionState" type="MotionState"/>
+    <xs:element name="SecondaryMotionState" type="MotionState"/>
+    <xs:complexType name="MotionState">
+        <xs:sequence>
+            <xs:element ref="MotionState"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="MotionState" type="xs:string"/>
+    <xs:element name="Confidence" type="xs:string"/>
+    <xs:element name="qos_not_met">
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="direction" type="xs:string"/>
+    <xs:element name="speed" type="xs:string"/>
+    <xs:element name="lev_conf" type="xs:string"/>
+    <xs:element name="geo_info">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="CoordinateReferenceSystem">
+                    <xs:attribute name="requested_positiondata" default="SHAPE">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:token">
+                                <xs:enumeration value="SHAPE"/>
+                                <xs:enumeration value="CIVICLOC"/>
+                                <xs:enumeration value="SHAPE_AND_CIVICLOC"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                    <xs:attribute name="Strict" default="YES">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:token">
+                                <xs:enumeration value="YES"/>
+                                <xs:enumeration value="NO"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="CoordinateReferenceSystem">
+        <xs:sequence>
+            <xs:element ref="CoordinateReferenceSystem"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="CoordinateReferenceSystem" type="Identifier"/>
+    <xs:complexType name="Identifier">
+        <xs:sequence>
+            <xs:element ref="Identifier"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Identifier">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="code"/>
+                <xs:element ref="codeSpace"/>
+                <xs:element ref="edition"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="code" type="xs:string"/>
+    <xs:element name="codeSpace" type="xs:string"/>
+    <xs:element name="edition" type="xs:string"/>
+    <xs:element name="service_coverage">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded">
+                <xs:element ref="cc"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ndc"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="MotionStateRequest">
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="serving_cell">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element ref="cgi"/>
+                <xs:element ref="sai"/>
+                <xs:sequence>
+                    <xs:element ref="mcc"/>
+                    <xs:element ref="mnc"/>
+                    <xs:element ref="lte_ci"/>
+                </xs:sequence>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="sai">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="mcc"/>
+                <xs:element ref="mnc"/>
+                <xs:element ref="lac"/>
+                <xs:element ref="sac"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="sac" type="xs:string"/>
+    <xs:element name="lte_ci" type="xs:string"/>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_SLIA -->
+    <xs:element name="slia">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element maxOccurs="unbounded" ref="pos"/>
+                <xs:element ref="req_id"/>
+                <xs:sequence>
+                    <xs:element ref="result"/>
+                    <xs:element minOccurs="0" ref="add_info"/>
+                </xs:sequence>
+            </xs:choice>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_SLIR -->
+    <xs:element name="slir">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice>
+                    <xs:element ref="msids"/>
+                    <xs:sequence maxOccurs="unbounded">
+                        <xs:element ref="msid"/>
+                        <xs:element minOccurs="0" ref="codeword"/>
+                        <xs:element ref="gsm_net_param"/>
+                        <xs:element minOccurs="0" ref="trans_id"/>
+                    </xs:sequence>
+                </xs:choice>
+                <xs:element minOccurs="0" ref="eqop"/>
+                <xs:element minOccurs="0" ref="geo_info"/>
+                <xs:element minOccurs="0" ref="loc_type"/>
+                <xs:element minOccurs="0" ref="prio"/>
+                <xs:element minOccurs="0" ref="pushaddr"/>
+                <xs:element minOccurs="0" ref="service_coverage"/>
+                <xs:element minOccurs="0" ref="MapRequest"/>
+                <xs:element minOccurs="0" ref="MotionStateRequest"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="res_type" default="SYNC">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="SYNC"/>
+                        <xs:enumeration value="ASYNC"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_SLIREP -->
+    <xs:element name="slirep">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="req_id"/>
+                <xs:element maxOccurs="unbounded" ref="pos"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_SLRA -->
+    <xs:element name="slra">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="result"/>
+                <xs:element minOccurs="0" ref="add_info"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_SLREP -->
+    <xs:element name="slrep">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="pos"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_SVC_INIT -->
+    <xs:element name="svc_init">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="hdr"/>
+                <xs:choice>
+                    <xs:element ref="slir"/>
+                    <xs:element ref="eme_lir"/>
+                    <xs:element ref="tlrr"/>
+                    <xs:element ref="tlrsr"/>
+                    <xs:element ref="hlir"/>
+                    <xs:element ref="tlrqr"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_SVC_RESULT -->
+    <xs:element name="svc_result">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="hdr"/>
+                <xs:choice>
+                    <xs:element ref="slia"/>
+                    <xs:element ref="slirep"/>
+                    <xs:element ref="slrep"/>
+                    <xs:element ref="slra"/>
+                    <xs:element ref="eme_lia"/>
+                    <xs:element ref="emerep"/>
+                    <xs:element ref="eme_lirep"/>
+                    <xs:element ref="tlra"/>
+                    <xs:element ref="tlrep"/>
+                    <xs:element ref="tlrsa"/>
+                    <xs:element ref="hlia"/>
+                    <xs:element ref="hlirep"/>
+                    <xs:element ref="tlrpr"/>
+                    <xs:element ref="tlrqa"/>
+                    <xs:element ref="tlqrep"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_TLRA -->
+    <xs:element name="tlra">
+        <xs:complexType>
+            <xs:choice>
+                <xs:sequence>
+                    <xs:element ref="req_id"/>
+                    <xs:element minOccurs="0" ref="lcs_ref"/>
+                </xs:sequence>
+                <xs:sequence>
+                    <xs:element ref="result"/>
+                    <xs:element minOccurs="0" ref="add_info"/>
+                </xs:sequence>
+            </xs:choice>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_TLRR -->
+    <xs:element name="tlrr">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="msids"/>
+                <xs:element minOccurs="0" ref="interval"/>
+                <xs:element minOccurs="0" ref="start_time"/>
+                <xs:element minOccurs="0" ref="stop_time"/>
+                <xs:element minOccurs="0" ref="duration"/>
+                <xs:element minOccurs="0" ref="tlrr_event"/>
+                <xs:element minOccurs="0" ref="qop"/>
+                <xs:element minOccurs="0" ref="geo_info"/>
+                <xs:element minOccurs="0" ref="pushaddr"/>
+                <xs:element minOccurs="0" ref="loc_type"/>
+                <xs:element minOccurs="0" ref="prio"/>
+                <xs:element minOccurs="0" ref="service_coverage"/>
+                <xs:element minOccurs="0" ref="MapRequest"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_TLREP -->
+    <xs:element name="tlrep">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="req_id"/>
+                <xs:element minOccurs="0" ref="lcs_ref"/>
+                <xs:element maxOccurs="unbounded" ref="trl_pos"/>
+                <xs:element minOccurs="0" ref="time_remaining"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="more" default="NO">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="YES"/>
+                        <xs:enumeration value="NO"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_TLRPR -->
+    <xs:element name="tlrpr">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="msid"/>
+                <xs:element ref="req_id"/>
+                <xs:element minOccurs="0" ref="lcs_ref"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="cause" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="PAUSE"/>
+                        <xs:enumeration value="RESUME"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_TLRQA -->
+    <xs:element name="tlrqa">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element ref="query_id"/>
+                <xs:sequence>
+                    <xs:element ref="result"/>
+                    <xs:element minOccurs="0" ref="add_info"/>
+                </xs:sequence>
+            </xs:choice>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_TLRQR -->
+    <xs:element name="tlrqr">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="pushaddr"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_TLRQREP -->
+    <xs:element name="tlqrep">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="query_id"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="trigger_data"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="last" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="YES"/>
+                        <xs:enumeration value="NO"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_TLRSA -->
+    <xs:element name="tlrsa">
+        <xs:complexType>
+            <xs:choice>
+                <xs:sequence>
+                    <xs:choice minOccurs="0">
+                        <xs:element ref="msids"/>
+                        <xs:element ref="msid"/>
+                    </xs:choice>
+                    <xs:element ref="req_id"/>
+                </xs:sequence>
+                <xs:sequence>
+                    <xs:element ref="result"/>
+                    <xs:element minOccurs="0" ref="add_info"/>
+                </xs:sequence>
+            </xs:choice>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- END OF SECTION -->
+    <!-- START OF   MLP_TLRSR -->
+    <xs:element name="tlrsr">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="0">
+                    <xs:element ref="msids"/>
+                    <xs:element ref="msid"/>
+                </xs:choice>
+                <xs:element ref="req_id"/>
+                <xs:element minOccurs="0" ref="lcs_ref"/>
+            </xs:sequence>
+            <xs:attribute name="ver" default="3.4.0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="3.4.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+<!-- END OF SECTION -->

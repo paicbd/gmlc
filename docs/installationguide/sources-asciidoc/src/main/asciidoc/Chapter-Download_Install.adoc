@@ -1,0 +1,106 @@
+[[_setup_downloading]]
+= Downloading and Installing
+
+Installing {this-platform} {this-application} is easy and quick with the binary download.
+You can either download the binary release or download the source code and set up from source.
+
+[[_downloading_binary]]
+== Binary Download and Installation
+
+The binary release is available for download at {this-release-binary-url} 
+
+.Procedure: Binary Download and Installation
+. Download the zip file `<filename>` to any folder of your choice. 
+. Extract the contents of the zip file. 
++
+----
+Downloads]$ unzip <filename>
+----						
+. Verify the newly created directory and ensure the contents are as explained below.
+
+== Directory Structure (WildFly 10)
+
+When you download the binary release, you will notice that the top level directory is named `restcomm-gmlc-<version>` and immediately below this are five sub-directories as explained below:
+
+* docs: Contains all relevant documentation in respective subfolders for JSLEE, jSS7, jDiameter, Management-HQ and GMLC.
+* wildfly-10.1.0.Final: The core server with two profiles "standalone" and "simulator". The "standalone" profile is a clean profile where you will have to start from scratch and configure the entire SS7 and Diameter stacks and {this-platform} {this-application}.
+  The "simulator" profile is a pre-configured profile to work with jss7-simulator and diameter location simulator.
+  Refer to the Admin Guide for instructions on how to start the server in either of the profiles.
+* resources: contains SLEE MAP, SLEE Diameter, JDBC, http-client, http-servlet and SIP RA jars.
+* tools: contains SLEE tools, a simple REST API for SLR/LRR, jdiameter location simulator and jss7-simulator.
+
+----
+
+|- restcomm-gmlc-<version>
+		|- docs
+				| jss7
+				| slee
+				| GMLC
+				| management-hq
+		|- wildfly-10.1.0.Final
+				| bin    //contains start up and shutdown scripts for the Server and the start up script for Shell.
+				| appclient
+				| client
+				| docs
+				| domain
+				| lib
+				| log
+				| modules //contains module binaries including slee, ss7 and gmlc
+				| simulator //pre-configured profile to work with the jss7-simulator
+				| standalone //clean profile to set up from scratch
+				| welcome-content
+		|- resources
+		        | diameter-base
+				| diameter-sh
+				| diameter-slh
+				| diameter-slg
+				| http-servlet
+				| map
+				| ocs
+				| sip11
+		|- tools
+				| restcomm-jss7-simulator
+				| diameter-lcs-simulator
+				| REST-API
+				| twiddle
+----
+
+[[_source_code]]
+== Setup from Source
+
+{this-platform} {this-application} works with JDK 11.
+In addition, you must have the following tools installed.
+
+* `Git Client` : Instructions for using GIT, including install, can be found at http://git-scm.com/book
+* `Maven 3.2.X` : Instructions for using Maven, including install, can be found at http://maven.apache.org/
+* `Ant 1.9.X` : Instructions for using Ant, including install, can be found at http://ant.apache.org
+
+
+[[_source_building]]
+=== Release Source Code Building
+
+
+. Downloading the source code
++
+Use GIT to check out a specific release source, the base URL is &THIS.TRUNK_SOURCE_CODE_URL;, then add the specific release version.
++
+[source]
+----
+
+[usr]$ git clone https://userid@bitbucket.org/paicbd/restcomm-gmlc.git
+[usr]$ cd extended-gmlc
+[usr]$ git checkout <version>
+----
+
+. Building the source code
++
+Now that we have the source the next step is to build and install the source.
+ {this-platform} {this-application} uses Maven 2 to build the system.
+You must ensure that `JAVA_HOME` environment variable is set properly prior to building the source.
++
+[source]
+----
+
+[usr]$ mvn clean install
+----
+

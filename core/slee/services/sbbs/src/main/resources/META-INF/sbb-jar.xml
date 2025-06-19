@@ -1,0 +1,758 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE sbb-jar PUBLIC "-//Sun Microsystems, Inc.//DTD JAIN SLEE SBB 1.1//EN"
+		"http://java.sun.com/dtd/slee-sbb-jar_1_1.dtd">
+
+<sbb-jar>
+	<sbb id="gmlc_gw_parent">
+		<description>Represents the GSM/UMTS/LTE location retrieval</description>
+		<sbb-name>MobileCoreNetworkInterfaceSbb</sbb-name>
+		<sbb-vendor>org.mobicents</sbb-vendor>
+		<sbb-version>1.0</sbb-version>
+		<sbb-alias>MobileCoreNetworkInterfaceSbb</sbb-alias>
+
+		<library-ref>
+			<library-name>gmlc-library</library-name>
+			<library-vendor>org.mobicents</library-vendor>
+			<library-version>2.0</library-version>
+		</library-ref>
+
+		<sbb-ref>
+			<sbb-name>CDRSbbPlain</sbb-name>
+			<sbb-vendor>org.mobicents</sbb-vendor>
+			<sbb-version>1.0</sbb-version>
+			<sbb-alias>CDRSbb_plain</sbb-alias>
+		</sbb-ref>
+
+		<sbb-classes>
+			<sbb-abstract-class>
+				<sbb-abstract-class-name>
+                    org.mobicents.gmlc.slee.MobileCoreNetworkInterfaceSbb
+                </sbb-abstract-class-name>
+				<cmp-field>
+					<cmp-field-name>eventContext</cmp-field-name>
+				</cmp-field>
+				<cmp-field>
+					<cmp-field-name>eventContextCMP</cmp-field-name>
+				</cmp-field>
+				<cmp-field>
+					<cmp-field-name>httpRequest</cmp-field-name>
+				</cmp-field>
+				<cmp-field>
+					<cmp-field-name>timerID</cmp-field-name>
+				</cmp-field>
+				<cmp-field>
+					<cmp-field-name>gMLCCDRState</cmp-field-name>
+				</cmp-field>
+				<cmp-field>
+					<cmp-field-name>sendRoutingInfoForLCSResponse</cmp-field-name>
+				</cmp-field>
+				<cmp-field>
+					<cmp-field-name>provideSubscriberLocationResponse</cmp-field-name>
+				</cmp-field>
+				<cmp-field>
+					<cmp-field-name>subscriberLocationReportRequest</cmp-field-name>
+				</cmp-field>
+				<cmp-field>
+					<cmp-field-name>sendRoutingInfoForSMResponse</cmp-field-name>
+				</cmp-field>
+				<cmp-field>
+					<cmp-field-name>sendRoutingInformationResponse</cmp-field-name>
+				</cmp-field>
+				<cmp-field>
+					<cmp-field-name>provideSubscriberInformationResponse</cmp-field-name>
+				</cmp-field>
+				<cmp-field>
+					<cmp-field-name>errorResponse</cmp-field-name>
+				</cmp-field>
+
+				<get-child-relation-method>
+					<sbb-alias-ref>CDRSbb_plain</sbb-alias-ref>
+					<get-child-relation-method-name>getCDRPlainInterfaceChildRelation</get-child-relation-method-name>
+					<default-priority>0</default-priority>
+				</get-child-relation-method>
+			</sbb-abstract-class>
+
+			<sbb-local-interface>
+				<sbb-local-interface-name>
+                    org.mobicents.gmlc.slee.MobileCoreNetworkInterfaceSbbLocalObject
+                </sbb-local-interface-name>
+			</sbb-local-interface>
+		</sbb-classes>
+
+		<!-- SS7 -->
+		<event event-direction="Receive" initial-event="False">
+			<event-name>AnyTimeInterrogationRequest</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.service.mobility.subscriberinfo.ANY_TIME_INTERROGATION_REQUEST</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>AnyTimeInterrogationResponse</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.service.mobility.subscriberinfo.ANY_TIME_INTERROGATION_RESPONSE</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SendRoutingInfoForLCSRequest</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.service.lsm.SEND_ROUTING_INFO_FOR_LCS_REQUEST</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SendRoutingInfoForLCSResponse</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.service.lsm.SEND_ROUTING_INFO_FOR_LCS_RESPONSE</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>ProvideSubscriberLocationRequest</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.service.lsm.PROVIDE_SUBSCRIBER_LOCATION_REQUEST</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>ProvideSubscriberLocationResponse</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.service.lsm.PROVIDE_SUBSCRIBER_LOCATION_RESPONSE</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="True">
+			<event-name>SubscriberLocationReportRequest</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.service.lsm.SUBSCRIBER_LOCATION_REPORT_REQUEST</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+			<initial-event-select variable="ActivityContext"/>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SubscriberLocationReportResponse</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.service.lsm.SUBSCRIBER_LOCATION_REPORT_RESPONSE</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SendRoutingInfoForSMRequest</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.service.sms.SEND_ROUTING_INFO_FOR_SM_REQUEST</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SendRoutingInfoForSMResponse</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.service.sms.SEND_ROUTING_INFO_FOR_SM_RESPONSE</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>ProvideSubscriberInformationRequest</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.service.mobility.subscriberinfo.PROVIDE_SUBSCRIBER_INFO_REQUEST</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>ProvideSubscriberInformationResponse</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.service.mobility.subscriberinfo.PROVIDE_SUBSCRIBER_INFO_RESPONSE</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SendRoutingInformationRequest</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.service.callhandling.SEND_ROUTING_INFORMATION_REQUEST</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SendRoutingInformationResponse</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.service.callhandling.SEND_ROUTING_INFORMATION_RESPONSE</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>DialogTimeout</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.DIALOG_TIMEOUT</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>DialogDelimiter</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.DIALOG_DELIMITER</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+			<initial-event-selector-method-name/>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>DialogAccept</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.DIALOG_ACCEPT</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+			<initial-event-selector-method-name/>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>DialogReject</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.DIALOG_REJECT</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+			<initial-event-selector-method-name/>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>DialogUserAbort</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.DIALOG_USERABORT</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+			<initial-event-selector-method-name/>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>DialogProviderAbort</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.DIALOG_PROVIDERABORT</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+			<initial-event-selector-method-name/>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>DialogClose</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.DIALOG_CLOSE</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+			<initial-event-selector-method-name/>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>DialogNotice</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.DIALOG_NOTICE</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+			<initial-event-selector-method-name/>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>DialogRelease</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.DIALOG_RELEASE</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+			<initial-event-selector-method-name/>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>InvokeTimeout</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.INVOKE_TIMEOUT</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+			<initial-event-selector-method-name/>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>ErrorComponent</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.ERROR_COMPONENT</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+			<initial-event-selector-method-name/>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>RejectComponent</event-name>
+			<event-type-ref>
+				<event-type-name>ss7.map.REJECT_COMPONENT</event-type-name>
+				<event-type-vendor>org.restcomm</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+			<initial-event-selector-method-name/>
+		</event>
+
+		<!-- Diameter based events for LTE location services using Diameter SLh and SLg resource adaptors-->
+		<event event-direction="Receive" initial-event="False">
+			<event-name>LCSRoutingInfoRequest</event-name>
+			<event-type-ref>
+				<event-type-name>net.java.slee.resource.diameter.slh.events.LCSRoutingInfoRequest</event-type-name>
+				<event-type-vendor>java.net</event-type-vendor>
+				<event-type-version>0.8</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>LCSRoutingInfoAnswer</event-name>
+			<event-type-ref>
+				<event-type-name>net.java.slee.resource.diameter.slh.events.LCSRoutingInfoAnswer</event-type-name>
+				<event-type-vendor>java.net</event-type-vendor>
+				<event-type-version>0.8</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>ProvideLocationRequest</event-name>
+			<event-type-ref>
+				<event-type-name>net.java.slee.resource.diameter.slg.events.ProvideLocationRequest</event-type-name>
+				<event-type-vendor>java.net</event-type-vendor>
+				<event-type-version>0.8</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>ProvideLocationAnswer</event-name>
+			<event-type-ref>
+				<event-type-name>net.java.slee.resource.diameter.slg.events.ProvideLocationAnswer</event-type-name>
+				<event-type-vendor>java.net</event-type-vendor>
+				<event-type-version>0.8</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="True">
+			<event-name>LocationReportRequest</event-name>
+			<event-type-ref>
+				<event-type-name>net.java.slee.resource.diameter.slg.events.LocationReportRequest</event-type-name>
+				<event-type-vendor>java.net</event-type-vendor>
+				<event-type-version>0.8</event-type-version>
+			</event-type-ref>
+			<initial-event-select variable="ActivityContext"/>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>LocationReportAnswer</event-name>
+			<event-type-ref>
+				<event-type-name>net.java.slee.resource.diameter.slg.events.LocationReportAnswer</event-type-name>
+				<event-type-vendor>java.net</event-type-vendor>
+				<event-type-version>0.8</event-type-version>
+			</event-type-ref>
+		</event>
+		<!-- Diameter based events for LTE location retrieval from user data using Diameter Sh resource adaptors-->
+		<event event-direction="Receive" initial-event="False">
+			<event-name>UserDataRequest</event-name>
+			<event-type-ref>
+				<event-type-name>net.java.slee.resource.diameter.sh.events.UserDataRequest</event-type-name>
+				<event-type-vendor>java.net</event-type-vendor>
+				<event-type-version>0.8</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>UserDataAnswer</event-name>
+			<event-type-ref>
+				<event-type-name>net.java.slee.resource.diameter.sh.events.UserDataAnswer</event-type-name>
+				<event-type-vendor>java.net</event-type-vendor>
+				<event-type-version>0.8</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>ErrorAnswer</event-name>
+			<event-type-ref>
+				<event-type-name>net.java.slee.resource.diameter.base.events.ErrorAnswer</event-type-name>
+				<event-type-vendor>java.net</event-type-vendor>
+				<event-type-version>0.8</event-type-version>
+			</event-type-ref>
+		</event>
+
+		<!-- HTTP -->
+		<event event-direction="Receive" initial-event="True">
+			<event-name>Get</event-name>
+			<event-type-ref>
+				<event-type-name>net.java.slee.resource.http.events.incoming.request.GET</event-type-name>
+				<event-type-vendor>net.java.slee</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+			<initial-event-select variable="ActivityContext"/>
+		</event>
+		<event event-direction="Receive" initial-event="True">
+			<event-name>Post</event-name>
+			<event-type-ref>
+				<event-type-name>net.java.slee.resource.http.events.incoming.request.POST</event-type-name>
+				<event-type-vendor>net.java.slee</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+			<initial-event-select variable="ActivityContext"/>
+		</event>
+
+		<!-- TimerEvent -->
+		<event event-direction="Receive" initial-event="False">
+			<event-name>TimerEvent</event-name>
+			<event-type-ref>
+				<event-type-name>javax.slee.facilities.TimerEvent</event-type-name>
+				<event-type-vendor>javax.slee</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+
+		<!-- SUPL -->
+		<!--
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SuplInit</event-name>
+			<event-type-ref>
+				<event-type-name>com.paicbd.slee.resource.ulp.events.SuplInit</event-type-name>
+				<event-type-vendor>com.paicbd</event-type-vendor>
+        		<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SuplPosInit</event-name>
+			<event-type-ref>
+				<event-type-name>com.paicbd.slee.resource.ulp.events.SuplPosInit</event-type-name>
+				<event-type-vendor>com.paicbd</event-type-vendor>
+        		<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SuplPos</event-name>
+			<event-type-ref>
+				<event-type-name>com.paicbd.slee.resource.ulp.events.SuplPos</event-type-name>
+				<event-type-vendor>com.paicbd</event-type-vendor>
+        		<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SuplEnd</event-name>
+			<event-type-ref>
+				<event-type-name>com.paicbd.slee.resource.ulp.events.SuplEnd</event-type-name>
+				<event-type-vendor>com.paicbd</event-type-vendor>
+				<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SuplTriggeredStart</event-name>
+			<event-type-ref>
+				<event-type-name>com.paicbd.slee.resource.ulp.events.SuplTriggeredStart</event-type-name>
+				<event-type-vendor>com.paicbd</event-type-vendor>
+        		<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SuplTriggeredResponse</event-name>
+			<event-type-ref>
+				<event-type-name>com.paicbd.slee.resource.ulp.events.SuplTriggeredResponse</event-type-name>
+				<event-type-vendor>com.paicbd</event-type-vendor>
+        		<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SuplTriggeredStop</event-name>
+			<event-type-ref>
+				<event-type-name>com.paicbd.slee.resource.ulp.events.SuplTriggeredStop</event-type-name>
+				<event-type-vendor>com.paicbd</event-type-vendor>
+        		<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SuplReport</event-name>
+			<event-type-ref>
+				<event-type-name>com.paicbd.slee.resource.ulp.events.SuplReport</event-type-name>
+				<event-type-vendor>com.paicbd</event-type-vendor>
+        		<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SuplStart</event-name>
+			<event-type-ref>
+				<event-type-name>com.paicbd.slee.resource.ulp.events.SuplStart</event-type-name>
+				<event-type-vendor>com.paicbd</event-type-vendor>
+        		<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SuplAuthReq</event-name>
+			<event-type-ref>
+				<event-type-name>com.paicbd.slee.resource.ulp.events.SuplAuthReq</event-type-name>
+				<event-type-vendor>com.paicbd</event-type-vendor>
+        		<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SuplAuthResp</event-name>
+			<event-type-ref>
+				<event-type-name>com.paicbd.slee.resource.ulp.events.SuplAuthResp</event-type-name>
+				<event-type-vendor>com.paicbd</event-type-vendor>
+        		<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SuplNotify</event-name>
+			<event-type-ref>
+				<event-type-name>com.paicbd.slee.resource.ulp.events.SuplNotify</event-type-name>
+				<event-type-vendor>com.paicbd</event-type-vendor>
+        		<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SuplNotifyResponse</event-name>
+			<event-type-ref>
+				<event-type-name>com.paicbd.slee.resource.ulp.events.SuplNotifyResponse</event-type-name>
+				<event-type-vendor>com.paicbd</event-type-vendor>
+        		<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SuplResponse</event-name>
+			<event-type-ref>
+				<event-type-name>com.paicbd.slee.resource.ulp.events.SuplResponse</event-type-name>
+				<event-type-vendor>com.paicbd</event-type-vendor>
+        		<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		<event event-direction="Receive" initial-event="False">
+			<event-name>SuplSetInit</event-name>
+			<event-type-ref>
+				<event-type-name>com.paicbd.slee.resource.ulp.events.SuplSetInit</event-type-name>
+				<event-type-vendor>com.paicbd</event-type-vendor>
+        		<event-type-version>1.0</event-type-version>
+			</event-type-ref>
+		</event>
+		-->
+
+		<!-- GSM/UMTS location services using SS7 MAP Resource Adaptors -->
+		<resource-adaptor-type-binding>
+			<resource-adaptor-type-ref>
+				<resource-adaptor-type-name>MAPResourceAdaptorType</resource-adaptor-type-name>
+				<resource-adaptor-type-vendor>org.restcomm</resource-adaptor-type-vendor>
+				<resource-adaptor-type-version>2.0</resource-adaptor-type-version>
+			</resource-adaptor-type-ref>
+			<activity-context-interface-factory-name>slee/resources/map/2.0/acifactory</activity-context-interface-factory-name>
+			<resource-adaptor-entity-binding>
+				<resource-adaptor-object-name>slee/resources/map/2.0/provider</resource-adaptor-object-name>
+				<resource-adaptor-entity-link>MAPRA</resource-adaptor-entity-link>
+			</resource-adaptor-entity-binding>
+		</resource-adaptor-type-binding>
+
+		<!-- LTE location services using Diameter SLh and SLg Resource Adaptors -->
+		<resource-adaptor-type-binding>
+			<resource-adaptor-type-ref>
+				<resource-adaptor-type-name>Diameter SLh</resource-adaptor-type-name>
+				<resource-adaptor-type-vendor>java.net</resource-adaptor-type-vendor>
+				<resource-adaptor-type-version>0.8.1</resource-adaptor-type-version>
+			</resource-adaptor-type-ref>
+			<activity-context-interface-factory-name>slee/resources/JDiameterSLhResourceAdaptor/java.net/0.8.1/acif</activity-context-interface-factory-name>
+			<resource-adaptor-entity-binding>
+				<resource-adaptor-object-name>slee/resources/diameter-slh-ra-interface</resource-adaptor-object-name>
+				<resource-adaptor-entity-link>DiameterSLh</resource-adaptor-entity-link>
+			</resource-adaptor-entity-binding>
+		</resource-adaptor-type-binding>
+
+		<resource-adaptor-type-binding>
+			<resource-adaptor-type-ref>
+				<resource-adaptor-type-name>Diameter SLg</resource-adaptor-type-name>
+				<resource-adaptor-type-vendor>java.net</resource-adaptor-type-vendor>
+				<resource-adaptor-type-version>0.8.1</resource-adaptor-type-version>
+			</resource-adaptor-type-ref>
+			<activity-context-interface-factory-name>slee/resources/JDiameterSLgResourceAdaptor/java.net/0.8.1/acif</activity-context-interface-factory-name>
+			<resource-adaptor-entity-binding>
+				<resource-adaptor-object-name>slee/resources/diameter-slg-ra-interface</resource-adaptor-object-name>
+				<resource-adaptor-entity-link>DiameterSLg</resource-adaptor-entity-link>
+			</resource-adaptor-entity-binding>
+		</resource-adaptor-type-binding>
+
+		<!-- IMS Diameter Sh Client Resource Adaptor -->
+		<resource-adaptor-type-binding>
+			<resource-adaptor-type-ref>
+				<resource-adaptor-type-name>Diameter Sh-Client</resource-adaptor-type-name>
+				<resource-adaptor-type-vendor>java.net</resource-adaptor-type-vendor>
+				<resource-adaptor-type-version>0.8.1</resource-adaptor-type-version>
+			</resource-adaptor-type-ref>
+			<activity-context-interface-factory-name>slee/resources/JDiameterShClientResourceAdaptor/java.net/0.8.1/acif</activity-context-interface-factory-name>
+			<resource-adaptor-entity-binding>
+				<resource-adaptor-object-name>slee/resources/diameter-sh-client-ra-interface</resource-adaptor-object-name>
+				<resource-adaptor-entity-link>DiameterShClient</resource-adaptor-entity-link>
+			</resource-adaptor-entity-binding>
+		</resource-adaptor-type-binding>
+		<!-- IMS Diameter Sh Server Resource Adaptor -->
+		<resource-adaptor-type-binding>
+			<resource-adaptor-type-ref>
+				<resource-adaptor-type-name>Diameter Sh-Server</resource-adaptor-type-name>
+				<resource-adaptor-type-vendor>java.net</resource-adaptor-type-vendor>
+				<resource-adaptor-type-version>0.8.1</resource-adaptor-type-version>
+			</resource-adaptor-type-ref>
+			<activity-context-interface-factory-name>slee/resources/JDiameterShServerResourceAdaptor/java.net/0.8.1/acif</activity-context-interface-factory-name>
+			<resource-adaptor-entity-binding>
+				<resource-adaptor-object-name>slee/resources/diameter-sh-server-ra-interface</resource-adaptor-object-name>
+				<resource-adaptor-entity-link>DiameterShServer</resource-adaptor-entity-link>
+			</resource-adaptor-entity-binding>
+		</resource-adaptor-type-binding>
+
+		<!-- Diameter Base Resource Adaptor -->
+		<resource-adaptor-type-binding>
+			<resource-adaptor-type-ref>
+				<resource-adaptor-type-name>Diameter Base</resource-adaptor-type-name>
+				<resource-adaptor-type-vendor>java.net</resource-adaptor-type-vendor>
+				<resource-adaptor-type-version>0.8.1</resource-adaptor-type-version>
+			</resource-adaptor-type-ref>
+			<activity-context-interface-factory-name>slee/resources/DiameterBaseResourceAdaptor/java.net/0.8.1/acif</activity-context-interface-factory-name>
+			<resource-adaptor-entity-binding>
+				<resource-adaptor-object-name>slee/resources/diameter-base-ra</resource-adaptor-object-name>
+				<resource-adaptor-entity-link>DiameterBaseResourceAdaptor</resource-adaptor-entity-link>
+			</resource-adaptor-entity-binding>
+		</resource-adaptor-type-binding>
+
+		<!-- OMA SUPL ULP Resource Adaptor -->
+		<resource-adaptor-type-binding>
+			<resource-adaptor-type-ref>
+				<resource-adaptor-type-name>ULPResourceAdaptorType</resource-adaptor-type-name>
+				<resource-adaptor-type-vendor>com.paicbd</resource-adaptor-type-vendor>
+				<resource-adaptor-type-version>1.0</resource-adaptor-type-version>
+			</resource-adaptor-type-ref>
+			<activity-context-interface-factory-name>slee/resources/ULPResourceAdaptor/com.paicbd/1.0/acif</activity-context-interface-factory-name>
+			<resource-adaptor-entity-binding>
+				<resource-adaptor-object-name>slee/resources/ulp</resource-adaptor-object-name>
+				<resource-adaptor-entity-link>ULPRA</resource-adaptor-entity-link>
+			</resource-adaptor-entity-binding>
+		</resource-adaptor-type-binding>
+	</sbb>
+
+
+	<sbb id="gmlc_cdr_plain">
+		<description>SBB which exposes stateless interface to allow CDR generation. This SBB logs CDRs into tracer facility</description>
+		<sbb-name>CDRSbbPlain</sbb-name>
+		<sbb-vendor>org.mobicents</sbb-vendor>
+		<sbb-version>1.0</sbb-version>
+		<sbb-alias>CDRSbb_plain</sbb-alias>
+
+		<sbb-classes>
+			<sbb-abstract-class>
+				<sbb-abstract-class-name>org.mobicents.gmlc.slee.cdr.plain.CDRGeneratorSbb</sbb-abstract-class-name>
+				<cmp-field>
+					<cmp-field-name>gMLCCDRState</cmp-field-name>
+				</cmp-field>
+			</sbb-abstract-class>
+			<sbb-local-interface>
+				<sbb-local-interface-name>org.mobicents.gmlc.slee.cdr.CDRSBBLocalObject</sbb-local-interface-name>
+			</sbb-local-interface>
+		</sbb-classes>
+		<event event-direction="Receive" initial-event="True">
+			<event-name>StartServiceEvent</event-name>
+			<event-type-ref>
+				<event-type-name>
+					javax.slee.serviceactivity.ServiceStartedEvent
+				</event-type-name>
+				<event-type-vendor>javax.slee</event-type-vendor>
+				<event-type-version>1.1</event-type-version>
+			</event-type-ref>
+			<initial-event-select variable="ActivityContext" />
+		</event>
+
+		<!-- GSM/UMTS location services using SS7 MAP resource adaptors -->
+		<resource-adaptor-type-binding>
+			<resource-adaptor-type-ref>
+				<resource-adaptor-type-name>MAPResourceAdaptorType</resource-adaptor-type-name>
+				<resource-adaptor-type-vendor>org.restcomm</resource-adaptor-type-vendor>
+				<resource-adaptor-type-version>2.0</resource-adaptor-type-version>
+			</resource-adaptor-type-ref>
+			<activity-context-interface-factory-name>slee/resources/map/2.0/acifactory</activity-context-interface-factory-name>
+			<resource-adaptor-entity-binding>
+				<resource-adaptor-object-name>slee/resources/map/2.0/provider</resource-adaptor-object-name>
+				<resource-adaptor-entity-link>MAPRA</resource-adaptor-entity-link>
+			</resource-adaptor-entity-binding>
+		</resource-adaptor-type-binding>
+
+		<!-- LTE location services using Diameter SLh and SLg resource adaptors -->
+		<resource-adaptor-type-binding>
+			<resource-adaptor-type-ref>
+				<resource-adaptor-type-name>Diameter SLh</resource-adaptor-type-name>
+				<resource-adaptor-type-vendor>java.net</resource-adaptor-type-vendor>
+				<resource-adaptor-type-version>0.8.1</resource-adaptor-type-version>
+			</resource-adaptor-type-ref>
+			<activity-context-interface-factory-name>slee/resources/JDiameterSLhResourceAdaptor/java.net/0.8.1/acif</activity-context-interface-factory-name>
+			<resource-adaptor-entity-binding>
+				<resource-adaptor-object-name>slee/resources/diameter-slh-ra-interface</resource-adaptor-object-name>
+				<resource-adaptor-entity-link>DiameterSLh</resource-adaptor-entity-link>
+			</resource-adaptor-entity-binding>
+		</resource-adaptor-type-binding>
+
+		<resource-adaptor-type-binding>
+			<resource-adaptor-type-ref>
+				<resource-adaptor-type-name>Diameter SLg</resource-adaptor-type-name>
+				<resource-adaptor-type-vendor>java.net</resource-adaptor-type-vendor>
+				<resource-adaptor-type-version>0.8.1</resource-adaptor-type-version>
+			</resource-adaptor-type-ref>
+			<activity-context-interface-factory-name>slee/resources/JDiameterSLgResourceAdaptor/java.net/0.8.1/acif</activity-context-interface-factory-name>
+			<resource-adaptor-entity-binding>
+				<resource-adaptor-object-name>slee/resources/diameter-slg-ra-interface</resource-adaptor-object-name>
+				<resource-adaptor-entity-link>DiameterSLg</resource-adaptor-entity-link>
+			</resource-adaptor-entity-binding>
+		</resource-adaptor-type-binding>
+
+		<!-- IMS Diameter Sh Client resource adaptor -->
+		<resource-adaptor-type-binding>
+			<resource-adaptor-type-ref>
+				<resource-adaptor-type-name>Diameter Sh-Client</resource-adaptor-type-name>
+				<resource-adaptor-type-vendor>java.net</resource-adaptor-type-vendor>
+				<resource-adaptor-type-version>0.8.1</resource-adaptor-type-version>
+			</resource-adaptor-type-ref>
+			<activity-context-interface-factory-name>slee/resources/JDiameterShClientResourceAdaptor/java.net/0.8.1/acif</activity-context-interface-factory-name>
+			<resource-adaptor-entity-binding>
+				<resource-adaptor-object-name>slee/resources/diameter-sh-client-ra-interface</resource-adaptor-object-name>
+				<resource-adaptor-entity-link>DiameterShClient</resource-adaptor-entity-link>
+			</resource-adaptor-entity-binding>
+		</resource-adaptor-type-binding>
+		<!-- IMS Diameter Sh Server resource adaptor -->
+		<resource-adaptor-type-binding>
+			<resource-adaptor-type-ref>
+				<resource-adaptor-type-name>Diameter Sh-Server</resource-adaptor-type-name>
+				<resource-adaptor-type-vendor>java.net</resource-adaptor-type-vendor>
+				<resource-adaptor-type-version>0.8.1</resource-adaptor-type-version>
+			</resource-adaptor-type-ref>
+			<activity-context-interface-factory-name>slee/resources/JDiameterShServerResourceAdaptor/java.net/0.8.1/acif</activity-context-interface-factory-name>
+			<resource-adaptor-entity-binding>
+				<resource-adaptor-object-name>slee/resources/diameter-sh-server-ra-interface</resource-adaptor-object-name>
+				<resource-adaptor-entity-link>DiameterShServer</resource-adaptor-entity-link>
+			</resource-adaptor-entity-binding>
+		</resource-adaptor-type-binding>
+
+		<!-- Diameter Base Resource Adaptor -->
+		<resource-adaptor-type-binding>
+			<resource-adaptor-type-ref>
+				<resource-adaptor-type-name>Diameter Base</resource-adaptor-type-name>
+				<resource-adaptor-type-vendor>java.net</resource-adaptor-type-vendor>
+				<resource-adaptor-type-version>0.8.1</resource-adaptor-type-version>
+			</resource-adaptor-type-ref>
+			<activity-context-interface-factory-name>slee/resources/DiameterBaseResourceAdaptor/java.net/0.8.1/acif</activity-context-interface-factory-name>
+			<resource-adaptor-entity-binding>
+				<resource-adaptor-object-name>slee/resources/diameter-base-ra</resource-adaptor-object-name>
+				<resource-adaptor-entity-link>DiameterBaseResourceAdaptor</resource-adaptor-entity-link>
+			</resource-adaptor-entity-binding>
+		</resource-adaptor-type-binding>
+
+		<!-- OMA SUPL ULP Resource Adaptor -->
+		<resource-adaptor-type-binding>
+			<resource-adaptor-type-ref>
+				<resource-adaptor-type-name>ULPResourceAdaptorType</resource-adaptor-type-name>
+				<resource-adaptor-type-vendor>com.paicbd</resource-adaptor-type-vendor>
+				<resource-adaptor-type-version>1.0</resource-adaptor-type-version>
+			</resource-adaptor-type-ref>
+			<activity-context-interface-factory-name>slee/resources/ULPResourceAdaptor/com.paicbd/1.0/acif</activity-context-interface-factory-name>
+			<resource-adaptor-entity-binding>
+				<resource-adaptor-object-name>slee/resources/ulp</resource-adaptor-object-name>
+				<resource-adaptor-entity-link>ULPRA</resource-adaptor-entity-link>
+			</resource-adaptor-entity-binding>
+		</resource-adaptor-type-binding>
+	</sbb>
+</sbb-jar>

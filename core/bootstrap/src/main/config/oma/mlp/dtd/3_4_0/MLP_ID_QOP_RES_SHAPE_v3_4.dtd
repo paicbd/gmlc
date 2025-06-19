@@ -1,0 +1,210 @@
+
+<!--
+
+MLP DTD - Mobile Location Protocol
+   version - 3.4.1
+   date    - 11 Dec 2018
+FILE INFORMATION
+
+  OMA Permanent Document
+    File: OMA-SUP-DTD_MLP_ID_QOP_RES_SHAPE-V3_4_1-20181211-A
+    Type: Text
+
+  Public Reachable Information
+    Path: http://www.openmobilealliance.org/tech/dtd
+    Name: MLP_ID_QOP_RES_SHAPE_v3_4.dtd
+
+NORMATIVE INFORMATION
+
+  Information about this file can be found in the latest revision of
+
+    OMA-TS-MLP-V3_4
+
+  This is available at http://www.openmobilealliance.org/
+
+  Send comments to technical-comments@mail.openmobilealliance.org
+
+CHANGE HISTORY
+
+12052015 Status changed to Approved by TP, TP Ref # OMA-TP-2015-0081-INP_MLS_V1_3_ERP_for_final_Approval
+11122018 Status changed to Approved by LOC WG, Ref LOC WG Doc# OMA-LOC-2018-0020-INP_MLS_Evolution_v1_3_1_ERP_for_Final_Approval_notification
+
+
+LEGAL DISCLAIMER
+
+Copyright 2018 Open Mobile Alliance.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+3. Neither the name of the copyright holder nor the names of its
+contributors may be used to endorse or promote products derived
+from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+The above license is used as a license under copyright only.  Please
+reference the OMA IPR Policy for patent licensing terms:
+http://www.openmobilealliance.org/ipr.html
+
+TYPICAL USAGE IN XML DOCUMENT
+
+  <?xml version="1.0"?>
+  <!DOCTYPE FooBarMsg PUBLIC "-//OMA//DTD FooBar 1.0//EN"
+            "http://www.openmobilealliance.org/tech/DTD/foobar-v1_0.dtd"
+            [<?oma-foobar-ver supported-versions="1.0"?>]>
+  <FooBarMsg>
+     ...
+  </FooBarMsg>
+
+-->
+
+<!-- START OF   MLP_GEM  -->
+<!ELEMENT	gem	(result, add_info?)>
+<!ATTLIST	gem	
+	ver CDATA	#FIXED "3.4.0">
+<!-- END OF SECTION -->
+<!-- START OF   MLP_ID  -->
+<!ELEMENT	msid	(#PCDATA)>
+<!ATTLIST	msid	
+	type (MSISDN | IMSI | IMEI | MIN | MDN |
+      EME_MSID | ASID | OPE_ID | IPV4 | IPV6 |
+      SESSID | SIP_URI |TEL_URL | NAI | URI)	"MSISDN"
+	enc (ASC | CRP)	"ASC">
+<!ELEMENT	msid_range	(start_msid, stop_msid)>
+<!ELEMENT	msids	(((msid, codeword?, session?, trans_id?) | (msid_range, codeword*)| msid_group)+)>
+<!ELEMENT	msid_group	(#PCDATA)>
+<!ELEMENT	codeword	(#PCDATA)>
+<!ELEMENT	esrd	(#PCDATA)>
+<!ATTLIST	esrd	
+	type (NA)	"NA">
+<!ELEMENT	esrk	(#PCDATA)>
+<!ATTLIST	esrk	
+	type (NA)	"NA">
+<!ELEMENT	session	(#PCDATA)>
+<!ATTLIST	session	
+	type (APN | DIAL)	#REQUIRED>
+<!ELEMENT	start_msid	(msid)>
+<!ELEMENT	stop_msid	(msid)>
+<!ELEMENT	trans_id	(#PCDATA)>
+<!-- END OF SECTION -->
+<!-- START OF  MLP_QOP  -->
+<!ELEMENT	eqop	(resp_req?, resp_timer?,
+ (ll_acc | hor_acc)?, alt_acc?,
+ max_loc_age?)>
+<!ELEMENT	qop	((ll_acc | hor_acc)?,
+ alt_acc?)>
+<!ELEMENT	ll_acc	(#PCDATA)>
+<!ATTLIST	ll_acc	
+	qos_class (ASSURED | BEST_EFFORT)	#IMPLIED>
+<!ELEMENT	hor_acc	(#PCDATA)>
+<!ATTLIST	hor_acc	
+	qos_class (ASSURED | BEST_EFFORT)	#IMPLIED>
+<!ELEMENT	alt_acc	(#PCDATA)>
+<!ATTLIST	alt_acc	
+	qos_class (ASSURED | BEST_EFFORT)	#IMPLIED>
+<!ELEMENT	max_loc_age	(#PCDATA)>
+<!ELEMENT	resp_req	EMPTY>
+<!ATTLIST	resp_req	
+	type (NO_DELAY | LOW_DELAY | DELAY_TOL)	"DELAY_TOL">
+<!ELEMENT	resp_timer	(#PCDATA)>
+<!-- END OF SECTION -->
+<!-- START OF  MLP_RES  -->
+<!ELEMENT	add_info	(#PCDATA)>
+<!ELEMENT	result	(#PCDATA)>
+<!ATTLIST	result 	
+	resid CDATA	#REQUIRED>
+<!-- END OF SECTION -->
+<!-- START OF  MLP_SHAPE  -->
+<!ELEMENT	shape	(Point | LineString | Polygon |
+ Box | CircularArea |
+ CircularArcArea |
+ EllipticalArea |
+ MultiLineString | MultiPoint |
+ MultiPolygon| LinearRing)>
+<!ELEMENT	distanceUnit	(#PCDATA)>
+<!ELEMENT	angularUnit	(#PCDATA)>
+<!ELEMENT	angle	(#PCDATA)>
+<!ELEMENT	coord	(X, Y?, Z?, Zone?, Hemisphere?)>
+<!ELEMENT	X	(#PCDATA)>
+<!ELEMENT	Y	(#PCDATA)>
+<!ELEMENT	Z	(#PCDATA)>
+<!ELEMENT	Zone	(#PCDATA)>
+<!ELEMENT	Hemisphere	(#PCDATA)>
+<!ELEMENT	Point	(coord)>
+<!ATTLIST	Point	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	LineString	(coord, coord+)>
+<!ATTLIST	LineString	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	Box	(coord, coord)>
+<!ATTLIST	Box	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	LinearRing	(coord, coord, coord, coord*)>
+<!ATTLIST	LinearRing	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	Polygon	(outerBoundaryIs, innerBoundaryIs*)>
+<!ATTLIST	Polygon	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	outerBoundaryIs	(LinearRing)>
+<!ELEMENT	innerBoundaryIs	(LinearRing)>
+<!ELEMENT	CircularArcArea	(coord, inRadius, outRadius,
+ startAngle, stopAngle,
+ angularUnit?, distanceUnit?)>
+<!ATTLIST	CircularArcArea	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	CircularArea	(coord, radius, distanceUnit?)>
+<!ATTLIST	CircularArea	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	EllipticalArea	(coord, angle, semiMajor,
+ semiMinor, angularUnit?,
+ distanceUnit?)>
+<!ATTLIST	EllipticalArea	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	inRadius	(#PCDATA)>
+<!ELEMENT	outRadius	(#PCDATA)>
+<!ELEMENT	radius	(#PCDATA)>
+<!ELEMENT	semiMajor	(#PCDATA)>
+<!ELEMENT	semiMinor	(#PCDATA)>
+<!ELEMENT	startAngle	(#PCDATA)>
+<!ELEMENT	stopAngle	(#PCDATA)>
+<!ELEMENT	MultiLineString	(LineString+)>
+<!ATTLIST	MultiLineString	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	MultiPoint	(Point+)>
+<!ATTLIST	MultiPoint	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!ELEMENT	MultiPolygon	((Polygon| Box | CircularArea |
+ CircularArcArea |
+ EllipticalArea)+)>
+<!ATTLIST	MultiPolygon	
+	gid ID	#IMPLIED
+	srsName CDATA	#IMPLIED>
+<!-- END OF SECTION -->
