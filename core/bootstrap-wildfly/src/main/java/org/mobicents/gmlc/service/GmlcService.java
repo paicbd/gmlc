@@ -1,5 +1,6 @@
 package org.mobicents.gmlc.service;
 
+import com.paic.licenser.licenseValidator;
 import javolution.util.FastList;
 import org.jboss.as.controller.services.path.PathManager;
 import org.jboss.dmr.ModelNode;
@@ -33,19 +34,19 @@ public class GmlcService implements Service<GmlcService> {
     return ServiceName.of("restcomm", "gmlc-service");
   }
 
-  private final InjectedValue<SS7ServiceInterface> ss7Service = new InjectedValue<>();
+  private final InjectedValue<SS7ServiceInterface> ss7Service = new InjectedValue<SS7ServiceInterface>();
 
   public InjectedValue<SS7ServiceInterface> getSS7Service() {
     return ss7Service;
   }
 
-  private final InjectedValue<PathManager> pathManagerInjector = new InjectedValue<>();
+  private final InjectedValue<PathManager> pathManagerInjector = new InjectedValue<PathManager>();
 
   public InjectedValue<PathManager> getPathManagerInjector() {
     return pathManagerInjector;
   }
 
-  private final InjectedValue<MBeanServer> mbeanServer = new InjectedValue<>();
+  private final InjectedValue<MBeanServer> mbeanServer = new InjectedValue<MBeanServer>();
 
   public InjectedValue<MBeanServer> getMbeanServer() {
     return mbeanServer;
@@ -111,12 +112,23 @@ public class GmlcService implements Service<GmlcService> {
 
     this.gmlcManagementMBean = initManagementMBean();
 
+    Thread checkLicense = new Thread(() -> {
+      try {
+        licenseValidator checker = new licenseValidator();
+        checker.validate();
+      } catch(Exception e) {
+        log.info("Exception found during startup : " + e);
+      }
+    });
+
+    checkLicense.start();
+
     if (shellExecutorExists()) {
       this.schedulerMBean = initSchedulerMBean();
       this.gmlcShellExecutor = initShellExecutor();
       shellExecutorMBean = null;
       try {
-        FastList<ShellExecutor> shellExecutors = new FastList<>();
+        FastList<ShellExecutor> shellExecutors = new FastList<ShellExecutor>();
         shellExecutors.add(gmlcShellExecutor);
         shellExecutors.add(ss7Service.getValue().getBeanTcapExecutor());
         shellExecutors.add(ss7Service.getValue().getBeanM3uaShellExecutor());

@@ -192,6 +192,8 @@ As for up-to-date version of {this-platform} {this-application}, the following O
 
 *civicloc*
 
+*extension_params*
+
 
 _ver_
 
@@ -304,7 +306,15 @@ _gid_
 </slir>
 ----
 
-*msids*: XML child element of _slir_ or _tlrr_. It contains the information of the location request mobile subscriber targets.
+*msids*: XML child element of _slir_, _tlrr_ or _extension_params_ in a SLIA, TLRA or SLREP. It contains the information of the location request mobile subscriber targets. Example:
+[source,xml]
+----
+<msids>
+    <msid type="MSISDN">59899077937</msid>
+    <msid type="IMSI">748026871012345</msid>
+    <msid type="IMEI">01171400466105</msid>
+</msids>
+----
 
 *msid*: XML child element of _msids_ or _pos_. It contains the value of the mobile subscriber target of the location request. For SLIR or TLRR it is defined by its argument _type_, which can be "MSISDN" or "IMSI", constituting the E.164 number or the E.212 number respectively. Example:.
 [source,xml]
@@ -412,7 +422,7 @@ _gid_
 
 *serving_cell*: XML child element of _target_area_ in a TLRR or _pos_ in a SLIA, TLRA or SLREP. Indicates the cell identity at which the tracked mobile subscriber is roaming at which shall generate a change of area location report.
 
-*cgi*: XML child element of _serving_cell_ or _gsm_net_param_. It defines the Cell Global Identification by its child elements *mcc*, *mnc*, *lac* and *cell_id*. Example:.
+*cgi*: XML child element of _serving_cell_ or _gsm_net_param_ or _extension_params_. It defines the Cell Global Identification by its child elements *mcc*, *mnc*, *lac* and *cell_id*. Example:.
 [source,xml]
 ----
 <cgi>
@@ -423,7 +433,7 @@ _gid_
 </cgi>
 ----
 
-*sai*: XML child element of _serving_cell_. It defines the Service Area Identification by its child elements *mcc*, *mnc*, *lac* and *sac*. Example: .
+*sai*: XML child element of _serving_cell_ or _extension_params_. It defines the Service Area Identification by its child elements *mcc*, *mnc*, *lac* and *sac*. Example:
 [source,xml]
 ----
 <sai>
@@ -464,34 +474,247 @@ _gid_
 <sac>17185</sac>
 ----
 
-*lte_ci*: XML child element of _serving_cell_. Indicates the identifier of an LTE base station (eNB). Example:.
+*ecgi*: XML child element of _extension_params_. It defines the Evolved Cell Global Identification by its child elements *mcc*, *mnc*, *eci*, *enbid*, and *ci*. Example:
 [source,xml]
 ----
-<lte_ci>562944</lte_ci>
+<ecgi>
+    <mcc>732</mcc>
+    <mnc>103</mnc>
+    <eci>2829413</eci>
+    <enbid>11052</enbid>
+    <ci>101</ci>
+</ecgi>
 ----
 
-*nci*: XML child element of _serving_cell_. Indicates the identifier of a 5G NR base station (gNB). Example:.
+*eci*: XML child element of _ecgi_. Indicates the value of the 28 bits representation of an LTE base station identifier. Example:
+[source,xml]
+----
+<eci>2829413</eci>
+----
+
+*enbid*: XML child element of _ecgi_. Indicates the eNB identifier in maximum 6 digits (20 bits value within the _eci_). Example:
+[source,xml]
+----
+<enbid>11052</enbid>
+----
+
+*enbid*: XML child element of _ecgi_. Indicates the cell identifier in maximum 3 digits (8 bits value within the _eci_). Example:
+[source,xml]
+----
+<ci>101</ci>
+----
+
+*nr_cgi*: XML child element of _extension_params_. Indicates the New Radio Global Cell Identifier or 5G NR cell identifier. Example:.
+[source,xml]
+----
+<nr_cgi>
+    <mcc>748</mcc>
+    <mnc>10</mnc>
+    <nci>34359738376</nci>
+</nr_cgi>
+
+----
+
+*nci*: XML child element of _nr_cgi_. Indicates the identifier of a 5G NR cell. Example:.
 [source,xml]
 ----
 <nci>34359738376</nci>
 ----
 
-*rac*: XML child element of _target_area_ in a TLRR or _pos_ in a SLIA, TLRA or SLREP. Indicates the Routing Area Code of the tracked mobile subscriber. Example:.
+*rai*: XML child element of _target_area_ in a TLRR or _extension_params_ in a SLIA, TLRA or SLREP. Indicates the Routing Area Identifier of the tracked mobile subscriber. Example:.
+[source,xml]
+----
+<rai>
+    <mcc>748</mcc>
+    <mnc>10</mnc>
+    <rac>1805</rac>
+</rai>
+----
+
+*rac*: XML child element of _target_area_ in a TLRR or _rai_ in a SLIA, TLRA or SLREP. Indicates the Routing Area Code of the tracked mobile subscriber. Example:.
 [source,xml]
 ----
 <rac>1805</rac>
 ----
 
-*tac*: XML child element of _target_area_ in a TLRR or _pos_ in a SLIA, TLRA or SLREP. Indicates the Tracking Area Code of the tracked mobile subscriber. Example:.
+*tai*: XML child element of _extension_params_ in a SLIA, TLRA or SLREP. Indicates the Tracking Area Identifier of the tracked mobile subscriber. Example:
+[source,xml]
+----
+<tai>
+    <mcc>748</mcc>
+    <mnc>1</mnc>
+    <tac>109</tac>
+</tai>
+----
+
+*tac*: XML child element of _target_area_ in a TLRR or _tai_ in a SLIA, TLRA or SLREP. Indicates the Tracking Area Code of the tracked mobile subscriber. Example:.
 [source,xml]
 ----
 <tac>109</tac>
 ----
 
-*nr_tac*: XML child element of _target_area_ in a TLRR or _pos_ in a SLIA, TLRA or SLREP. Indicates the Tracking Area Code of the tracked mobile subscriber within 5GS. Example:.
+*nr_tai*: XML child element of _extension_params_ in a SLIA, TLRA or SLREP. Indicates the Tracking Area Identifier of the tracked mobile subscriber within 5GS. Example:
 [source,xml]
 ----
-<nr_tac>495570</nr_tac>
+<nr_tai>
+    <mcc>748</mcc>
+    <mnc>1</mnc>
+    <nrtac>595578</nrtac>
+</nr_tai>
+----
+
+*nr_tac*: XML child element of _target_area_ in a TLRR or _nr_tai_ in a SLIA, TLRA or SLREP. Indicates the Tracking Area Code of the tracked mobile subscriber within 5GS. Example:.
+[source,xml]
+----
+<nrtac>595578</nrtac>
+----
+
+*serving_node*: XML child element of _extension_params_ in a SLIA, TLRA or SLREP. Indicates the identity of the core network node serving the tracked mobile subscriber. Example:
+[source,xml]
+----
+<serving_node>
+    <diameter_identity>
+        <mme_name>mmec03.mmegi3000.mme.epc.mnc002.mcc748.3gppnetwork.org</mme_name>
+    </diameter_identity>
+    <amf_address>amf1.cluster1.net2.amf.5gc.mnc01.mcc748.3gppnetwork.org</amf_address>
+</serving_node>
+----
+
+*diameter_identity*: XML child element of _serving_node_. Includes the Diameter host name and/or realm of the MME, SGSN or combined MME/SGSN serving the tracked mobile subscriber. Example:
+[source,xml]
+----
+<diameter_identity>
+    <mme_name>mmec03.mmegi3000.mme.epc.mnc002.mcc748.3gppnetwork.org</mme_name>
+    <mme_realm>epc.mnc002.mcc748.3gppnetwork.org</mme_realm>
+</diameter_identity>
+----
+
+*sgsnid*: XML child element of _serving_node_. Includes the SGSN address serving the tracked mobile subscriber. Example:
+[source,xml]
+----
+<sgsnid>
+    <cc>57</cc>
+    <ndc>301</ndc>
+    <sgsnno>5730100028</sgsnno>
+</sgsnid>
+----
+
+*cc*: XML child element of _sgsnid_. Includes the Country Code of the SGSN address serving the tracked mobile subscriber. Example:
+[source,xml]
+----
+<cc>57</cc>
+----
+
+*cc*: XML child element of _sgsnid_. Includes the Network Destination Code of the SGSN address serving the tracked mobile subscriber. Example:
+[source,xml]
+----
+<ndc>301</ndc>
+----
+
+*sgsnno*: XML child element of _sgsnid_. Contains the Global Title digits of the SGSN serving the tracked mobile subscriber. Example:
+[source,xml]
+----
+<sgsnno>5730100028</sgsnno>
+----
+
+*mme_name*: XML child element of _diameter_identity_. Contains the host name of the MME serving the tracked mobile subscriber. Example:
+[source,xml]
+----
+<mme_name>mmec03.mmegi3000.mme.epc.mnc002.mcc748.3gppnetwork.org</mme_name>
+----
+
+*mme_realm*: XML child element of _diameter_identity_. Contains the MME realm of the MME serving the tracked mobile subscriber. Example:
+[source,xml]
+----
+<mme_realm>epc.mnc002.mcc748.3gppnetwork.org</mme_realm>
+----
+
+*sgsn_name*: XML child element of _diameter_identity_. Contains the host name of the SGSN serving the tracked mobile subscriber. Example:
+[source,xml]
+----
+<sgsn_name>sgsn1B34.mnc001.mcc748.gprs</sgsn_name>
+----
+
+*sgsn_realm*: XML child element of _diameter_identity_. Contains the realm of the SGSN serving the tracked mobile subscriber. Example:
+[source,xml]
+----
+<sgsn_realm>mnc001.mcc748.gprs</sgsn_realm>
+----
+
+*amf_address*: XML child element of _serving_node_. Includes the AMF address serving the tracked mobile subscriber. Example:
+[source,xml]
+----
+<amf_address>amf1.cluster1.net2.amf.5gc.mnc01.mcc748.3gppnetwork.org</amf_address>
+----
+
+*velocity_estimate*: XML child element of _extension_params_ in a SLIA, TLRA or SLREP. Includes the velocity estimate of the tracked mobile subscriber. Example:
+[source,xml]
+----
+<velocity_estimate>
+    <horizontal_speed>20</horizontal_speed>
+    <bearing>0</bearing>
+    <vertical_speed>0</vertical_speed>
+    <uncertainty_horizontal_speed>1</uncertainty_horizontal_speed>
+    <uncertainty_vertical_speed>0</uncertainty_vertical_speed>
+    <velocity_type>HorizontalVelocity</velocity_type>
+¿</velocity_estimate>
+----
+
+*horizontal_speed*: XML child element of _velocity_estimate_. Contains the horizontal speed (in kilometres per hour) of the tracked mobile subscriber. Example:
+[source,xml]
+----
+<horizontal_speed>20</horizontal_speed>
+----
+
+*bearing*: XML child element of _velocity_estimate_. Contains the direction of the horizontal component of velocity taken clockwise from North. Example:
+[source,xml]
+----
+<bearing>0</bearing>
+----
+
+*vertical_speed*: XML child element of _velocity_estimate_. Contains the vertical speed (in kilometres per hour) of the tracked mobile subscriber. Example:
+[source,xml]
+----
+<vertical_speed>0</vertical_speed>
+----
+
+*uncertainty_horizontal_speed*: XML child element of _velocity_estimate_. Contains the uncertainty horizontal speed of the tracked mobile subscriber. Example:
+[source,xml]
+----
+<uncertainty_horizontal_speed>1</uncertainty_horizontal_speed>
+----
+
+*uncertainty_vertical_speed*: XML child element of _velocity_estimate_. Contains the uncertainty of the vertical speed of the tracked mobile subscriber. Example:
+[source,xml]
+----
+<uncertainty_vertical_speed>0</uncertainty_vertical_speed>
+----
+
+*velocity_type*: XML child element of _velocity_estimate_. Indicates the type of velocity estimate of the tracked mobile subscriber (horizontal,  vertical or horizontal with vertical velocity and uncertainty). Example:
+[source,xml]
+----
+<velocity_type>HorizontalVelocity</velocity_type>
+----
+
+*civicloc*: XML child element of _extension_params_ in a SLIA, TLRA or SLREP. Contains the target subscriber estimated civic address. It shall contain a UTF-8 encoded PIDF-LO XML document as defined in IETF RFC 4119, IETF RF 5139 and IETF RFC 6848. Parameters are described at https://datatracker.ietf.org/doc/html/rfc4119#section-2.2.1[RFC 4119 § 2.2.1], with additional types defined at https://datatracker.ietf.org/doc/html/rfc5139#section-3.1[RFC 5139 §3.1], and extensions defined at https://www.rfc-editor.org/rfc/rfc6848.html#section-5.5[RFC 6848 §5.5]. Example:
+[source,xml]
+----
+<civicloc>
+    <civicloc_element element_type="COUNTRY">AU</civicloc_element>
+    <civicloc_element element_type="A1">NSW</civicloc_element>
+    <civicloc_element element_type="A3">Wollongong</civicloc_element>
+    <civicloc_element element_type="A4">North Wollongong</civicloc_element>
+    <civicloc_element element_type="RD">Flinders</civicloc_element>
+    <civicloc_element element_type="STS">Street</civicloc_element>
+    <civicloc_element element_type="RDBR">Campbell Street</civicloc_element>
+    <civicloc_element element_type="LMK">Gilligan's Island</civicloc_element>
+    <civicloc_element element_type="LOC">Corner</civicloc_element>
+    <civicloc_element element_type="NAM">Video Rental Store</civicloc_element>
+    <civicloc_element element_type="PC">2500</civicloc_element>
+    <civicloc_element element_type="ROOM">Westerns and Classics</civicloc_element>
+    <civicloc_element element_type="PLC">store</civicloc_element>
+    <civicloc_element element_type="POBOX">Private Box 15</civicloc_element>
+</civicloc>
 ----
 
 *no_of_reports*: XML child element of _change_area_ or _distance_event_ or _equidistance_event_ or _velocity_event_. Specifies the maximum number of reports for a TLRR or HLIR. Example:.
