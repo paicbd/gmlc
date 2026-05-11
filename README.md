@@ -43,7 +43,7 @@ cd $JBOSS_HOME/Extended-GMLC-6.0.1-SNAPSHOT/wildfly-24.0.1.Final
 
 
 
-This open source release is provided as part of PAiCore Technology' commitment to open innovation.  
+This open source release is provided as part of PAiCore Technology commitment to open innovation.  
 Community contributions are welcome via pull requests and issue discussions.
 
 For commercial support, enterprise-grade deployments or consulting services, contact us at:  
