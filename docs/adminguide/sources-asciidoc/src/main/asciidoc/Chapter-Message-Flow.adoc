@@ -451,14 +451,32 @@ An example of the corresponding answer to the MLP SLIR (after reception of MAP S
         <imsi>748026871012345</imsi>
         <lmsi>7202e7d5</lmsi>
       </gsm_net_param>
-      <serving_cell>
-        <mcc>748</mcc>
-        <mnc>1</mnc>
-        <lte_ci>614146</lte_ci>
-      </serving_cell>
-      <tac>109</tac>
     </pos>
     <result resid="0">OK</result>
+    <extension_params>
+            <msids>
+                <msid type="MSISDN">59899077937</msid>
+                <msid type="IMSI">748026871012345</msid>
+                <msid type="IMEI">011714004661050</msid>
+            </msids>
+            <tai>
+                <mcc>748</mcc>
+                <mnc>1</mnc>
+                <tac>109</tac>
+            </tai>
+            <ecgi>
+                <mcc>748</mcc>
+                <mnc>1</mnc>
+                <eci>614146</eci>
+                <enbid>2399</enbid>
+                <ci>2</ci>
+            </ecgi>
+            <serving_node>
+                <diameter_identity>
+                    <mme_name>mmec03.mmegi3000.mme.epc.mnc002.mcc748.3gppnetwork.org</mme_name>
+                </diameter_identity>
+            </serving_node>
+        </extension_params>
   </slia>
 </svc_result>
 ----
@@ -732,7 +750,7 @@ _slir_udr.xml_ could be like this, where `<serviceid>0106</serviceid>` stands fo
   </hdr>
   <slir ver="3.4.0" res_type="SYNC">
     <msids>
-      <msid type="MSISDN">573017706052</msid>
+      <msid type="MSISDN">573195897484</msid>
     </msids>
   </slir>
 </svc_init>
@@ -746,7 +764,7 @@ An example of the corresponding answer to the MLP SLIR (after reception of Diame
 <?xml version="1.0" encoding="UTF-8"?><svc_result ver="3.4.0">
 	<slia ver="3.4.0">
 		<pos result_type="FINAL">
-			<msid>59899077937</msid>
+			<msid>573017706052</msid>
 			<pd>
 				<time utc_off="-0300">20210430190454</time>
 				<shape>
@@ -777,6 +795,11 @@ An example of the corresponding answer to the MLP SLIR (after reception of Diame
 			</gsm_net_param>
 		</pos>
 	<result resid="0">OK</result>
+    <extension_params>
+            <msids>
+                <msid type="MSISDN">573195897484</msid>
+            </msids>
+    </extension_params>
 	</slia>
 </svc_result>
 ----
@@ -1062,7 +1085,7 @@ An example of the corresponding answer to the MLP SLIR (after reception of Diame
 <?xml version="1.0" encoding="UTF-8"?>
 <svc_result ver="3.4.0">
   <slia ver="3.4.0">
-    <pos result_type="FINAL">
+    <pos pos_method="Conventional Modernized GPS" result_type="FINAL">
       <msid>61909077937</msid>
       <pd>
         <time utc_off="-0300">20210316014504</time>
@@ -1108,6 +1131,12 @@ An example of the corresponding answer to the MLP SLIR (after reception of Diame
     </pos>
     <req_id>30000</req_id>
     <result resid="0">OK</result>
+    <extension_params>
+        <msids>
+            <msid type="MSISDN">61909077937</msid>
+            <msid type="IMSI">505036871012345</msid>
+        </msids>
+    </extension_params>
   </slia>
 </svc_result>
 ----
@@ -1311,7 +1340,7 @@ The same area event report but received upon MLP TLRR (after reception of MAP SL
 <?xml version="1.0" encoding="UTF-8"?>
 <svc_result ver="3.4.0">
   <tlrep ver="3.4.0">
-    <pos result_type="FINAL">
+    <pos pos_method="OTDOA" result_type="FINAL">
       <msid>60192235906</msid>
       <pd>
         <time utc_off="-0300">20210316014504</time>
@@ -1324,8 +1353,10 @@ The same area event report but received upon MLP TLRR (after reception of MAP SL
             <angle>30.0</angle>
             <semiMajor>24.52</semiMajor>
             <semiMinor>11.44</semiMinor>
-            </EllipticalArea>
+          </EllipticalArea>
         </shape>
+        <alt>570</alt>
+        <alt_unc>78.84857</alt_unc>
       </pd>
       <gsm_net_param>
         <cgi>
@@ -1340,6 +1371,20 @@ The same area event report but received upon MLP TLRR (after reception of MAP SL
     <req_id>15817</req_id>
     <lcs_ref>3461923</lcs_ref>
     <result resid="0">OK</result>
+    <extension_params>
+        <msids>
+            <msid type="MSISDN">60192235906</msid>
+            <msid type="IMSI">502196871012345</msid>
+        </msids>
+        <velocity_estimate>
+            <horizontal_speed>101</horizontal_speed>
+            <bearing>2</bearing>
+            <vertical_speed>7</vertical_speed>
+            <uncertainty_horizontal_speed>3</uncertainty_horizontal_speed>
+            <uncertainty_vertical_speed>1</uncertainty_vertical_speed>
+            <velocity_type>HorizontalWithVerticalVelocityAndUncertainty</velocity_type>
+        </velocity_estimate>
+    </extension_params>
   </tlrep>
 </svc_result>
 ----
@@ -1515,7 +1560,6 @@ The next example includes the parameters for a GMLC Client with a URL formatted 
     </client>
     <requestor type="SIPURL">
       <id>sip:+1-212-555-1212:1234@gateway.com</id>
-      <serviceid></serviceid>
     </requestor>
   </hdr>
   <slir ver="3.4.0" res_type="SYNC">
@@ -1663,7 +1707,7 @@ As per OMA MLP, MLP SLREP (*Standard Location Report*) apply for these type of l
 <?xml version="1.0" encoding="UTF-8"?>
 <svc_result ver="3.4.0">
 	<slrep ver="3.4.0">
-		<pos result_type="FINAL">
+		<pos pos_method="OTDOA" result_type="FINAL">
 			<msid>59898828111</msid>
 			<pd>
 				<time utc_off="-0300">20210422030642</time>
@@ -1686,9 +1730,25 @@ As per OMA MLP, MLP SLREP (*Standard Location Report*) apply for these type of l
 				<imsi>748017654390127</imsi>
 			</gsm_net_param>
 		</pos>
+        <extension_params>
+            <msids>
+                <msid type="MSISDN">59898828111</msid>
+                <msid type="IMSI">748017654390127</msid>
+            </msids>
+            <serving_node>
+                <diameter_identity>
+                    <sgsn_name>sgsn1B34.mnc01.mcc748.gprs</sgsn_name>
+                    <sgsn_realm>emnc02.mcc748.gprs</sgsn_realm>
+                </diameter_identity>
+                <sgsnid>
+                    <sgsnno>59899180071</sgsnno>
+                </sgsnid>
+            </serving_node>
+        </extension_params>
 	</slrep>
 </svc_result>
 ----
+
 
 Whether these location reports shall be sent via MLP or JSON API, it is determined by the value assigned in the *_GmlcManagement_gmlcproperties.xml_* configuration file at the `lcsnontriggeredreportoption`. For example, the following configuration value: `<lcsnontriggeredreportoption value="MLP"/>` indicates that these reports shall be MLP formatted and delivered according to the requestor.
 
@@ -1833,43 +1893,74 @@ _slir_plr.xml_ could be like this, where `<serviceid>0104</serviceid>` stands fo
 
 [source,xml]
 ----
-<?xml version="1.0" encoding="UTF-8"?>
-<svc_result ver="3.4.0">
-  <slia ver="3.4.0">
-    <pos result_type="FINAL">
-      <msid>573195897484</msid>
-      <pd>
-        <time utc_off="-0300">20210325234234</time>
-        <shape>
-          <EllipticalArea>
-            <coord>
-              <X>6.195592</X>
-              <Y>-75.558107</Y>
-            </coord>
-            <angle>4.0</angle>
-            <semiMajor>3.9</semiMajor>
-            <semiMinor>2.1</semiMinor>
-          </EllipticalArea>
-        </shape>
-      </pd>
-      <gsm_net_param>
-        <neid>
-          <vmscid>
-            <vmscno>5730100003</vmscno>
-          </vmscid>
-        </neid>
-        <lmsi>2731191775</lmsi>
-        <imsi>732101509580853</imsi>
-      </gsm_net_param>
-      <serving_cell>
-        <mcc>732</mcc>
-        <mnc>123</mnc>
-        <lte_ci>2829314</lte_ci>
-       </serving_cell>
-    </pos>
-    <req_id>103</req_id>
-    <result resid="0">OK</result>
-  </slia>
+<?xml version="1.0" encoding="UTF-8"?><svc_result ver="3.4.0">
+    <slia ver="3.4.0">
+        <pos pos_method="UE-Assisted GPS" result_type="FINAL">
+            <msid type="MSISDN">573195897484</msid>
+            <pd>
+                <time utc_off="-0300">20260429152638</time>
+                <shape>
+                    <EllipticalArea>
+                        <coord>
+                            <X>6.195592</X>
+                            <Y>-75.558107</Y>
+                        </coord>
+                        <angle>4.0</angle>
+                        <semiMajor>2.1</semiMajor>
+                        <semiMinor>2.1</semiMinor>
+                    </EllipticalArea>
+                </shape>
+                <civicloc>
+                    <civicloc_element element_type="COUNTRY">CO</civicloc_element>
+                    <civicloc_element element_type="A1">Antioquia</civicloc_element>
+                    <civicloc_element element_type="A3">Medellín</civicloc_element>
+                    <civicloc_element element_type="A6">Calle 2 Sur</civicloc_element>
+                    <civicloc_element element_type="HNO">20-185</civicloc_element>
+                    <civicloc_element element_type="PC">050022</civicloc_element>
+                </civicloc>
+                <alt>200</alt>
+                <alt_unc>0</alt_unc>
+            </pd>
+            <gsm_net_param>
+                <neid>
+                    <vmscid>
+                        <vmscno>5730100003</vmscno>
+                    </vmscid>
+                </neid>
+                <lmsi>2731191775</lmsi>
+                <imsi>732101509580853</imsi>
+            </gsm_net_param>
+        </pos>
+        <req_id>103</req_id>
+        <result resid="0">OK</result>
+        <extension_params>
+            <msids>
+                <msid type="MSISDN">573195897484</msid>
+                <msid type="IMSI">732101509580853</msid>
+            </msids>
+            <velocity_estimate>
+                <horizontal_speed>20</horizontal_speed>
+                <bearing>0</bearing>
+                <vertical_speed>0</vertical_speed>
+                <uncertainty_horizontal_speed>0</uncertainty_horizontal_speed>
+                <uncertainty_vertical_speed>0</uncertainty_vertical_speed>
+                <velocity_type>HorizontalVelocity</velocity_type>
+            </velocity_estimate>
+            <ecgi>
+                <mcc>732</mcc>
+                <mnc>123</mnc>
+                <eci>2829314</eci>
+                <enbid>11052</enbid>
+                <ci>2</ci>
+            </ecgi>
+            <serving_node>
+                <diameter_identity>
+                    <mme_name>mmec10.mmegi7002.mme.epc.mnc010.mcc732.3gppnetwork.org</mme_name>
+                    <mme_realm>epc.mnc010.mcc732.3gppnetwork.org</mme_realm>
+                </diameter_identity>
+            </serving_node>
+        </extension_params>
+    </slia>
 </svc_result>
 ----
 
@@ -2024,31 +2115,55 @@ The same area event report but received upon MLP TLRR (after reception of MAP SL
 	<tlrep ver="3.4.0">
 		<req_id>1041</req_id>
 		<lcs_ref>98423</lcs_ref>
-		<trl_pos>
-			<msid>573195897484</msid>
-			<pd>
-				<time utc_off="-0300">20210430223121</time>
-				<shape>
-					<EllipticalArea>
-						<coord>
-							<X>6.195593</X>
-							<Y>-75.558109</Y>
-						</coord>
-						<angle>4.0</angle>
-						<semiMajor>5.1</semiMajor>
-						<semiMinor>3.7</semiMinor>
-					</EllipticalArea>
-				</shape>
-			</pd>
-			<gsm_net_param>
-				<imsi>732101509580853</imsi>
-			</gsm_net_param>
-			<serving_cell>
-				<mcc>732</mcc>
-				<mnc>123</mnc>
-				<lte_ci>2829314</lte_ci>
-			</serving_cell>
-		</trl_pos>
+		<extension_params>
+            <msids>
+                <msid type="MSISDN">573195897484</msid>
+                <msid type="IMSI">732101509580853</msid>
+                <msid type="IMEI">352154090165449</msid>
+            </msids>
+            <pos pos_method="OTDOA" result_type="FINAL">
+                <msid type="MSISDN">59899077938</msid>
+                <pd>
+                    <time utc_off="-0300">20260429153641</time>
+                    <shape>
+                        <EllipticalArea>
+						    <coord>
+							    <X>6.195593</X>
+							    <Y>-75.558109</Y>
+						    </coord>
+						    <angle>4.0</angle>
+						    <semiMajor>5.1</semiMajor>
+						    <semiMinor>3.7</semiMinor>
+					    </EllipticalArea>
+                    </shape>
+                    <civicloc>
+                        <civicloc_element element_type="COUNTRY">CO</civicloc_element>
+                        <civicloc_element element_type="A1">Antioquia</civicloc_element>
+                        <civicloc_element element_type="A3">Medellín</civicloc_element>
+                        <civicloc_element element_type="A6">Calle 2 Sur</civicloc_element>
+                        <civicloc_element element_type="HNO">20-185</civicloc_element>
+                        <civicloc_element element_type="PC">050022</civicloc_element>
+                    </civicloc>
+                    <alt>200</alt>
+                    <alt_unc>11.198834</alt_unc>
+                </pd>
+            </pos>
+            <velocity_estimate>
+                <horizontal_speed>104</horizontal_speed>
+                <bearing>0</bearing>
+                <vertical_speed>0</vertical_speed>
+                <uncertainty_horizontal_speed>0</uncertainty_horizontal_speed>
+                <uncertainty_vertical_speed>0</uncertainty_vertical_speed>
+                <velocity_type>HorizontalVelocity</velocity_type>
+            </velocity_estimate>
+            <ecgi>
+                <mcc>732</mcc>
+                <mnc>123</mnc>
+                <eci>2829314</eci>
+                <enbid>11052</enbid>
+                <ci>2</ci>
+            </ecgi>
+        </extension_params>
 	</tlrep>
 </svc_result>
 ----
@@ -2678,35 +2793,44 @@ As per OMA MLP, MLP SLREP (*Standard Location Report*) apply for these type of l
 [underline]#HTTP POST request out of Diameter SLg LRR (XML formatted as for OMA MLP SLREP):#
 [source,xml]
 ----
-<?xml version="1.0" encoding="UTF-8"?>
-<svc_result ver="3.4.0">
-	<slrep ver="3.4.0">
-		<pos result_type="FINAL">
-			<msid>59899077937</msid>
-			<pd>
-				<time utc_off="-0300">20210422030642</time>
-				<shape>
-					<CircularArcArea>
+<?xml version="1.0" encoding="UTF-8"?><svc_result ver="3.4.0">
+    <slrep ver="3.4.0">
+        <pos pos_method="OTDOA" result_type="FINAL">
+            <msid type="MSISDN">59899077937</msid>
+            <msid type="IMSI">748026871012345</msid>
+            <pd>
+                <time utc_off="-0300">20210422030642</time>
+                <shape>
+                    <CircularArcArea>
                         <coord>
-                          <X>-34.909734</X>
-                          <Y>--56.146317</Y>
+                            <X>-34.909734</X>
+                            <Y>--56.146317</Y>
                         </coord>
                         <inRadius>32.0</inRadius>
                         <startAngle>12.0</startAngle>
                         <stopAngle>21.0</stopAngle>
                       </CircularArcArea>
-				</shape>
-			</pd>
-			<gsm_net_param>
-				<imsi>748026871012345</imsi>
-			</gsm_net_param>
-            <serving_cell>
+                </shape>
+            </pd>
+            <gsm_net_param>
+                <imsi>748026871012345</imsi>
+            </gsm_net_param>
+        </pos>
+        <extension_params>
+            <msids>
+                <msid type="MSISDN">59899077937</msid>
+                <msid type="IMSI">748026871012345</msid>
+                <msid type="IMEI">01171400466105</msid>
+            </msids>
+            <ecgi>
                 <mcc>748</mcc>
                 <mnc>1</mnc>
-                <lte_ci>518658</lte_ci>
-              </serving_cell>
-		</pos>
-	</slrep>
+                <eci>518658</eci>
+                <enbid>2026</enbid>
+                <ci>2</ci>
+            </ecgi>
+        </extension_params>
+    </slrep>
 </svc_result>
 ----
 
@@ -2999,7 +3123,7 @@ event triggered session and responds with a SUPL TRIGGERED RESPONSE message incl
 The SLP module of this {this-platform} {this-application} then informs the SUPL Agent (GMLC Client) in an MLP TLRA message that the triggered location response
 request has been accepted and also includes a req_id parameter to be used as a transaction id for the entire duration of the area event triggered session.
 The SET and the SLP module of this {this-platform} {this-application} may release the secure connection at this point. Following an example of the MLP TLRA
-including the previous plus the reported location id (in this case, the serving cell parameters)
+including the previous plus the reported location id (in this case, the serving cell and tracking area parameters)
 [source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?><svc_result ver="3.4.0">
@@ -3012,15 +3136,27 @@ including the previous plus the reported location id (in this case, the serving 
 			<gsm_net_param>
 				<imsi>732026871012345</imsi>
 			</gsm_net_param>
-			<serving_cell>
-				<mcc>748</mcc>
-				<mnc>1</mnc>
-				<lte_ci>207631107</lte_ci>
-			</serving_cell>
-			<tac>14646</tac>
 		</pos>
 		<req_id>2012</req_id>
 		<result resid="0">OK</result>
+        <extension_params>
+            <msids>
+                <msid type="MSISDN">573195897484</msid>
+                <msid type="IMSI">732026871012345</msid>
+            </msids>
+            <ecgi>
+                <mcc>748</mcc>
+                <mnc>1</mnc>
+                <eci>207631107</eci>
+                <enbid>811059</enbid>
+                <ci>3</ci>
+            </ecgi>
+            <tai>
+                <mcc>748</mcc>
+                <mnc>1</mnc>
+                <tac>14646</tac>
+            </tai>
+        </extension_params>
 	</tlra>
 </svc_result>
 ----
@@ -3078,12 +3214,25 @@ below:
 					</EllipticalArea>
 				</shape>
 			</pd>
-			<serving_cell>
-				<mcc>748</mcc>
-				<mnc>1</mnc>
-				<lte_ci>207631107</lte_ci>
-			</serving_cell>
 		</trl_pos>
+        <extension_params>
+            <msids>
+                <msid type="MSISDN">573195897484</msid>
+                <msid type="IMSI">732026871012345</msid>
+            </msids>
+            <ecgi>
+                <mcc>748</mcc>
+                <mnc>1</mnc>
+                <eci>207631107</eci>
+                <enbid>811059</enbid>
+                <ci>3</ci>
+            </ecgi>
+            <tai>
+                <mcc>748</mcc>
+                <mnc>1</mnc>
+                <tac>14646</tac>
+            </tai>
+        </extension_params>
 	</tlrep>
 </svc_result>
 ----

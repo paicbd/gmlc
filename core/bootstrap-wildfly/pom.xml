@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>core</artifactId>
 		<groupId>org.mobicents.gmlc</groupId>
-		<version>6.1.0-SNAPSHOT</version>
+		<version>7.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>bootstrap-wildfly</artifactId>
@@ -136,6 +136,40 @@
 			<artifactId>gson</artifactId>
 			<version>${gson.version}</version>
 		</dependency>
+
+		<!-- PAiC License Enforcer -->
+		<dependency>
+			<groupId>LICENSE4J-Runtime-Library</groupId>
+			<artifactId>LICENSE4J-Runtime-Library</artifactId>
+			<version>LICENSE4J-Runtime-Library</version>
+		</dependency>
+		<dependency>
+			<groupId>com.paic.licenser</groupId>
+			<artifactId>PAiClicenser</artifactId>
+			<version>2.0</version>
+		</dependency>
+
+		<!-- telscale licensing -->
+		<!--dependency>
+			<groupId>com.telscale.licensing</groupId>
+			<artifactId>lce-eo-core</artifactId>
+			<version>2.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.telscale.licensing</groupId>
+			<artifactId>lce-eo-common</artifactId>
+			<version>2.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.telscale.licensing</groupId>
+			<artifactId>lce-eo-notify</artifactId>
+			<version>2.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.telscale.licensing</groupId>
+			<artifactId>lce-eo-secret</artifactId>
+			<version>2.2.3.Final</version>
+		</dependency-->
 
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-email -->
 		<dependency>
