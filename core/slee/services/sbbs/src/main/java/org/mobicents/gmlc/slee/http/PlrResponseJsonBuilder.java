@@ -143,7 +143,7 @@ public class PlrResponseJsonBuilder {
                                                  Long plrFlags, Integer clientReferenceNumber, Integer lcsReferenceNumber, String diameterResultMessage) {
 
         String msisdn, imsi, lmsi, mmeName, mmeRealm, mscNumber, sgsnName, sgsnRealm, sgsnNumber, aaaServerName, gmlcAddress,
-                typeOfShape, velocityType, civicAddress;
+            typeOfShape, velocityType, civicAddress;
         mmeName = mmeRealm = sgsnName = sgsnRealm = sgsnNumber = aaaServerName = mscNumber = velocityType = gmlcAddress = null;
         Double latitude, longitude, uncertainty, uncertaintySemiMajorAxis, uncertaintySemiMinorAxis, uncertaintyAltitude, uncertaintyInnerRadius,
             angleOfMajorAxis, offsetAngle, includedAngle;

@@ -76,5 +76,3 @@ include::Chapter-Running-WildFly.adoc[]
 :leveloffset: 1
 
 include::Revision_History.adoc[]
-
-:leveloffset: 0

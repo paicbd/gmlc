@@ -1064,7 +1064,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             logger.severe(String.format("Error while trying to process AnyTimeInterrogationResponse=%s", anyTimeInterrogationResponse), e);
             this.createCDRRecord(RecordStatus.ATI_SYSTEM_FAILURE);
             this.reportLocationRequestError(MLPResponse.MLPResultType.SYSTEM_FAILURE, "Exception on MAP ATI response: " + e.getMessage(),
-                    "ATI", msisdnDigitsForAti, imsiForAti, atiImei, null, null, null, null, null, false);
+                "ATI", msisdnDigitsForAti, imsiForAti, atiImei, null, null, null, null, null, false);
         } finally {
             detachFromMAPDialogMobility(aci);
         }
@@ -1544,7 +1544,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
         try {
             if (this.subscriberInfoEnquiryContext == null) {
                 mapDialogMobility = this.mapProvider.getMAPServiceMobility().createNewDialog(this.getMAPPsiApplicationContext(),
-                        this.getGmlcSccpAddress(), null, networkNodeAddress, null);
+                    this.getGmlcSccpAddress(), null, networkNodeAddress, null);
             } else {
                 mapDialogMobility = this.mapProvider.getMAPServiceMobility().createNewDialog(this.subscriberInfoEnquiryContext,
                     this.getGmlcSccpAddress(), null, networkNodeAddress, null);
@@ -2105,7 +2105,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
         this.logger.fine("\nReceived onSendRoutingInfoForLCSResponse = " + sendRoutingInfoForLCSResponse + ", ActivityContextInterface = " + aci + ", EventContext=" + eventContext);
         MAPErrorMessage mapErrorMessage = this.getErrorResponse();
         String pslMsisdn = null, pslImsi = null, pslImei = null, nnn = null, additionalNumberAddress = null,
-                sgsnName = null, sgsnRealm = null, mmeName = null, hlr = null, curlUser, httpRequestType;
+            sgsnName = null, sgsnRealm = null, mmeName = null, hlr = null, curlUser, httpRequestType;
         Integer referenceNumber = null;
         Boolean mlpTriggeredReportingService = false;
         Long transaction = null;
@@ -5954,7 +5954,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
 
             this.reportLocationRequestError(mlpResultType, "Rejected, event type: " + rejectComponent.getEventTypeName() + ", " +
                     "invoke problem: " + onRejectComponentInvokeProblemType.name(), operation, targetMsisdn, targetImsi, targetImei,
-                     referenceNumber, nnn, null, null, null, mlpTriggeredReportingService);
+                referenceNumber, nnn, null, null, null, mlpTriggeredReportingService);
         } else {
             this.reportLocationRequestError(MLPResponse.MLPResultType.SYSTEM_FAILURE, "Rejected, event type: "
                     + rejectComponent.getEventTypeName(), operation, targetMsisdn, targetImsi, targetImei, referenceNumber, nnn,
@@ -6495,8 +6495,8 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
 
         try {
             logger.fine("\n\nReceived SLh RIA with session Id: " + lcsRoutingInfoAnswer.getSessionId() +
-                    ", host '" + lcsRoutingInfoAnswer.getOriginHost()
-                    + "', realm '" + lcsRoutingInfoAnswer.getOriginRealm() + "'");
+                ", host '" + lcsRoutingInfoAnswer.getOriginHost()
+                + "', realm '" + lcsRoutingInfoAnswer.getOriginRealm() + "'");
             this.logger.fine("\nonLCSRoutingInfoAnswer event details : " + lcsRoutingInfoAnswer);
             DiameterIdentity riaOriginHost, riaOriginRealm, gmlcHost, gmlcRealm, destHost = null, destRealm = null;
             riaOriginHost = lcsRoutingInfoAnswer.getOriginHost();
@@ -6746,7 +6746,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     }
 
                     this.logger.fine(String.format("\nRecovered requestValuesForPLR as %s object from Diameter session '%s'",
-                            "valid", lcsRoutingInfoAnswer.getSessionId()));
+                        "valid", lcsRoutingInfoAnswer.getSessionId()));
 
                     SLgClientSessionActivity slgClientSessionActivity = this.slgProvider.createSLgClientSessionActivity(destHost, destRealm);
                     // Keep ACI in across Diameter session for PLR/PLA
@@ -7410,9 +7410,9 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                                     mlp = true;
                             }
                             slhRiaAvpValues.lteLcsReferenceNumber =
-                                    httpSubscriberLocationReport.Register(requestValuesForPLR.plrLcsReferenceNumber, requestValuesForPLR.lrrCallbackUrl, null, mlp, curlUser);
+                                httpSubscriberLocationReport.Register(requestValuesForPLR.plrLcsReferenceNumber, requestValuesForPLR.lrrCallbackUrl, null, mlp, curlUser);
                             logger.fine(String.format("Sending SLg PLR with LCS-Reference-Number: %d from HTTP request clientReferenceNumber: %d and callback URL: '%s'",
-                                    slhRiaAvpValues.lteLcsReferenceNumber, requestValuesForPLR.plrLcsReferenceNumber, requestValuesForPLR.lrrCallbackUrl));
+                                slhRiaAvpValues.lteLcsReferenceNumber, requestValuesForPLR.plrLcsReferenceNumber, requestValuesForPLR.lrrCallbackUrl));
                             httpSubscriberLocationReport.closeMongo();
                             if (slhRiaAvpValues.lteLcsReferenceNumber != null) {
                                 byte[] lcsReferenceNumber = ByteBuffer.allocate(Integer.SIZE / 8).putInt(slhRiaAvpValues.lteLcsReferenceNumber).array();
@@ -7469,7 +7469,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                                 plr.setGMLCAddress(gmlcAddress);
                             }
                         } else if (gmlcPropertiesManagement.getUseRiaGmlcAddress() &&
-                                (gmlcAddress != null || servingNodeGmlcAddress != null || additionalGmlcAddress != null)) {
+                            (gmlcAddress != null || servingNodeGmlcAddress != null || additionalGmlcAddress != null)) {
                             if (servingNodeGmlcAddress != null)
                                 plr.setGMLCAddress(servingNodeGmlcAddress);
                             else if (gmlcAddress != null)
@@ -7518,11 +7518,11 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                                 // UE is served by the MME and the SGSN parts of the same combined MME/SGSN
                                 // and this combined MME/SGSN supports the optimized LCS procedure
                                 if ((destHost == sgsnName || destHost == additionalSgsnName) &&
-                                        (destRealm == sgsnRealm || destRealm == additionalSgsnRealm)) {
+                                    (destRealm == sgsnRealm || destRealm == additionalSgsnRealm)) {
                                     // PLR shall be sent over the Lgd interface
                                     plrFlags = 6;
                                     if (requestValuesForPLR.plrSlgLocationType == SLgLocationType._ACTIVATE_DEFERRED_LOCATION &&
-                                            plr.getPeriodicLDRInformation() != null) {
+                                        plr.getPeriodicLDRInformation() != null) {
                                         // MO-LR short circuit feature is requested for the periodic location
                                         // applicable only as the deferred MT-LR procedure is initiated for a periodic location
                                         // and the message is sent over Lgd interface.
@@ -7552,12 +7552,12 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
 
                         slgClientSessionActivity.sendProvideLocationRequest(plr);
                         logger.fine("\n\nSent SLg PLR with session Id: " + plr.getSessionId() + ", host '" + plr.getDestinationHost()
-                                + "', realm '" + plr.getDestinationRealm() + "'");
+                            + "', realm '" + plr.getDestinationRealm() + "'");
                         logger.fine("\nSLg Provide-Location-Request details: " + plr);
                     } else {
                         //this should never happen
                         logger.warning("\nRIA received on session Id: " + lcsRoutingInfoAnswer.getSessionId() + ", for MSISDN '" + Arrays.toString(lcsRoutingInfoAnswer.getMSISDN())
-                                + "', IMSI '" + lcsRoutingInfoAnswer.getUserName() + "' but no PLR parameters set. No PLR to send.");
+                            + "', IMSI '" + lcsRoutingInfoAnswer.getUserName() + "' but no PLR parameters set. No PLR to send.");
 
                     }
                 } else {
@@ -7638,7 +7638,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
 
                 if (provideLocationAnswer != null) {
                     logger.fine("\n\nReceived SLg PLA with session Id: " + provideLocationAnswer.getSessionId() +
-                            ", host '" + provideLocationAnswer.getOriginHost() + "', realm '" + provideLocationAnswer.getOriginRealm() + "'");
+                        ", host '" + provideLocationAnswer.getOriginHost() + "', realm '" + provideLocationAnswer.getOriginRealm() + "'");
                     this.logger.fine("\nonProvideLocationAnswer event details " + provideLocationAnswer);
                     MLPResponse.MLPResultType mlpRespResult = null;
                     String mlpClientErrorMessage = null;
@@ -7647,7 +7647,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
 
                     // CDR initialization
                     GMLCCDRState gmlcCdrState = CDRCreationHelper.slhSlgCdrInitializer(aci, this.getCDRInterface(), null, provideLocationAnswer, null,
-                            plaOriginHost, plaOriginRealm, gmlcHost, gmlcRealm);
+                        plaOriginHost, plaOriginRealm, gmlcHost, gmlcRealm);
                     // Set timer last
                     this.setTimer(aci);
 
@@ -7707,7 +7707,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                             gmlcCdrState.setImsi(slgImsi);
                         }
                         gmlcCdrState.setMsisdn(new ISDNAddressStringImpl(AddressNature.international_number,
-                                org.restcomm.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, msisdnAddress));
+                            org.restcomm.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, msisdnAddress));
                         if (sLhRiaAvpResponseValues != null) {
                             gmlcCdrState.setLcsReferenceNumber(sLhRiaAvpResponseValues.lteLcsReferenceNumber);
                             if (sLhRiaAvpResponseValues.getRiaFLags() != null)
@@ -7825,7 +7825,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         if (utranPositioningData != null) {
                             slgPlaAvpValues.setUtranPositioningData(utranPositioningData);
                             this.logger.fine("\nonProvideLocationAnswer, UTRAN-Positioning-Data AVP: "
-                                    + Arrays.toString(utranPositioningData));
+                                + Arrays.toString(utranPositioningData));
                             if (gmlcCdrState.isInitialized()) {
                                 gmlcCdrState.setUtranPositioningDataInfo(AVPHandler.lteUtranPosData2MapUtranPosDataInfo(utranPositioningData));
                             }
@@ -7834,7 +7834,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         if (utranGANSSPositioningData != null) {
                             slgPlaAvpValues.setUtranGANSSPositioningData(utranGANSSPositioningData);
                             this.logger.fine("\nonProvideLocationAnswer, UTRAN-GANSS-Positioning-Data AVP: "
-                                    + Arrays.toString(utranGANSSPositioningData));
+                                + Arrays.toString(utranGANSSPositioningData));
                             if (gmlcCdrState.isInitialized()) {
                                 gmlcCdrState.setUtranGANSSpositioningData(AVPHandler.lteUtranGanssPosData2MapUtranGanssPosDataInfo(utranGANSSPositioningData));
                             }
@@ -7843,7 +7843,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         if (utranAdditionalPositioningData != null) {
                             slgPlaAvpValues.setUtranAdditionalPositioningData(utranAdditionalPositioningData);
                             this.logger.fine("\nonProvideLocationAnswer, UTRAN-Additional-Positioning-Data AVP: " +
-                                    Arrays.toString(utranAdditionalPositioningData));
+                                Arrays.toString(utranAdditionalPositioningData));
                             if (gmlcCdrState.isInitialized()) {
                                 gmlcCdrState.setUtranAdditionalPositioningData(AVPHandler.lteUtranAddPosData2MapUtranAdditionalPositioningdata(utranAdditionalPositioningData));
                             }
@@ -7853,7 +7853,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     if (provideLocationAnswer.hasServiceAreaIdentity()) {
                         slgPlaAvpValues.setServiceAreaIdentity(provideLocationAnswer.getServiceAreaIdentity());
                         this.logger.fine("\nonProvideLocationAnswer, Service-Area-Identity AVP: "
-                                + Arrays.toString(provideLocationAnswer.getServiceAreaIdentity()));
+                            + Arrays.toString(provideLocationAnswer.getServiceAreaIdentity()));
                         if (gmlcCdrState.isInitialized()) {
                             gmlcCdrState.setServiceAreaIdentity(AVPHandler.byte2String(provideLocationAnswer.getServiceAreaIdentity()));
                         }
@@ -7953,9 +7953,9 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         }
                     } else {
                         Map<MLPResponse.MLPResultType, String> mlpResultTypeStringMap = handleRecordAndLocationReportOnDiameterResultCode(resultCode, mlpRespResult, mlpClientErrorMessage, msisdnAddress, imsi,
-                                "PLR", referenceNumber, gmlcCdrState, false,
-                                plaOriginHost != null ? plaOriginHost.toString() : null, plaOriginRealm != null ? plaOriginRealm.toString() : null,
-                                mlpTriggeredReportingService);
+                            "PLR", referenceNumber, gmlcCdrState, false,
+                            plaOriginHost != null ? plaOriginHost.toString() : null, plaOriginRealm != null ? plaOriginRealm.toString() : null,
+                            mlpTriggeredReportingService);
                         if (mlpResultTypeStringMap != null) {
                             mlpRespResult = mlpResultTypeStringMap.entrySet().iterator().next().getKey();
                             mlpClientErrorMessage = mlpResultTypeStringMap.entrySet().iterator().next().getValue();
@@ -7978,8 +7978,8 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             this.createCDRRecord(RecordStatus.LTE_PLR_SYSTEM_FAILURE);
             this.reportLocationRequestError(MLPResponse.MLPResultType.SYSTEM_FAILURE, "Exception on SLg PLA: " + e.getMessage(),
                 "PLR", msisdnAddress, imsi, imei, referenceNumber, null, null,
-                    plaOriginHost != null ? plaOriginHost.toString() : null, plaOriginRealm != null ? plaOriginRealm.toString() : null,
-                    mlpTriggeredReportingService);
+                plaOriginHost != null ? plaOriginHost.toString() : null, plaOriginRealm != null ? plaOriginRealm.toString() : null,
+                mlpTriggeredReportingService);
             if (transaction != null)
                 mobileCoreNetworkTransactions.destroy(transaction);
         } finally {
@@ -7996,7 +7996,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             DiameterIdentity lrrOriginHost, lrrOriginRealm, gmlcHost, gmlcRealm;
             if (locationReportRequest != null) {
                 logger.fine("\n\nReceived SLg LRA with session Id: " + locationReportRequest.getSessionId()
-                        + ", host '" + locationReportRequest.getOriginHost() + "', realm '" + locationReportRequest.getOriginRealm() + "'");
+                    + ", host '" + locationReportRequest.getOriginHost() + "', realm '" + locationReportRequest.getOriginRealm() + "'");
                 this.logger.fine("\nonLocationReportRequest event details= " + locationReportRequest);
                 lrrOriginHost = locationReportRequest.getOriginHost();
                 lrrOriginRealm = locationReportRequest.getOriginRealm();
@@ -8121,7 +8121,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     if (locationReportRequest.hasEUTRANPositioningData()) {
                         slgLrrAvpValues.setEUtranPositioningData(locationReportRequest.getEUTRANPositioningData());
                         this.logger.fine("\nonLocationReportRequest, E-UTRAN-Positioning-Data AVP: "
-                                + Arrays.toString(locationReportRequest.getEUTRANPositioningData()));
+                            + Arrays.toString(locationReportRequest.getEUTRANPositioningData()));
                         if (gmlcCdrState.isInitialized()) {
                             gmlcCdrState.setEUTRANPositioningData(new EUTRANPositioningDataImpl(locationReportRequest.getEUTRANPositioningData()));
                         }
@@ -8144,7 +8144,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         if (geranPositioningData != null) {
                             slgLrrAvpValues.setGeranPositioningData(geranPositioningData);
                             this.logger.fine("\nonLocationReportRequest, GERAN-Positioning-Data AVP: "
-                                    + Arrays.toString(geranPositioningData));
+                                + Arrays.toString(geranPositioningData));
                             if (gmlcCdrState.isInitialized()) {
                                 gmlcCdrState.setGeranPositioningDataInformation(AVPHandler.lteGeranPosDataInfo2MapGeranPosDataInfo(geranPositioningData));
                             }
@@ -8153,7 +8153,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         if (geranGANSSPositioningData != null) {
                             slgLrrAvpValues.setGeranGANSSPositioningData(geranGANSSPositioningData);
                             this.logger.fine("\nonLocationReportRequest, GERAN-GANSS-Positioning-Data AVP: "
-                                    + Arrays.toString(geranGANSSPositioningData));
+                                + Arrays.toString(geranGANSSPositioningData));
                             if (gmlcCdrState.isInitialized()) {
                                 gmlcCdrState.setGeranGANSSpositioningData(AVPHandler.lteGeranGanssPosDataInfo2MapGeranGanssPosDataInfo(geranGANSSPositioningData));
                             }
@@ -8176,7 +8176,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         if (utranPositioningData != null) {
                             slgLrrAvpValues.setUtranPositioningData(utranPositioningData);
                             this.logger.fine("\nonLocationReportRequest, UTRAN-Positioning-Data AVP: "
-                                    + Arrays.toString(utranPositioningData));
+                                + Arrays.toString(utranPositioningData));
                             if (gmlcCdrState.isInitialized()) {
                                 gmlcCdrState.setUtranPositioningDataInfo(AVPHandler.lteUtranPosData2MapUtranPosDataInfo(utranPositioningData));
                             }
@@ -8185,7 +8185,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         if (utranGANSSPositioningData != null) {
                             slgLrrAvpValues.setUtranGANSSPositioningData(utranGANSSPositioningData);
                             this.logger.fine("\nonLocationReportRequest, UTRAN-GANSS-Positioning-Data AVP: "
-                                    + Arrays.toString(utranGANSSPositioningData));
+                                + Arrays.toString(utranGANSSPositioningData));
                             if (gmlcCdrState.isInitialized()) {
                                 gmlcCdrState.setUtranGANSSpositioningData(AVPHandler.lteUtranGanssPosData2MapUtranGanssPosDataInfo(utranGANSSPositioningData));
                             }
@@ -8194,7 +8194,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         if (utranAdditionalPositioningData != null) {
                             slgLrrAvpValues.setUtranAdditionalPositioningData(utranAdditionalPositioningData);
                             this.logger.fine("\nonLocationReportRequest, UTRAN-Additional-Positioning-Data AVP: "
-                                    + Arrays.toString(utranAdditionalPositioningData));
+                                + Arrays.toString(utranAdditionalPositioningData));
                             if (gmlcCdrState.isInitialized()) {
                                 gmlcCdrState.setUtranAdditionalPositioningData(AVPHandler.lteUtranAddPosData2MapUtranAdditionalPositioningdata(utranAdditionalPositioningData));
                             }
@@ -8287,7 +8287,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         long deferredLocationType = locationReportRequest.getDeferredMTLRData().getDeferredLocationType();
                         long terminationCause = locationReportRequest.getDeferredMTLRData().getTerminationCause();
                         this.logger.fine("\nonLocationReportRequest, Deferred-MT-LR-Data AVP, " +
-                                "Deferred-Location-Type=" + deferredLocationType + ",Termination-Cause=" + terminationCause);
+                            "Deferred-Location-Type=" + deferredLocationType + ",Termination-Cause=" + terminationCause);
                         if (gmlcCdrState.isInitialized()) {
                             gmlcCdrState.setDeferredmtlrData(AVPHandler.lteDeferredMtlrData2MapDeferredmtlrData(locationReportRequest.getDeferredMTLRData()));
                         }
@@ -8319,7 +8319,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         long reportingAmount = locationReportRequest.getPeriodicLDRInformation().getReportingAmount();
                         long reportingInterval = locationReportRequest.getPeriodicLDRInformation().getReportingInterval();
                         this.logger.fine("\nonLocationReportRequest, Periodic-LDR-Information AVP, " +
-                                "Reporting-Amount=" + reportingAmount + ",Reporting-Interval=" + reportingInterval);
+                            "Reporting-Amount=" + reportingAmount + ",Reporting-Interval=" + reportingInterval);
                         if (gmlcCdrState.isInitialized()) {
                             gmlcCdrState.setPeriodicLDRInfo(AVPHandler.ltePeriodicLDRInfo2MapPeriodicLDRInfo(locationReportRequest.getPeriodicLDRInformation()));
                         }
@@ -8539,7 +8539,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
 
         try {
             logger.fine("\n\nReceived Sh UDA with session Id: " + userDataAnswer.getSessionId() + ", host '" + userDataAnswer.getOriginHost()
-                    + "', realm '" + userDataAnswer.getOriginRealm() + "'");
+                + "', realm '" + userDataAnswer.getOriginRealm() + "'");
             this.logger.fine("\nonUserDataAnswer event details: " + userDataAnswer);
 
             ShUdaAvpValues shUdaAvpValues = new ShUdaAvpValues();
@@ -9140,7 +9140,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
         if (errorAnswer != null) {
             logger.fine("\nReceived Diameter error answer with session Id: " + errorAnswer.getSessionId() + ", host='"
                 + errorAnswer.getOriginHost() + "', realm='" + errorAnswer.getOriginRealm() + "'" +
-                    ", 'result code='" + errorAnswer.getResultCode());
+                ", 'result code='" + errorAnswer.getResultCode());
         }
 
         try {
@@ -10010,7 +10010,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         // set HttpRequest with params for Sh UDR
                         setHttpRequest(new HttpRequest(httpRequestType, locationRequestParams.udrMsisdn, "", locationRequestParams.udrImsPublicId,
                             locationRequestParams.operation, locationRequestParams.domainType, null, null, null,
-                                null, null, null, null, null, null, null, null, null,
+                            null, null, null, null, null, null, null, null, null,
                             null, null, null, null, null, null,
                             null, null, null, null, null, null,
                             null, null, null, null, null,
@@ -10073,7 +10073,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             } else {
                 setHttpRequest(new HttpRequest(httpRequestType, locationRequestParams.targetingMSISDN, locationRequestParams.targetingIMSI, null,
                     null, null, null, null, null, null,
-                        null, null, null, null, null, null, null, null,
+                    null, null, null, null, null, null, null, null,
                     null, null, null, null, null, null,
                     null, null, null, null, null, null,
                     null, null, null, null, null,
@@ -10374,12 +10374,12 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 response.setCellGlobalIdOrServiceAreaIdOrLAI(cellGlobalIdOrServiceAreaIdOrLAI);
                 ExtGeographicalInformation extGeographicalInformation;
                 try {
-                  // fakeLocationX = "27 28 25.00S"
-                  double fakeXLocation = 27.458902;
-                  // fakeLocationY = "153 01 43.00E"
-                  double fakeYLocation = 153.014394;
-                  int fakeLocationInnerRadius = 100;
-                  extGeographicalInformation = new ExtGeographicalInformationImpl(null, fakeXLocation, fakeYLocation, 0, 0, 0, 0, 0, 0, 0, fakeLocationInnerRadius, 0, 0, 0, 0, 0);
+                    // fakeLocationX = "27 28 25.00S"
+                    double fakeXLocation = 27.458902;
+                    // fakeLocationY = "153 01 43.00E"
+                    double fakeYLocation = 153.014394;
+                    int fakeLocationInnerRadius = 100;
+                    extGeographicalInformation = new ExtGeographicalInformationImpl(null, fakeXLocation, fakeYLocation, 0, 0, 0, 0, 0, 0, 0, fakeLocationInnerRadius, 0, 0, 0, 0, 0);
                 } catch (MAPException e) {
                     throw new RuntimeException(e);
                 }
@@ -10428,7 +10428,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 AddressString serviceCentreAddressString = this.mapParameterFactory.createAddressString(AddressNature.international_number,
                     org.restcomm.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, gmlcPropertiesManagement.getGmlcGt());
                 mapDialogSms.addSendRoutingInfoForSMRequest(msisdn, sm_RP_PRI, serviceCentreAddressString, null, false, null, null,
-                        null, false, null, false, false, null, null, false);
+                    null, false, null, false, false, null, null, false);
 
                 // Transaction
                 Long transaction = mobileCoreNetworkTransactions.create();
@@ -10842,7 +10842,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
         }
         // CDR initialization
         GMLCCDRState gmlcCdrState = CDRCreationHelper.suplCdrInitializer(aci, this.getCDRInterface(), locationRequestParams,
-                localSocketAddress, localSocketPort, remoteSocketAddress, remoteSocketPort);
+            localSocketAddress, localSocketPort, remoteSocketAddress, remoteSocketPort);
         // Set timer last
         this.setTimer(aci);
 
@@ -10851,7 +10851,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             if (locationRequestParams.suplHorizontalAccuracy != null) {
                 qoP = new QoP(locationRequestParams.suplHorizontalAccuracy);
                 if (locationRequestParams.suplVerticalAccuracy != null && locationRequestParams.suplMaximumLocationAge != null &&
-                        locationRequestParams.suplDelay != null && locationRequestParams.suplResponseTime != null) {
+                    locationRequestParams.suplDelay != null && locationRequestParams.suplResponseTime != null) {
                     qoP = new QoP(locationRequestParams.suplHorizontalAccuracy, locationRequestParams.suplVerticalAccuracy,
                         locationRequestParams.suplMaximumLocationAge, locationRequestParams.suplDelay, locationRequestParams.suplResponseTime);
                 }
@@ -10933,7 +10933,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     AreaIdList[] areaIdListArray = new AreaIdList[]{areaIdList};
                     AreaEventParams_areaIdLists areaIdLists = new AreaEventParams_areaIdLists(areaIdListArray);
                     AreaEventParams areaEventParams = new AreaEventParams(areaEventType, locationEstimateRequired, repeatedReportingParams,
-                            startTime, stopTime, geographicTargetAreaList, areaIdLists);
+                        startTime, stopTime, geographicTargetAreaList, areaIdLists);
                     triggerParams.setAreaEventParams(areaEventParams);
                     suplResponseHelperForMLP = networkInitiatedSuplLocation.processNetworkInitiatedSuplBySmppAreaEventTriggeredService(qoP, SuplTriggerType.AreaEvent.getSuplTriggerType(), posMethod, SLPMode.nonProxy(), triggerParams, transactionId, locationRequestParams.getTargetingMSISDN());
                     String splId = new String(suplResponseHelperForMLP.getSessionID().getSlpSessionID().getSessionID().value);
@@ -10959,7 +10959,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         httpSubscriberLocationReport = getHttpSubscriberLocationReport();
                         boolean isMlp = true;
                         suplResponseHelperForMLP.suplReportReferenceNumber = httpSubscriberLocationReport.Register(transactionId,
-                                locationRequestParams.suplAgentCallbackUrl, null, isMlp, locationRequestParams.curlUser);
+                            locationRequestParams.suplAgentCallbackUrl, null, isMlp, locationRequestParams.curlUser);
                         httpSubscriberLocationReport.closeMongo();
                     }
                 } else {
@@ -10995,7 +10995,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         httpSubscriberLocationReport = getHttpSubscriberLocationReport();
                         boolean isMlp = true;
                         suplResponseHelperForMLP.suplReportReferenceNumber = httpSubscriberLocationReport.Register(transactionId,
-                                locationRequestParams.suplAgentCallbackUrl, null, isMlp, locationRequestParams.curlUser);
+                            locationRequestParams.suplAgentCallbackUrl, null, isMlp, locationRequestParams.curlUser);
                         httpSubscriberLocationReport.closeMongo();
                     }
                 }
@@ -11027,7 +11027,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             }
             if (suplResponseHelperForMLP != null && !suplResponseHelperForMLP.getTimeOut()) {
                 handleSUPLResponse(MLPResponse.MLPResultType.OK, "", locationRequestParams.targetingMSISDN,
-                        locationRequestParams.targetingIMSI, transactionId, suplResponseHelperForMLP, mlpTriggeredReportingService, false);
+                    locationRequestParams.targetingIMSI, transactionId, suplResponseHelperForMLP, mlpTriggeredReportingService, false);
                 if (suplResponseHelperForMLP.isReport()) {
                     handleSuplReports(suplResponseHelperForMLP, aci, triggerParams, locationRequestParams, gmlcCdrState, transactionId, mlpTriggeredReportingService);
                 } else {
@@ -11056,7 +11056,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                     if (suplResponseHelperForMLP.getTimeOut()) {
                         this.createCDRRecord(RecordStatus.SUPL_TIMEOUT);
                         reportLocationRequestError(MLPResponse.MLPResultType.TIMEOUT, "Network Initiated SUPL positioning timeout", "SUPL",
-                                locationRequestParams.targetingMSISDN, locationRequestParams.targetingIMSI, null, null, null, null, null, null, mlpTriggeredReportingService);
+                            locationRequestParams.targetingMSISDN, locationRequestParams.targetingIMSI, null, null, null, null, null, null, mlpTriggeredReportingService);
                     } else {
                         if (gmlcCdrState.isInitialized()) {
                             if (triggerParams != null) {
@@ -11073,7 +11073,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                             this.createCDRRecord(RecordStatus.SUPL_SYSTEM_FAILURE);
                         }
                         reportLocationRequestError(MLPResponse.MLPResultType.POSITION_METHOD_FAILURE, "Network Initiated SUPL positioning failure", "SUPL",
-                                locationRequestParams.targetingMSISDN, locationRequestParams.targetingIMSI, null, null, null, null, null, null, mlpTriggeredReportingService);
+                            locationRequestParams.targetingMSISDN, locationRequestParams.targetingIMSI, null, null, null, null, null, null, mlpTriggeredReportingService);
 
                     }
                 }
@@ -11085,7 +11085,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                 this.createCDRRecord(RecordStatus.SUPL_SYSTEM_FAILURE);
             }
             reportLocationRequestError(MLPResponse.MLPResultType.FORMAT_ERROR, "Exception on SUPL request", "SUPL", locationRequestParams.targetingMSISDN,
-                    locationRequestParams.targetingIMSI, null, null, null, null, null, null, mlpTriggeredReportingService);
+                locationRequestParams.targetingIMSI, null, null, null, null, null, null, mlpTriggeredReportingService);
         } finally {
             aci.detach(this.sbbContext.getSbbLocalObject());
         }
@@ -11291,20 +11291,20 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                             /***** Plain HTTP Response *****/
                             // for retro-compatibility with Restcomm Geolocation API and GMLC v1.0.0
                             String atiResponseSb = "mcc=" +
-                                    atiHelper.getMcc() +
-                                    ", mnc=" +
-                                    atiHelper.getMnc() +
-                                    ", lac=" +
-                                    atiHelper.getLac() +
-                                    ", cellid=" +
-                                    atiHelper.getCi() +
-                                    ", aol=" +
-                                    atiHelper.getAgeOfLocationInfo() +
-                                    ", vlrNumber=" +
-                                    atiHelper.getVlrNumber() +
-                                    ", subscriberState=" +
-                                    atiHelper.getSubscriberState() +
-                                    "\n";
+                                atiHelper.getMcc() +
+                                ", mnc=" +
+                                atiHelper.getMnc() +
+                                ", lac=" +
+                                atiHelper.getLac() +
+                                ", cellid=" +
+                                atiHelper.getCi() +
+                                ", aol=" +
+                                atiHelper.getAgeOfLocationInfo() +
+                                ", vlrNumber=" +
+                                atiHelper.getVlrNumber() +
+                                ", subscriberState=" +
+                                atiHelper.getSubscriberState() +
+                                "\n";
 
                             this.sendHTTPResult(HttpServletResponse.SC_OK, atiResponseSb);
 
@@ -11912,7 +11912,7 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
                         try {
                             if (psiResponseParams != null) {
                                 if (psiResponseParams.getPsiOnlyImsi() != null && psiResponseParams.getPsiOnlyNnn() != null &&
-                                        psiResponseParams.getPsiServiceType() != null && psiResponseParams.getPsiServiceType().equalsIgnoreCase("psiFirst")) {
+                                    psiResponseParams.getPsiServiceType() != null && psiResponseParams.getPsiServiceType().equalsIgnoreCase("psiFirst")) {
                                     jsonResponse = PsiResponseJsonBuilder.buildJsonResponseForPsi(psiResponseParams, imsi, psiMsisdn, null);
                                 } else if (psiResponseParams.getSriForSmResponse() != null) {
                                     SriSmResponseParams sriSmResponse = psiResponseParams.getSriForSmResponse();
@@ -12383,8 +12383,8 @@ public abstract class MobileCoreNetworkInterfaceSbb extends GMLCBaseSbb implemen
             childExt = null; // temporary
         }
 
-      assert childExt != null;
-      CDRInterface child = (CDRInterface) childExt.get(CDR);
+        assert childExt != null;
+        CDRInterface child = (CDRInterface) childExt.get(CDR);
         if (child == null) {
             try {
                 child = (CDRInterface) childExt.create(CDR);
